@@ -1,0 +1,153 @@
+<?php
+
+return [
+    // Poll Form
+    'poll_title_required' => 'Poll title is required.',
+    'options_min' => 'At least 2 options are required.',
+    'option_title_required' => 'Option title is required.',
+    'ends_at_after' => 'End date must be after start date.',
+    'max_selections_gte' => 'Max selections must be greater than or equal to min selections.',
+
+    // Voting
+    'please_enter_option_title' => 'Please enter an option title.',
+    'comment_required' => 'A comment is required for this poll.',
+    'rating_between' => 'Rating must be between :min and :max.',
+    'max_votes_reached' => 'Maximum of :max votes allowed.',
+    'vote_changing_not_allowed' => 'Vote changing is not allowed for this poll.',
+    'vote_retraction_not_allowed' => 'Vote retraction is not allowed.',
+    'at_least_one_option' => 'At least one option must be selected.',
+    'invalid_options' => 'One or more selected options do not belong to this poll.',
+    'single_option_only' => 'Only one option can be selected for this poll type.',
+    'min_options' => 'At least :min options must be selected.',
+    'max_options' => 'At most :max options can be selected.',
+
+    // Custom Options
+    'custom_options_not_allowed' => 'Custom options are not allowed for this poll.',
+    'custom_option_unauthorized' => 'You are not authorized to add custom options to this poll.',
+    'custom_option_limit_reached' => 'This poll has reached its maximum of :max custom options.',
+
+    // Lifecycle
+    'cannot_change_type_with_votes' => 'Cannot change poll type after votes have been cast.',
+
+    // Authorization
+    'unauthorized' => 'You are not authorized to perform this action.',
+    'votes_anonymous' => 'Votes are anonymous for this poll.',
+
+    // Commands
+    'auto_open_disabled' => 'Auto-open feature is disabled.',
+    'auto_close_disabled' => 'Auto-close feature is disabled.',
+    'activated_polls' => 'Activated :count poll(s).',
+    'closed_polls' => 'Closed :count poll(s).',
+    'reconciled_counts' => 'Reconciled vote counts for :count option(s).',
+    'options_reordered' => 'Options reordered successfully.',
+
+    // Enums - Poll Status
+    'status_draft' => 'Draft',
+    'status_active' => 'Active',
+    'status_closed' => 'Closed',
+    'status_cancelled' => 'Cancelled',
+
+    // Enums - Poll Type
+    'type_yes_no' => 'Yes/No',
+    'type_single_choice' => 'Single Choice',
+    'type_multiple_choice' => 'Multiple Choice',
+    'type_rating' => 'Rating',
+    'type_ranked' => 'Ranked',
+
+    // UI - Poll Manager
+    'polls' => 'Polls',
+    'create_poll' => 'Create Poll',
+    'search_polls' => 'Search polls...',
+    'all_statuses' => 'All Statuses',
+    'all_types' => 'All Types',
+    'by' => 'By',
+    'unknown' => 'Unknown',
+    'options' => 'options',
+    'votes' => 'votes',
+    'starts' => 'Starts',
+    'ends' => 'Ends',
+    'activate_this_poll' => 'Activate this poll?',
+    'activate' => 'Activate',
+    'close_this_poll' => 'Close this poll?',
+    'close' => 'Close',
+    'cancel_this_poll' => 'Cancel this poll?',
+    'edit' => 'Edit',
+    'duplicate' => 'Duplicate',
+    'delete_this_poll' => 'Delete this poll?',
+    'delete' => 'Delete',
+    'no_polls_found' => 'No polls found.',
+    'create_your_first_poll' => 'Create your first poll',
+
+    // UI - Poll Form
+    'edit_poll' => 'Edit Poll',
+    'title' => 'Title',
+    'enter_poll_title' => 'Enter poll title',
+    'description' => 'Description',
+    'optional_description' => 'Optional description',
+    'type' => 'Type',
+    'status' => 'Status',
+    'start_date' => 'Start Date',
+    'end_date' => 'End Date',
+    'min_selections' => 'Min Selections',
+    'max_selections' => 'Max Selections',
+    'anonymous_voting' => 'Anonymous voting',
+    'show_results_before_close' => 'Show results before close',
+    'allow_vote_change' => 'Allow vote change',
+    'require_comment_with_vote' => 'Require comment with vote',
+    'allow_custom_options' => 'Allow custom options',
+    'max_custom_options' => 'Max custom options',
+    'max_votes_per_user' => 'Max votes per user',
+    'options_label' => 'Options',
+    'add_option' => 'Add Option',
+    'option' => 'Option',
+    'description_optional' => 'Description (optional)',
+    'cancel' => 'Cancel',
+    'update_poll' => 'Update Poll',
+
+    // UI - Poll Display
+    'total_votes' => 'Total Votes',
+    'voters' => 'Voters',
+    'options_count' => 'Options',
+    'no_deadline' => 'No deadline',
+    'anonymous' => 'Anonymous',
+    'vote_change_allowed' => 'Vote Change Allowed',
+    'comment_required_badge' => 'Comment Required',
+    'live_results' => 'Live Results',
+    'overview' => 'Overview',
+    'results' => 'Results',
+    'votes_tab' => 'Votes',
+    'results_available_after_close' => 'Results will be available after the poll closes.',
+    'voter' => 'Voter',
+    'option_column' => 'Option',
+    'comment' => 'Comment',
+    'date' => 'Date',
+    'anonymous_votes_hidden' => 'This poll uses anonymous voting. Individual votes are hidden.',
+
+    // UI - Poll Results
+    'total_votes_label' => 'total votes',
+    'voters_label' => 'voters',
+    'leading' => 'Leading',
+    'no_votes_yet' => 'No votes yet.',
+
+    // UI - Poll Vote
+    'cast_your_vote' => 'Cast Your Vote',
+    'select_min_to_max' => 'Select :min to :max options',
+    'select_at_least_min' => 'Select at least :min options',
+    'select_up_to_max' => 'Select up to :max options',
+    'rank_options_hint' => 'Assign a rank to each option (1 = highest priority)',
+    'add_your_own_option' => 'Add your own option',
+    'enter_option_title' => 'Enter option title...',
+    'add' => 'Add',
+    'comment_label' => 'Comment',
+    'add_a_comment' => 'Add a comment...',
+    'submit_vote' => 'Submit Vote',
+    'submitting' => 'Submitting...',
+    'you_have_voted' => 'You have voted',
+    'show_results' => 'Show results',
+    'change_vote' => 'Change Vote',
+    'retract_your_vote' => 'Retract your vote?',
+    'retract_vote' => 'Retract Vote',
+    'poll_is_closed' => 'This poll is closed.',
+    'please_log_in' => 'Please log in to vote.',
+    'not_eligible' => 'You are not eligible to vote on this poll.',
+];

@@ -1,0 +1,153 @@
+<?php
+
+return [
+    // Poll Form
+    'poll_title_required' => 'Anket başlığı zorunludur.',
+    'options_min' => 'En az 2 seçenek gereklidir.',
+    'option_title_required' => 'Seçenek başlığı zorunludur.',
+    'ends_at_after' => 'Bitiş tarihi başlangıç tarihinden sonra olmalıdır.',
+    'max_selections_gte' => 'Maksimum seçim sayısı minimum seçim sayısından büyük veya eşit olmalıdır.',
+
+    // Voting
+    'please_enter_option_title' => 'Lütfen bir seçenek başlığı girin.',
+    'comment_required' => 'Bu anket için yorum zorunludur.',
+    'rating_between' => 'Puan :min ile :max arasında olmalıdır.',
+    'max_votes_reached' => 'En fazla :max oy kullanılabilir.',
+    'vote_changing_not_allowed' => 'Bu ankette oy değiştirmeye izin verilmiyor.',
+    'vote_retraction_not_allowed' => 'Oy geri çekme işlemi yapılamaz.',
+    'at_least_one_option' => 'En az bir seçenek seçilmelidir.',
+    'invalid_options' => 'Seçilen seçeneklerden bir veya daha fazlası bu ankete ait değil.',
+    'single_option_only' => 'Bu anket türü için yalnızca bir seçenek seçilebilir.',
+    'min_options' => 'En az :min seçenek seçilmelidir.',
+    'max_options' => 'En fazla :max seçenek seçilebilir.',
+
+    // Custom Options
+    'custom_options_not_allowed' => 'Bu ankette özel seçeneklere izin verilmiyor.',
+    'custom_option_unauthorized' => 'Bu ankete özel seçenek ekleme yetkiniz yok.',
+    'custom_option_limit_reached' => 'Bu anket en fazla :max özel seçenek sınırına ulaştı.',
+
+    // Lifecycle
+    'cannot_change_type_with_votes' => 'Oy verildikten sonra anket türü değiştirilemez.',
+
+    // Authorization
+    'unauthorized' => 'Bu işlemi gerçekleştirme yetkiniz yok.',
+    'votes_anonymous' => 'Bu ankette oylar anonimdir.',
+
+    // Commands
+    'auto_open_disabled' => 'Otomatik açma özelliği devre dışı.',
+    'auto_close_disabled' => 'Otomatik kapatma özelliği devre dışı.',
+    'activated_polls' => ':count anket etkinleştirildi.',
+    'closed_polls' => ':count anket kapatıldı.',
+    'reconciled_counts' => ':count seçenek için oy sayıları yeniden hesaplandı.',
+    'options_reordered' => 'Seçenekler başarıyla yeniden sıralandı.',
+
+    // Enums - Poll Status
+    'status_draft' => 'Taslak',
+    'status_active' => 'Aktif',
+    'status_closed' => 'Kapatılmış',
+    'status_cancelled' => 'İptal Edilmiş',
+
+    // Enums - Poll Type
+    'type_yes_no' => 'Evet/Hayır',
+    'type_single_choice' => 'Tek Seçim',
+    'type_multiple_choice' => 'Çoklu Seçim',
+    'type_rating' => 'Puanlama',
+    'type_ranked' => 'Sıralama',
+
+    // UI - Poll Manager
+    'polls' => 'Anketler',
+    'create_poll' => 'Anket Oluştur',
+    'search_polls' => 'Anket ara...',
+    'all_statuses' => 'Tüm Durumlar',
+    'all_types' => 'Tüm Türler',
+    'by' => 'Oluşturan',
+    'unknown' => 'Bilinmiyor',
+    'options' => 'seçenek',
+    'votes' => 'oy',
+    'starts' => 'Başlangıç',
+    'ends' => 'Bitiş',
+    'activate_this_poll' => 'Bu anketi etkinleştir?',
+    'activate' => 'Etkinleştir',
+    'close_this_poll' => 'Bu anketi kapat?',
+    'close' => 'Kapat',
+    'cancel_this_poll' => 'Bu anketi iptal et?',
+    'edit' => 'Düzenle',
+    'duplicate' => 'Çoğalt',
+    'delete_this_poll' => 'Bu anketi sil?',
+    'delete' => 'Sil',
+    'no_polls_found' => 'Anket bulunamadı.',
+    'create_your_first_poll' => 'İlk anketinizi oluşturun',
+
+    // UI - Poll Form
+    'edit_poll' => 'Anketi Düzenle',
+    'title' => 'Başlık',
+    'enter_poll_title' => 'Anket başlığı girin',
+    'description' => 'Açıklama',
+    'optional_description' => 'İsteğe bağlı açıklama',
+    'type' => 'Tür',
+    'status' => 'Durum',
+    'start_date' => 'Başlangıç Tarihi',
+    'end_date' => 'Bitiş Tarihi',
+    'min_selections' => 'Min Seçim',
+    'max_selections' => 'Maks Seçim',
+    'anonymous_voting' => 'Anonim oylama',
+    'show_results_before_close' => 'Kapanmadan önce sonuçları göster',
+    'allow_vote_change' => 'Oy değiştirmeye izin ver',
+    'require_comment_with_vote' => 'Oyla birlikte yorum zorunlu',
+    'allow_custom_options' => 'Özel seçeneklere izin ver',
+    'max_custom_options' => 'Max özel seçenek',
+    'max_votes_per_user' => 'Kullanıcı başına max oy',
+    'options_label' => 'Seçenekler',
+    'add_option' => 'Seçenek Ekle',
+    'option' => 'Seçenek',
+    'description_optional' => 'Açıklama (isteğe bağlı)',
+    'cancel' => 'İptal',
+    'update_poll' => 'Anketi Güncelle',
+
+    // UI - Poll Display
+    'total_votes' => 'Toplam Oy',
+    'voters' => 'Oy Verenler',
+    'options_count' => 'Seçenekler',
+    'no_deadline' => 'Süre yok',
+    'anonymous' => 'Anonim',
+    'vote_change_allowed' => 'Oy Değiştirme Açık',
+    'comment_required_badge' => 'Yorum Zorunlu',
+    'live_results' => 'Canlı Sonuçlar',
+    'overview' => 'Genel Bakış',
+    'results' => 'Sonuçlar',
+    'votes_tab' => 'Oylar',
+    'results_available_after_close' => 'Sonuçlar anket kapandıktan sonra görüntülenebilir.',
+    'voter' => 'Oy Veren',
+    'option_column' => 'Seçenek',
+    'comment' => 'Yorum',
+    'date' => 'Tarih',
+    'anonymous_votes_hidden' => 'Bu anket anonim oylama kullanmaktadır. Bireysel oylar gizlidir.',
+
+    // UI - Poll Results
+    'total_votes_label' => 'toplam oy',
+    'voters_label' => 'oy veren',
+    'leading' => 'Önde',
+    'no_votes_yet' => 'Henüz oy yok.',
+
+    // UI - Poll Vote
+    'cast_your_vote' => 'Oyunuzu Kullanın',
+    'select_min_to_max' => ':min ile :max arasında seçenek seçin',
+    'select_at_least_min' => 'En az :min seçenek seçin',
+    'select_up_to_max' => 'En fazla :max seçenek seçin',
+    'rank_options_hint' => 'Her seçeneğe bir sıra atayın (1 = en yüksek öncelik)',
+    'add_your_own_option' => 'Kendi seçeneğinizi ekleyin',
+    'enter_option_title' => 'Seçenek başlığı girin...',
+    'add' => 'Ekle',
+    'comment_label' => 'Yorum',
+    'add_a_comment' => 'Yorum ekleyin...',
+    'submit_vote' => 'Oy Ver',
+    'submitting' => 'Gönderiliyor...',
+    'you_have_voted' => 'Oy kullandınız',
+    'show_results' => 'Sonuçları göster',
+    'change_vote' => 'Oyu Değiştir',
+    'retract_your_vote' => 'Oyunuzu geri çekmek istiyor musunuz?',
+    'retract_vote' => 'Oyu Geri Çek',
+    'poll_is_closed' => 'Bu anket kapatılmıştır.',
+    'please_log_in' => 'Oy vermek için giriş yapın.',
+    'not_eligible' => 'Bu ankette oy kullanma yetkiniz yok.',
+];

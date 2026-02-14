@@ -1,0 +1,153 @@
+<?php
+
+return [
+    // Poll Form
+    'poll_title_required' => 'Sorğu başlığı tələb olunur.',
+    'options_min' => 'Ən azı 2 seçim tələb olunur.',
+    'option_title_required' => 'Seçim başlığı tələb olunur.',
+    'ends_at_after' => 'Bitmə tarixi başlanğıc tarixindən sonra olmalıdır.',
+    'max_selections_gte' => 'Maksimum seçim sayı minimum seçim sayından böyük və ya bərabər olmalıdır.',
+
+    // Voting
+    'please_enter_option_title' => 'Zəhmət olmasa seçim başlığı daxil edin.',
+    'comment_required' => 'Bu sorğu üçün şərh tələb olunur.',
+    'rating_between' => 'Reytinq :min ilə :max arasında olmalıdır.',
+    'max_votes_reached' => 'Ən çox :max səs vermək mümkündür.',
+    'vote_changing_not_allowed' => 'Bu sorğuda səs dəyişdirməyə icazə verilmir.',
+    'vote_retraction_not_allowed' => 'Səs geri çəkmə əməliyyatı mümkün deyil.',
+    'at_least_one_option' => 'Ən azı bir seçim seçilməlidir.',
+    'invalid_options' => 'Seçilmiş seçimlərdən bir və ya daha çoxu bu sorğuya aid deyil.',
+    'single_option_only' => 'Bu sorğu növü üçün yalnız bir seçim seçilə bilər.',
+    'min_options' => 'Ən azı :min seçim seçilməlidir.',
+    'max_options' => 'Ən çox :max seçim seçilə bilər.',
+
+    // Custom Options
+    'custom_options_not_allowed' => 'Bu sorğuda xüsusi seçimlərə icazə verilmir.',
+    'custom_option_unauthorized' => 'Bu sorğuya xüsusi seçim əlavə etmək səlahiyyətiniz yoxdur.',
+    'custom_option_limit_reached' => 'Bu sorğu ən çox :max xüsusi seçim limitinə çatıb.',
+
+    // Lifecycle
+    'cannot_change_type_with_votes' => 'Səs verildikdən sonra sorğu növü dəyişdirilə bilməz.',
+
+    // Authorization
+    'unauthorized' => 'Bu əməliyyatı yerinə yetirmək səlahiyyətiniz yoxdur.',
+    'votes_anonymous' => 'Bu sorğuda səslər anonimdir.',
+
+    // Commands
+    'auto_open_disabled' => 'Avtomatik açma xüsusiyyəti deaktivdir.',
+    'auto_close_disabled' => 'Avtomatik bağlama xüsusiyyəti deaktivdir.',
+    'activated_polls' => ':count sorğu aktivləşdirildi.',
+    'closed_polls' => ':count sorğu bağlandı.',
+    'reconciled_counts' => ':count seçim üçün səs sayları yenidən hesablandı.',
+    'options_reordered' => 'Seçimlər uğurla yenidən sıralandı.',
+
+    // Enums - Poll Status
+    'status_draft' => 'Qaralama',
+    'status_active' => 'Aktiv',
+    'status_closed' => 'Bağlanmış',
+    'status_cancelled' => 'Ləğv Edilmiş',
+
+    // Enums - Poll Type
+    'type_yes_no' => 'Bəli/Xeyr',
+    'type_single_choice' => 'Tək Seçim',
+    'type_multiple_choice' => 'Çoxlu Seçim',
+    'type_rating' => 'Reytinq',
+    'type_ranked' => 'Sıralama',
+
+    // UI - Poll Manager
+    'polls' => 'Sorğular',
+    'create_poll' => 'Sorğu Yarat',
+    'search_polls' => 'Sorğu axtar...',
+    'all_statuses' => 'Bütün Statuslar',
+    'all_types' => 'Bütün Növlər',
+    'by' => 'Yaradan',
+    'unknown' => 'Naməlum',
+    'options' => 'seçim',
+    'votes' => 'səs',
+    'starts' => 'Başlanğıc',
+    'ends' => 'Bitmə',
+    'activate_this_poll' => 'Bu sorğunu aktivləşdir?',
+    'activate' => 'Aktivləşdir',
+    'close_this_poll' => 'Bu sorğunu bağla?',
+    'close' => 'Bağla',
+    'cancel_this_poll' => 'Bu sorğunu ləğv et?',
+    'edit' => 'Redaktə et',
+    'duplicate' => 'Dublikat et',
+    'delete_this_poll' => 'Bu sorğunu sil?',
+    'delete' => 'Sil',
+    'no_polls_found' => 'Sorğu tapılmadı.',
+    'create_your_first_poll' => 'İlk sorğunuzu yaradın',
+
+    // UI - Poll Form
+    'edit_poll' => 'Sorğunu Redaktə Et',
+    'title' => 'Başlıq',
+    'enter_poll_title' => 'Sorğu başlığı daxil edin',
+    'description' => 'Təsvir',
+    'optional_description' => 'İstəyə bağlı təsvir',
+    'type' => 'Növ',
+    'status' => 'Status',
+    'start_date' => 'Başlanğıc Tarixi',
+    'end_date' => 'Bitmə Tarixi',
+    'min_selections' => 'Min Seçim',
+    'max_selections' => 'Maks Seçim',
+    'anonymous_voting' => 'Anonim səsvermə',
+    'show_results_before_close' => 'Bağlanmadan əvvəl nəticələri göstər',
+    'allow_vote_change' => 'Səs dəyişdirməyə icazə ver',
+    'require_comment_with_vote' => 'Səslə birlikdə şərh tələb et',
+    'allow_custom_options' => 'Xüsusi seçimlərə icazə ver',
+    'max_custom_options' => 'Maks xüsusi seçim',
+    'max_votes_per_user' => 'İstifadəçi başına maks səs',
+    'options_label' => 'Seçimlər',
+    'add_option' => 'Seçim Əlavə Et',
+    'option' => 'Seçim',
+    'description_optional' => 'Təsvir (istəyə bağlı)',
+    'cancel' => 'Ləğv et',
+    'update_poll' => 'Sorğunu Yenilə',
+
+    // UI - Poll Display
+    'total_votes' => 'Ümumi Səslər',
+    'voters' => 'Səs Verənlər',
+    'options_count' => 'Seçimlər',
+    'no_deadline' => 'Müddət yoxdur',
+    'anonymous' => 'Anonim',
+    'vote_change_allowed' => 'Səs Dəyişdirmə Açıqdır',
+    'comment_required_badge' => 'Şərh Tələb Olunur',
+    'live_results' => 'Canlı Nəticələr',
+    'overview' => 'Ümumi Baxış',
+    'results' => 'Nəticələr',
+    'votes_tab' => 'Səslər',
+    'results_available_after_close' => 'Nəticələr sorğu bağlandıqdan sonra görünəcək.',
+    'voter' => 'Səs Verən',
+    'option_column' => 'Seçim',
+    'comment' => 'Şərh',
+    'date' => 'Tarix',
+    'anonymous_votes_hidden' => 'Bu sorğu anonim səsvermə istifadə edir. Fərdi səslər gizlidir.',
+
+    // UI - Poll Results
+    'total_votes_label' => 'ümumi səs',
+    'voters_label' => 'səs verən',
+    'leading' => 'Öndə',
+    'no_votes_yet' => 'Hələ səs yoxdur.',
+
+    // UI - Poll Vote
+    'cast_your_vote' => 'Səsinizi Verin',
+    'select_min_to_max' => ':min ilə :max arasında seçim edin',
+    'select_at_least_min' => 'Ən azı :min seçim edin',
+    'select_up_to_max' => 'Ən çox :max seçim edin',
+    'rank_options_hint' => 'Hər seçimə bir sıra təyin edin (1 = ən yüksək prioritet)',
+    'add_your_own_option' => 'Öz seçiminizi əlavə edin',
+    'enter_option_title' => 'Seçim başlığı daxil edin...',
+    'add' => 'Əlavə et',
+    'comment_label' => 'Şərh',
+    'add_a_comment' => 'Şərh əlavə edin...',
+    'submit_vote' => 'Səs Ver',
+    'submitting' => 'Göndərilir...',
+    'you_have_voted' => 'Səs verdiniz',
+    'show_results' => 'Nəticələri göstər',
+    'change_vote' => 'Səsi Dəyişdir',
+    'retract_your_vote' => 'Səsinizi geri çəkmək istəyirsiniz?',
+    'retract_vote' => 'Səsi Geri Çək',
+    'poll_is_closed' => 'Bu sorğu bağlanmışdır.',
+    'please_log_in' => 'Səs vermək üçün daxil olun.',
+    'not_eligible' => 'Bu sorğuda səs vermək səlahiyyətiniz yoxdur.',
+];
