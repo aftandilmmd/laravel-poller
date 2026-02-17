@@ -1,6 +1,6 @@
 [English](README.md) | [Türkçe](README.tr.md) | **Azərbaycanca**
 
-# Larapoll
+# Laravel Poll Vote
 
 Laravel üçün güclü və çevik sorğu və səsvermə paketi. 5 sorğu növünü, anonim səsverməni, planlanmış sorğuları, səs dəyişdirməni, həm Livewire komponentlərini, həm də RESTful API-ni dəstəkləyir.
 
@@ -12,7 +12,7 @@ Laravel üçün güclü və çevik sorğu və səsvermə paketi. 5 sorğu növü
 ## Quraşdırma
 
 ```bash
-composer require aftandilmmd/larapoll
+composer require aftandilmmd/laravel-poll-vote
 ```
 
 Xidmət provayderi və fasad avtomatik aşkarlanır.
@@ -20,25 +20,25 @@ Xidmət provayderi və fasad avtomatik aşkarlanır.
 Konfiqurasiya faylını dərc edin:
 
 ```bash
-php artisan vendor:publish --tag=larapoll-config
+php artisan vendor:publish --tag=poll-vote-config
 ```
 
 Miqrasiyaları dərc edin (istəyə bağlı - miqrasiyalar avtomatik işləyir):
 
 ```bash
-php artisan vendor:publish --tag=larapoll-migrations
+php artisan vendor:publish --tag=poll-vote-migrations
 ```
 
 Görünüşləri dərc edin (istəyə bağlı - fərdiləşdirmə üçün):
 
 ```bash
-php artisan vendor:publish --tag=larapoll-views
+php artisan vendor:publish --tag=poll-vote-views
 ```
 
 Tərcümələri dərc edin (istəyə bağlı - fərdiləşdirmə üçün):
 
 ```bash
-php artisan vendor:publish --tag=larapoll-translations
+php artisan vendor:publish --tag=poll-vote-translations
 ```
 
 Miqrasiyaları işə salın:
@@ -49,14 +49,14 @@ php artisan migrate
 
 ## Konfiqurasiya
 
-Tam konfiqurasiya seçimləri `config/larapoll.php` faylındadır:
+Tam konfiqurasiya seçimləri `config/poll-vote.php` faylındadır:
 
 | Açar | Təsvir | Susmayagörə |
 |------|--------|-------------|
 | `user_model` | İstifadəçi model sinfi | `App\Models\User` |
-| `tables.polls` | Sorğular cədvəlinin adı | `larapoll_polls` |
-| `tables.options` | Seçimlər cədvəlinin adı | `larapoll_poll_options` |
-| `tables.votes` | Səslər cədvəlinin adı | `larapoll_poll_votes` |
+| `tables.polls` | Sorğular cədvəlinin adı | `poll_vote_polls` |
+| `tables.options` | Seçimlər cədvəlinin adı | `poll_vote_poll_options` |
+| `tables.votes` | Səslər cədvəlinin adı | `poll_vote_poll_votes` |
 | `features.anonymous_voting` | Anonim səsverməni aktiv et | `true` |
 | `features.vote_changing` | Səs dəyişdirməni aktiv et | `true` |
 | `features.vote_retraction` | Səs geri çəkməni aktiv et | `true` |
@@ -80,7 +80,7 @@ Tam konfiqurasiya seçimləri `config/larapoll.php` faylındadır:
 ### İstənilən modelə sorğu dəstəyi əlavə edin (Pollable)
 
 ```php
-use Aftandilmmd\Larapoll\Traits\HasPolls;
+use Aftandilmmd\PollVote\Traits\HasPolls;
 
 class Meeting extends Model
 {
@@ -91,7 +91,7 @@ class Meeting extends Model
 ### İstifadəçi modelinə səsvermə qabiliyyəti əlavə edin
 
 ```php
-use Aftandilmmd\Larapoll\Traits\InteractsWithPolls;
+use Aftandilmmd\PollVote\Traits\InteractsWithPolls;
 
 class User extends Authenticatable
 {
@@ -139,10 +139,10 @@ class User extends Authenticatable
 ### Fasad vasitəsilə
 
 ```php
-use Aftandilmmd\Larapoll\Facades\Larapoll;
+use Aftandilmmd\PollVote\Facades\PollVote;
 
 // Create a poll
-$poll = Larapoll::create([
+$poll = PollVote::create([
     'title' => 'Best framework?',
     'type' => 'single_choice',
     'is_anonymous' => false,
@@ -151,41 +151,41 @@ $poll = Larapoll::create([
 ], $user);
 
 // Add options
-Larapoll::addOption($poll, ['title' => 'Laravel']);
-Larapoll::addOption($poll, ['title' => 'Django']);
-Larapoll::addOption($poll, ['title' => 'Rails']);
+PollVote::addOption($poll, ['title' => 'Laravel']);
+PollVote::addOption($poll, ['title' => 'Django']);
+PollVote::addOption($poll, ['title' => 'Rails']);
 
 // Activate the poll
-Larapoll::activate($poll);
+PollVote::activate($poll);
 
 // Cast a vote
-Larapoll::castVote($poll, $user, $optionId);
+PollVote::castVote($poll, $user, $optionId);
 
 // Cast vote with comment
-Larapoll::castVote($poll, $user, $optionId, ['comment' => 'Great choice!']);
+PollVote::castVote($poll, $user, $optionId, ['comment' => 'Great choice!']);
 
 // Change a vote
-Larapoll::changeVote($poll, $user, $newOptionId);
+PollVote::changeVote($poll, $user, $newOptionId);
 
 // Retract a vote
-Larapoll::retractVote($poll, $user);
+PollVote::retractVote($poll, $user);
 
 // Get results
-$results = Larapoll::getResults($poll);
+$results = PollVote::getResults($poll);
 // [['option_id' => 1, 'title' => 'Laravel', 'votes_count' => 15, 'percentage' => 75.0], ...]
 
-$detailed = Larapoll::getDetailedResults($poll);
+$detailed = PollVote::getDetailedResults($poll);
 // ['poll' => ..., 'total_votes' => 20, 'unique_voters' => 18, 'options' => [...], 'leading_option' => ...]
 
 // Lifecycle
-Larapoll::close($poll);
-Larapoll::cancel($poll);
+PollVote::close($poll);
+PollVote::cancel($poll);
 
 // Seçimləri yenidən sırala
-Larapoll::reorderOptions($poll, [$optionId3, $optionId1, $optionId2]);
+PollVote::reorderOptions($poll, [$optionId3, $optionId1, $optionId2]);
 
 // Duplicate a poll (copies all options)
-$newPoll = Larapoll::duplicate($poll, ['title' => 'Copy of poll']);
+$newPoll = PollVote::duplicate($poll, ['title' => 'Copy of poll']);
 ```
 
 ### Fərdi Seçimlər
@@ -194,7 +194,7 @@ Səs verənlərin sorğuya öz seçimlərini əlavə etməsinə icazə verin. Ma
 
 ```php
 // Fərdi seçimlər aktiv bir sorğu yaradın (maks 5)
-$poll = Larapoll::create([
+$poll = PollVote::create([
     'title' => 'Best framework?',
     'type' => 'single_choice',
     'allow_custom_options' => true,
@@ -202,7 +202,7 @@ $poll = Larapoll::create([
 ], $user);
 
 // Fərdi seçim əlavə et (Fasad vasitəsilə)
-Larapoll::addCustomOption($poll, $user, ['title' => 'Mənim təklifim']);
+PollVote::addCustomOption($poll, $user, ['title' => 'Mənim təklifim']);
 
 // Fərdi seçim əlavə et (İstifadəçi modeli vasitəsilə)
 $user->addCustomOption($poll, ['title' => 'Mənim təklifim']);
@@ -282,10 +282,10 @@ Paket Tailwind CSS UI ilə (qaranlıq rejim dəstəklənir) istifadəyə hazır 
 ### Sorğu İdarəedici (Tam CRUD)
 
 ```blade
-<livewire:larapoll-poll-manager />
+<livewire:poll-vote-poll-manager />
 
 {{-- Scoped to a specific model --}}
-<livewire:larapoll-poll-manager :pollable="$meeting" />
+<livewire:poll-vote-poll-manager :pollable="$meeting" />
 ```
 
 Xüsusiyyətlər: Axtarış, status/növə görə süzgəc, yaratma, redaktə, silmə, aktivləşdirmə, bağlama, sorğu dublikatı.
@@ -293,14 +293,14 @@ Xüsusiyyətlər: Axtarış, status/növə görə süzgəc, yaratma, redaktə, s
 ### Sorğu Formu (Yaratma/Redaktə)
 
 ```blade
-<livewire:larapoll-poll-form />
-<livewire:larapoll-poll-form :poll-id="$poll->id" />
+<livewire:poll-vote-poll-form />
+<livewire:poll-vote-poll-form :poll-id="$poll->id" />
 ```
 
 ### Sorğu Göstərişi (Tam Görünüş)
 
 ```blade
-<livewire:larapoll-poll-display :poll="$poll" />
+<livewire:poll-vote-poll-display :poll="$poll" />
 ```
 
 Sorğu məlumatlarını, statistikanı, səsvermə interfeysini, nəticələri və səs tarixçəsi nişanlarını göstərir.
@@ -308,7 +308,7 @@ Sorğu məlumatlarını, statistikanı, səsvermə interfeysini, nəticələri v
 ### Sorğu Nəticələri (Analitika)
 
 ```blade
-<livewire:larapoll-poll-results :poll="$poll" />
+<livewire:poll-vote-poll-results :poll="$poll" />
 ```
 
 Faizlər və lider seçim ilə sütun diaqram nəticələrini göstərir.
@@ -316,7 +316,7 @@ Faizlər və lider seçim ilə sütun diaqram nəticələrini göstərir.
 ### Sorğu Səsi (Kompakt Vidcet)
 
 ```blade
-<livewire:larapoll-poll-vote :poll="$poll" />
+<livewire:poll-vote-poll-vote :poll="$poll" />
 ```
 
 Daxil edilə bilən səsvermə vidceti. Bütün 5 sorğu növünü müvafiq interfeys ilə idarə edir (radio, onay qutusu, reytinq şkalası, sıralama).
@@ -324,10 +324,10 @@ Daxil edilə bilən səsvermə vidceti. Bütün 5 sorğu növünü müvafiq inte
 ### Görünüşlərin Fərdiləşdirilməsi
 
 ```bash
-php artisan vendor:publish --tag=larapoll-views
+php artisan vendor:publish --tag=poll-vote-views
 ```
 
-Görünüşlər `resources/views/vendor/larapoll/` qovluğuna dərc ediləcək.
+Görünüşlər `resources/views/vendor/poll-vote/` qovluğuna dərc ediləcək.
 
 ---
 
@@ -336,7 +336,7 @@ Görünüşlər `resources/views/vendor/larapoll/` qovluğuna dərc ediləcək.
 Konfiqurasiyanızda API-ni aktiv edin:
 
 ```php
-// config/larapoll.php
+// config/poll-vote.php
 'api' => [
     'enabled' => true,
     'prefix' => 'api/polls',
@@ -390,25 +390,25 @@ Avtomatik sorğu həyat dövrü idarəetməsi üçün planlaşdırıcınıza əl
 
 ```php
 // routes/console.php or bootstrap/app.php
-Schedule::command('larapoll:auto-open')->everyMinute();
-Schedule::command('larapoll:auto-close')->everyMinute();
+Schedule::command('poll-vote:auto-open')->everyMinute();
+Schedule::command('poll-vote:auto-close')->everyMinute();
 ```
 
-- `larapoll:auto-open` -- `starts_at` vaxtı keçmiş qaralama sorğularını aktivləşdirir
-- `larapoll:auto-close` -- `ends_at` vaxtı keçmiş aktiv sorğuları bağlayır
+- `poll-vote:auto-open` -- `starts_at` vaxtı keçmiş qaralama sorğularını aktivləşdirir
+- `poll-vote:auto-close` -- `ends_at` vaxtı keçmiş aktiv sorğuları bağlayır
 
 ### Texniki Xidmət Əmrləri
 
 ```bash
 # Bütün seçim səs sayılarını faktiki səs qeydlərindən yenidən hesabla
-php artisan larapoll:reconcile-counts
+php artisan poll-vote:reconcile-counts
 ```
 
 ---
 
 ## Hadisələr
 
-Bütün hadisələr `config/larapoll.php` vasitəsilə konfiqurasiya edilə bilir. Söndürmək üçün `null` təyin edin.
+Bütün hadisələr `config/poll-vote.php` vasitəsilə konfiqurasiya edilə bilir. Söndürmək üçün `null` təyin edin.
 
 | Hadisə | Məlumat |
 |--------|---------|
@@ -434,14 +434,14 @@ Event::listen(VoteCast::class, function ($event) {
 Bütün səsvermə xətaları tipli istisnalar atır:
 
 ```php
-use Aftandilmmd\Larapoll\Exceptions\PollClosedException;
-use Aftandilmmd\Larapoll\Exceptions\AlreadyVotedException;
-use Aftandilmmd\Larapoll\Exceptions\InvalidSelectionException;
-use Aftandilmmd\Larapoll\Exceptions\UnauthorizedVoteException;
-use Aftandilmmd\Larapoll\Exceptions\CustomOptionException;
+use Aftandilmmd\PollVote\Exceptions\PollClosedException;
+use Aftandilmmd\PollVote\Exceptions\AlreadyVotedException;
+use Aftandilmmd\PollVote\Exceptions\InvalidSelectionException;
+use Aftandilmmd\PollVote\Exceptions\UnauthorizedVoteException;
+use Aftandilmmd\PollVote\Exceptions\CustomOptionException;
 
 try {
-    Larapoll::castVote($poll, $user, $optionId);
+    PollVote::castVote($poll, $user, $optionId);
 } catch (PollClosedException $e) {
     // Sorğu səs qəbul etmir
 } catch (AlreadyVotedException $e) {
@@ -460,8 +460,8 @@ try {
 ## Enumlar
 
 ```php
-use Aftandilmmd\Larapoll\Enums\PollType;
-use Aftandilmmd\Larapoll\Enums\PollStatus;
+use Aftandilmmd\PollVote\Enums\PollType;
+use Aftandilmmd\PollVote\Enums\PollStatus;
 
 PollType::SingleChoice->value;   // "single_choice"
 PollType::SingleChoice->label(); // "Single Choice"
@@ -508,17 +508,17 @@ Hadisə siniflərini əvəz edin və ya söndürün:
 Paket İngiliscə, Türkcə və Azərbaycanca tərcümələr daxildir. Fərdiləşdirmək və ya yeni dil əlavə etmək üçün:
 
 ```bash
-php artisan vendor:publish --tag=larapoll-translations
+php artisan vendor:publish --tag=poll-vote-translations
 ```
 
-Tərcümə faylları `lang/vendor/larapoll/` qovluğuna dərc edilir.
+Tərcümə faylları `lang/vendor/poll-vote/` qovluğuna dərc edilir.
 
 ---
 
 ## Test
 
 ```bash
-php artisan test --filter=Larapoll
+php artisan test --filter=PollVote
 ```
 
 ---

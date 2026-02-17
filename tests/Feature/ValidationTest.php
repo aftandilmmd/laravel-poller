@@ -1,9 +1,9 @@
 <?php
 
-use Aftandilmmd\Larapoll\Exceptions\InvalidSelectionException;
-use Aftandilmmd\Larapoll\Exceptions\PollException;
-use Aftandilmmd\Larapoll\Models\Poll;
-use Aftandilmmd\Larapoll\Models\PollOption;
+use Aftandilmmd\PollVote\Exceptions\InvalidSelectionException;
+use Aftandilmmd\PollVote\Exceptions\PollException;
+use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\PollVote\Models\PollOption;
 use Illuminate\Foundation\Auth\User;
 
 beforeEach(function () {
@@ -25,7 +25,7 @@ it('enforces max_votes_per_user limit', function () {
 
     $option = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    app('larapoll')->castVote($poll, $this->user, $option->id);
+    app('poll-vote')->castVote($poll, $this->user, $option->id);
 
     $voter2 = User::forceCreate([
         'name' => 'Voter 2',
@@ -34,7 +34,7 @@ it('enforces max_votes_per_user limit', function () {
     ]);
 
     // Second user can vote (different user)
-    app('larapoll')->castVote($poll, $voter2, $option->id);
+    app('poll-vote')->castVote($poll, $voter2, $option->id);
 
     expect($option->fresh()->votes_count)->toBe(2);
 });
@@ -48,7 +48,7 @@ it('rejects vote without comment when requires_comment is enabled', function () 
 
     $option = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    app('larapoll')->castVote($poll, $this->user, $option->id);
+    app('poll-vote')->castVote($poll, $this->user, $option->id);
 })->throws(InvalidSelectionException::class, 'comment is required');
 
 it('accepts vote with comment when requires_comment is enabled', function () {
@@ -58,7 +58,7 @@ it('accepts vote with comment when requires_comment is enabled', function () {
 
     $option = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    $votes = app('larapoll')->castVote($poll, $this->user, $option->id, ['comment' => 'My comment']);
+    $votes = app('poll-vote')->castVote($poll, $this->user, $option->id, ['comment' => 'My comment']);
 
     expect($votes->first()->comment)->toBe('My comment');
 });
@@ -72,7 +72,7 @@ it('rejects rating outside configured range', function () {
 
     $option = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    app('larapoll')->castVote($poll, $this->user, $option->id, ['rating' => 10]);
+    app('poll-vote')->castVote($poll, $this->user, $option->id, ['rating' => 10]);
 })->throws(InvalidSelectionException::class, 'Rating must be between');
 
 it('accepts rating within configured range', function () {
@@ -82,14 +82,14 @@ it('accepts rating within configured range', function () {
 
     $option = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    $votes = app('larapoll')->castVote($poll, $this->user, $option->id, ['rating' => 3]);
+    $votes = app('poll-vote')->castVote($poll, $this->user, $option->id, ['rating' => 3]);
 
     expect($votes->first()->rating)->toBe(3);
 });
 
 it('respects custom rating range from config', function () {
-    config()->set('larapoll.rating.min', 1);
-    config()->set('larapoll.rating.max', 10);
+    config()->set('poll-vote.rating.min', 1);
+    config()->set('poll-vote.rating.max', 10);
 
     $poll = Poll::factory()->active()->rating()->create([
         'created_by' => $this->user->id,
@@ -97,7 +97,7 @@ it('respects custom rating range from config', function () {
 
     $option = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    $votes = app('larapoll')->castVote($poll, $this->user, $option->id, ['rating' => 8]);
+    $votes = app('poll-vote')->castVote($poll, $this->user, $option->id, ['rating' => 8]);
 
     expect($votes->first()->rating)->toBe(8);
 });
@@ -110,9 +110,9 @@ it('prevents type change on poll with votes', function () {
     ]);
 
     $option = PollOption::factory()->create(['poll_id' => $poll->id]);
-    app('larapoll')->castVote($poll, $this->user, $option->id);
+    app('poll-vote')->castVote($poll, $this->user, $option->id);
 
-    app('larapoll')->update($poll, ['type' => 'multiple_choice']);
+    app('poll-vote')->update($poll, ['type' => 'multiple_choice']);
 })->throws(PollException::class, 'Cannot change poll type');
 
 it('allows type change on poll without votes', function () {
@@ -120,7 +120,7 @@ it('allows type change on poll without votes', function () {
         'created_by' => $this->user->id,
     ]);
 
-    $updated = app('larapoll')->update($poll, ['type' => 'multiple_choice']);
+    $updated = app('poll-vote')->update($poll, ['type' => 'multiple_choice']);
 
     expect($updated->type->value)->toBe('multiple_choice');
 });
@@ -137,7 +137,7 @@ it('rejects too many selections on multiple choice', function () {
     $opt2 = PollOption::factory()->create(['poll_id' => $poll->id]);
     $opt3 = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    app('larapoll')->castVote($poll, $this->user, [$opt1->id, $opt2->id, $opt3->id]);
+    app('poll-vote')->castVote($poll, $this->user, [$opt1->id, $opt2->id, $opt3->id]);
 })->throws(InvalidSelectionException::class, 'At most 2 options');
 
 it('rejects options from different poll', function () {
@@ -148,7 +148,7 @@ it('rejects options from different poll', function () {
     $otherPoll = Poll::factory()->active()->create(['created_by' => $this->user->id]);
     $foreignOption = PollOption::factory()->create(['poll_id' => $otherPoll->id]);
 
-    app('larapoll')->castVote($poll, $this->user, $foreignOption->id);
+    app('poll-vote')->castVote($poll, $this->user, $foreignOption->id);
 })->throws(InvalidSelectionException::class, 'do not belong to this poll');
 
 // ── Vote change validation ─────────────────────────────────────────
@@ -161,8 +161,8 @@ it('requires comment on vote change when poll requires comment', function () {
     $optA = PollOption::factory()->create(['poll_id' => $poll->id]);
     $optB = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    app('larapoll')->castVote($poll, $this->user, $optA->id, ['comment' => 'First comment']);
-    app('larapoll')->changeVote($poll, $this->user, $optB->id);
+    app('poll-vote')->castVote($poll, $this->user, $optA->id, ['comment' => 'First comment']);
+    app('poll-vote')->changeVote($poll, $this->user, $optB->id);
 })->throws(InvalidSelectionException::class, 'comment is required');
 
 // ── Ranked voting ──────────────────────────────────────────────────
@@ -177,7 +177,7 @@ it('casts ranked votes with rank values', function () {
     $opt1 = PollOption::factory()->create(['poll_id' => $poll->id]);
     $opt2 = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    $votes = app('larapoll')->castVote($poll, $this->user, [$opt1->id, $opt2->id], [
+    $votes = app('poll-vote')->castVote($poll, $this->user, [$opt1->id, $opt2->id], [
         'ranks' => [1, 2],
     ]);
 

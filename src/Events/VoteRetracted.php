@@ -1,8 +1,8 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Events;
+namespace Aftandilmmd\PollVote\Events;
 
-use Aftandilmmd\Larapoll\Models\Poll;
+use Aftandilmmd\PollVote\Models\Poll;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;

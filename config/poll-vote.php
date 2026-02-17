@@ -23,9 +23,9 @@ return [
     |
     */
     'tables' => [
-        'polls' => 'larapoll_polls',
-        'options' => 'larapoll_poll_options',
-        'votes' => 'larapoll_poll_votes',
+        'polls' => 'poll_vote_polls',
+        'options' => 'poll_vote_poll_options',
+        'votes' => 'poll_vote_poll_votes',
     ],
 
     /*
@@ -38,9 +38,9 @@ return [
     |
     */
     'models' => [
-        'poll' => \Aftandilmmd\Larapoll\Models\Poll::class,
-        'option' => \Aftandilmmd\Larapoll\Models\PollOption::class,
-        'vote' => \Aftandilmmd\Larapoll\Models\PollVote::class,
+        'poll' => \Aftandilmmd\PollVote\Models\Poll::class,
+        'option' => \Aftandilmmd\PollVote\Models\PollOption::class,
+        'vote' => \Aftandilmmd\PollVote\Models\PollVote::class,
     ],
 
     /*
@@ -117,13 +117,13 @@ return [
     |
     */
     'events' => [
-        'poll_created' => \Aftandilmmd\Larapoll\Events\PollCreated::class,
-        'poll_activated' => \Aftandilmmd\Larapoll\Events\PollActivated::class,
-        'poll_closed' => \Aftandilmmd\Larapoll\Events\PollClosed::class,
-        'poll_cancelled' => \Aftandilmmd\Larapoll\Events\PollCancelled::class,
-        'vote_cast' => \Aftandilmmd\Larapoll\Events\VoteCast::class,
-        'vote_changed' => \Aftandilmmd\Larapoll\Events\VoteChanged::class,
-        'vote_retracted' => \Aftandilmmd\Larapoll\Events\VoteRetracted::class,
+        'poll_created' => \Aftandilmmd\PollVote\Events\PollCreated::class,
+        'poll_activated' => \Aftandilmmd\PollVote\Events\PollActivated::class,
+        'poll_closed' => \Aftandilmmd\PollVote\Events\PollClosed::class,
+        'poll_cancelled' => \Aftandilmmd\PollVote\Events\PollCancelled::class,
+        'vote_cast' => \Aftandilmmd\PollVote\Events\VoteCast::class,
+        'vote_changed' => \Aftandilmmd\PollVote\Events\VoteChanged::class,
+        'vote_retracted' => \Aftandilmmd\PollVote\Events\VoteRetracted::class,
     ],
 
     /*

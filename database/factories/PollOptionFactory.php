@@ -1,9 +1,9 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Database\Factories;
+namespace Aftandilmmd\PollVote\Database\Factories;
 
-use Aftandilmmd\Larapoll\Models\Poll;
-use Aftandilmmd\Larapoll\Models\PollOption;
+use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\PollVote\Models\PollOption;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /** @extends Factory<PollOption> */

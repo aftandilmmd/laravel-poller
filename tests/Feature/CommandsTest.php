@@ -1,9 +1,9 @@
 <?php
 
-use Aftandilmmd\Larapoll\Enums\PollStatus;
-use Aftandilmmd\Larapoll\Models\Poll;
-use Aftandilmmd\Larapoll\Models\PollOption;
-use Aftandilmmd\Larapoll\Models\PollVote;
+use Aftandilmmd\PollVote\Enums\PollStatus;
+use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\PollVote\Models\PollOption;
+use Aftandilmmd\PollVote\Models\PollVote;
 use Illuminate\Foundation\Auth\User;
 
 beforeEach(function () {
@@ -29,7 +29,7 @@ it('activates polls whose start time has passed', function () {
         'starts_at' => now()->addDay(),
     ]);
 
-    $this->artisan('larapoll:auto-open')
+    $this->artisan('poll-vote:auto-open')
         ->expectsOutputToContain('Activated 1 poll(s)')
         ->assertSuccessful();
 
@@ -37,7 +37,7 @@ it('activates polls whose start time has passed', function () {
 });
 
 it('does not activate when auto_open is disabled', function () {
-    config()->set('larapoll.features.auto_open', false);
+    config()->set('poll-vote.features.auto_open', false);
 
     Poll::factory()->create([
         'created_by' => $this->user->id,
@@ -45,7 +45,7 @@ it('does not activate when auto_open is disabled', function () {
         'starts_at' => now()->subMinute(),
     ]);
 
-    $this->artisan('larapoll:auto-open')
+    $this->artisan('poll-vote:auto-open')
         ->expectsOutputToContain('disabled')
         ->assertSuccessful();
 
@@ -65,7 +65,7 @@ it('closes polls whose end time has passed', function () {
         'ends_at' => now()->addDay(),
     ]);
 
-    $this->artisan('larapoll:auto-close')
+    $this->artisan('poll-vote:auto-close')
         ->expectsOutputToContain('Closed 1 poll(s)')
         ->assertSuccessful();
 
@@ -73,14 +73,14 @@ it('closes polls whose end time has passed', function () {
 });
 
 it('does not close when auto_close is disabled', function () {
-    config()->set('larapoll.features.auto_close', false);
+    config()->set('poll-vote.features.auto_close', false);
 
     Poll::factory()->active()->create([
         'created_by' => $this->user->id,
         'ends_at' => now()->subMinute(),
     ]);
 
-    $this->artisan('larapoll:auto-close')
+    $this->artisan('poll-vote:auto-close')
         ->expectsOutputToContain('disabled')
         ->assertSuccessful();
 });
@@ -115,7 +115,7 @@ it('reconciles vote counts from actual vote records', function () {
         ]);
     }
 
-    $this->artisan('larapoll:reconcile-counts')
+    $this->artisan('poll-vote:reconcile-counts')
         ->expectsOutputToContain('Reconciled vote counts')
         ->assertSuccessful();
 

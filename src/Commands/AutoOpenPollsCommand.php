@@ -1,27 +1,27 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Commands;
+namespace Aftandilmmd\PollVote\Commands;
 
-use Aftandilmmd\Larapoll\Enums\PollStatus;
-use Aftandilmmd\Larapoll\Models\Poll;
+use Aftandilmmd\PollVote\Enums\PollStatus;
+use Aftandilmmd\PollVote\Models\Poll;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 
 class AutoOpenPollsCommand extends Command
 {
-    protected $signature = 'larapoll:auto-open';
+    protected $signature = 'poll-vote:auto-open';
 
     protected $description = 'Activate polls whose scheduled start time has passed';
 
     public function handle(): int
     {
-        if (! config('larapoll.features.auto_open', true)) {
+        if (! config('poll-vote.features.auto_open', true)) {
             $this->info('Auto-open feature is disabled.');
 
             return self::SUCCESS;
         }
 
-        $pollModel = config('larapoll.models.poll', Poll::class);
+        $pollModel = config('poll-vote.models.poll', Poll::class);
 
         $polls = $pollModel::query()
             ->where('status', PollStatus::Draft)
@@ -29,7 +29,7 @@ class AutoOpenPollsCommand extends Command
             ->where('starts_at', '<=', now())
             ->get();
 
-        $service = App::make('larapoll');
+        $service = App::make('poll-vote');
         $count = 0;
 
         foreach ($polls as $poll) {

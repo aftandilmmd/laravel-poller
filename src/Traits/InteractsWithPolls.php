@@ -1,10 +1,10 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Traits;
+namespace Aftandilmmd\PollVote\Traits;
 
-use Aftandilmmd\Larapoll\Models\Poll;
-use Aftandilmmd\Larapoll\Models\PollOption;
-use Aftandilmmd\Larapoll\Models\PollVote;
+use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\PollVote\Models\PollOption;
+use Aftandilmmd\PollVote\Models\PollVote;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
@@ -13,12 +13,12 @@ trait InteractsWithPolls
 {
     public function pollVotes(): HasMany
     {
-        return $this->hasMany(config('larapoll.models.vote', PollVote::class), 'user_id');
+        return $this->hasMany(config('poll-vote.models.vote', PollVote::class), 'user_id');
     }
 
     public function createdPolls(): HasMany
     {
-        return $this->hasMany(config('larapoll.models.poll', Poll::class), 'created_by');
+        return $this->hasMany(config('poll-vote.models.poll', Poll::class), 'created_by');
     }
 
     public function canCreatePoll(): bool
@@ -62,12 +62,12 @@ trait InteractsWithPolls
      */
     public function vote(Poll $poll, PollOption|int|array $options, array $extra = []): Collection
     {
-        return App::make('larapoll')->castVote($poll, $this, $options, $extra);
+        return App::make('poll-vote')->castVote($poll, $this, $options, $extra);
     }
 
     public function retractVote(Poll $poll): void
     {
-        App::make('larapoll')->retractVote($poll, $this);
+        App::make('poll-vote')->retractVote($poll, $this);
     }
 
     /**
@@ -76,11 +76,11 @@ trait InteractsWithPolls
      */
     public function changeVote(Poll $poll, PollOption|int|array $options, array $extra = []): Collection
     {
-        return App::make('larapoll')->changeVote($poll, $this, $options, $extra);
+        return App::make('poll-vote')->changeVote($poll, $this, $options, $extra);
     }
 
     public function addCustomOption(Poll $poll, array $attributes): PollOption
     {
-        return App::make('larapoll')->addCustomOption($poll, $this, $attributes);
+        return App::make('poll-vote')->addCustomOption($poll, $this, $attributes);
     }
 }

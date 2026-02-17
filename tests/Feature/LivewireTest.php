@@ -1,12 +1,12 @@
 <?php
 
-use Aftandilmmd\Larapoll\Livewire\PollDisplay;
-use Aftandilmmd\Larapoll\Livewire\PollForm;
-use Aftandilmmd\Larapoll\Livewire\PollManager;
-use Aftandilmmd\Larapoll\Livewire\PollResults;
-use Aftandilmmd\Larapoll\Livewire\PollVote;
-use Aftandilmmd\Larapoll\Models\Poll;
-use Aftandilmmd\Larapoll\Models\PollOption;
+use Aftandilmmd\PollVote\Livewire\PollDisplay;
+use Aftandilmmd\PollVote\Livewire\PollForm;
+use Aftandilmmd\PollVote\Livewire\PollManager;
+use Aftandilmmd\PollVote\Livewire\PollResults;
+use Aftandilmmd\PollVote\Livewire\PollVote;
+use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\PollVote\Models\PollOption;
 use Illuminate\Foundation\Auth\User;
 use Livewire\Livewire;
 
@@ -283,7 +283,7 @@ it('retracts a vote via component', function () {
     $poll = Poll::factory()->active()->singleChoice()->create(['created_by' => $this->user->id]);
     $option = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    app('larapoll')->castVote($poll, $this->user, $option->id);
+    app('poll-vote')->castVote($poll, $this->user, $option->id);
 
     Livewire::actingAs($this->user)
         ->test(PollVote::class, ['poll' => $poll])
@@ -318,7 +318,7 @@ it('shows error for empty custom option title', function () {
         ->test(PollVote::class, ['poll' => $poll])
         ->set('customOptionTitle', '')
         ->call('addCustomOption')
-        ->assertSet('errorMessage', __('larapoll::messages.please_enter_option_title'));
+        ->assertSet('errorMessage', __('poll-vote::messages.please_enter_option_title'));
 });
 
 it('toggles results visibility', function () {

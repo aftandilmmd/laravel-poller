@@ -1,6 +1,6 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Exceptions;
+namespace Aftandilmmd\PollVote\Exceptions;
 
 class UnauthorizedVoteException extends PollException
 {

@@ -1,6 +1,6 @@
 **English** | [Türkçe](README.tr.md) | [Azərbaycanca](README.az.md)
 
-# Larapoll
+# Laravel Poll Vote
 
 A powerful, flexible poll and voting package for Laravel. Supports 5 poll types, anonymous voting, scheduled polls, vote changing, and both Livewire components and a RESTful API.
 
@@ -12,7 +12,7 @@ A powerful, flexible poll and voting package for Laravel. Supports 5 poll types,
 ## Installation
 
 ```bash
-composer require aftandilmmd/larapoll
+composer require aftandilmmd/laravel-poll-vote
 ```
 
 The service provider and facade are auto-discovered.
@@ -20,25 +20,25 @@ The service provider and facade are auto-discovered.
 Publish the config file:
 
 ```bash
-php artisan vendor:publish --tag=larapoll-config
+php artisan vendor:publish --tag=poll-vote-config
 ```
 
 Publish migrations (optional - migrations run automatically):
 
 ```bash
-php artisan vendor:publish --tag=larapoll-migrations
+php artisan vendor:publish --tag=poll-vote-migrations
 ```
 
 Publish views (optional - for customization):
 
 ```bash
-php artisan vendor:publish --tag=larapoll-views
+php artisan vendor:publish --tag=poll-vote-views
 ```
 
 Publish translations (optional - for customization):
 
 ```bash
-php artisan vendor:publish --tag=larapoll-translations
+php artisan vendor:publish --tag=poll-vote-translations
 ```
 
 Run migrations:
@@ -49,14 +49,14 @@ php artisan migrate
 
 ## Configuration
 
-Full config options in `config/larapoll.php`:
+Full config options in `config/poll-vote.php`:
 
 | Key | Description | Default |
 |-----|-------------|---------|
 | `user_model` | Your User model class | `App\Models\User` |
-| `tables.polls` | Polls table name | `larapoll_polls` |
-| `tables.options` | Options table name | `larapoll_poll_options` |
-| `tables.votes` | Votes table name | `larapoll_poll_votes` |
+| `tables.polls` | Polls table name | `poll_vote_polls` |
+| `tables.options` | Options table name | `poll_vote_poll_options` |
+| `tables.votes` | Votes table name | `poll_vote_poll_votes` |
 | `features.anonymous_voting` | Enable anonymous voting | `true` |
 | `features.vote_changing` | Enable vote changing | `true` |
 | `features.vote_retraction` | Enable vote retraction | `true` |
@@ -80,7 +80,7 @@ Full config options in `config/larapoll.php`:
 ### Add poll support to any model (Pollable)
 
 ```php
-use Aftandilmmd\Larapoll\Traits\HasPolls;
+use Aftandilmmd\PollVote\Traits\HasPolls;
 
 class Meeting extends Model
 {
@@ -91,7 +91,7 @@ class Meeting extends Model
 ### Add voting capabilities to User model
 
 ```php
-use Aftandilmmd\Larapoll\Traits\InteractsWithPolls;
+use Aftandilmmd\PollVote\Traits\InteractsWithPolls;
 
 class User extends Authenticatable
 {
@@ -139,10 +139,10 @@ class User extends Authenticatable
 ### Via Facade
 
 ```php
-use Aftandilmmd\Larapoll\Facades\Larapoll;
+use Aftandilmmd\PollVote\Facades\PollVote;
 
 // Create a poll
-$poll = Larapoll::create([
+$poll = PollVote::create([
     'title' => 'Best framework?',
     'type' => 'single_choice',
     'is_anonymous' => false,
@@ -151,41 +151,41 @@ $poll = Larapoll::create([
 ], $user);
 
 // Add options
-Larapoll::addOption($poll, ['title' => 'Laravel']);
-Larapoll::addOption($poll, ['title' => 'Django']);
-Larapoll::addOption($poll, ['title' => 'Rails']);
+PollVote::addOption($poll, ['title' => 'Laravel']);
+PollVote::addOption($poll, ['title' => 'Django']);
+PollVote::addOption($poll, ['title' => 'Rails']);
 
 // Activate the poll
-Larapoll::activate($poll);
+PollVote::activate($poll);
 
 // Cast a vote
-Larapoll::castVote($poll, $user, $optionId);
+PollVote::castVote($poll, $user, $optionId);
 
 // Cast vote with comment
-Larapoll::castVote($poll, $user, $optionId, ['comment' => 'Great choice!']);
+PollVote::castVote($poll, $user, $optionId, ['comment' => 'Great choice!']);
 
 // Change a vote
-Larapoll::changeVote($poll, $user, $newOptionId);
+PollVote::changeVote($poll, $user, $newOptionId);
 
 // Retract a vote
-Larapoll::retractVote($poll, $user);
+PollVote::retractVote($poll, $user);
 
 // Get results
-$results = Larapoll::getResults($poll);
+$results = PollVote::getResults($poll);
 // [['option_id' => 1, 'title' => 'Laravel', 'votes_count' => 15, 'percentage' => 75.0], ...]
 
-$detailed = Larapoll::getDetailedResults($poll);
+$detailed = PollVote::getDetailedResults($poll);
 // ['poll' => ..., 'total_votes' => 20, 'unique_voters' => 18, 'options' => [...], 'leading_option' => ...]
 
 // Lifecycle
-Larapoll::close($poll);
-Larapoll::cancel($poll);
+PollVote::close($poll);
+PollVote::cancel($poll);
 
 // Reorder options
-Larapoll::reorderOptions($poll, [$optionId3, $optionId1, $optionId2]);
+PollVote::reorderOptions($poll, [$optionId3, $optionId1, $optionId2]);
 
 // Duplicate a poll (copies all options)
-$newPoll = Larapoll::duplicate($poll, ['title' => 'Copy of poll']);
+$newPoll = PollVote::duplicate($poll, ['title' => 'Copy of poll']);
 ```
 
 ### Custom Options
@@ -194,7 +194,7 @@ Allow voters to add their own options to a poll. Control the maximum number and 
 
 ```php
 // Create a poll with custom options enabled (max 5)
-$poll = Larapoll::create([
+$poll = PollVote::create([
     'title' => 'Best framework?',
     'type' => 'single_choice',
     'allow_custom_options' => true,
@@ -202,7 +202,7 @@ $poll = Larapoll::create([
 ], $user);
 
 // Add a custom option (via Facade)
-Larapoll::addCustomOption($poll, $user, ['title' => 'My suggestion']);
+PollVote::addCustomOption($poll, $user, ['title' => 'My suggestion']);
 
 // Add a custom option (via User model)
 $user->addCustomOption($poll, ['title' => 'My suggestion']);
@@ -282,10 +282,10 @@ The package includes 5 ready-to-use Livewire components with full Tailwind CSS U
 ### Poll Manager (Full CRUD)
 
 ```blade
-<livewire:larapoll-poll-manager />
+<livewire:poll-vote-poll-manager />
 
 {{-- Scoped to a specific model --}}
-<livewire:larapoll-poll-manager :pollable="$meeting" />
+<livewire:poll-vote-poll-manager :pollable="$meeting" />
 ```
 
 Features: Search, filter by status/type, create, edit, delete, activate, close, duplicate polls.
@@ -293,14 +293,14 @@ Features: Search, filter by status/type, create, edit, delete, activate, close, 
 ### Poll Form (Create/Edit)
 
 ```blade
-<livewire:larapoll-poll-form />
-<livewire:larapoll-poll-form :poll-id="$poll->id" />
+<livewire:poll-vote-poll-form />
+<livewire:poll-vote-poll-form :poll-id="$poll->id" />
 ```
 
 ### Poll Display (Full View)
 
 ```blade
-<livewire:larapoll-poll-display :poll="$poll" />
+<livewire:poll-vote-poll-display :poll="$poll" />
 ```
 
 Shows poll info, stats, voting UI, results, and vote history tabs.
@@ -308,7 +308,7 @@ Shows poll info, stats, voting UI, results, and vote history tabs.
 ### Poll Results (Analytics)
 
 ```blade
-<livewire:larapoll-poll-results :poll="$poll" />
+<livewire:poll-vote-poll-results :poll="$poll" />
 ```
 
 Displays bar chart results with percentages and leading option.
@@ -316,7 +316,7 @@ Displays bar chart results with percentages and leading option.
 ### Poll Vote (Compact Widget)
 
 ```blade
-<livewire:larapoll-poll-vote :poll="$poll" />
+<livewire:poll-vote-poll-vote :poll="$poll" />
 ```
 
 Embeddable voting widget. Handles all 5 poll types with the appropriate UI (radio, checkbox, rating scale, ranking).
@@ -324,10 +324,10 @@ Embeddable voting widget. Handles all 5 poll types with the appropriate UI (radi
 ### Customizing Views
 
 ```bash
-php artisan vendor:publish --tag=larapoll-views
+php artisan vendor:publish --tag=poll-vote-views
 ```
 
-Views will be published to `resources/views/vendor/larapoll/`.
+Views will be published to `resources/views/vendor/poll-vote/`.
 
 ---
 
@@ -336,7 +336,7 @@ Views will be published to `resources/views/vendor/larapoll/`.
 Enable the API in your config:
 
 ```php
-// config/larapoll.php
+// config/poll-vote.php
 'api' => [
     'enabled' => true,
     'prefix' => 'api/polls',
@@ -390,25 +390,25 @@ Add to your scheduler for automatic poll lifecycle management:
 
 ```php
 // routes/console.php or bootstrap/app.php
-Schedule::command('larapoll:auto-open')->everyMinute();
-Schedule::command('larapoll:auto-close')->everyMinute();
+Schedule::command('poll-vote:auto-open')->everyMinute();
+Schedule::command('poll-vote:auto-close')->everyMinute();
 ```
 
-- `larapoll:auto-open` -- Activates draft polls whose `starts_at` has passed
-- `larapoll:auto-close` -- Closes active polls whose `ends_at` has passed
+- `poll-vote:auto-open` -- Activates draft polls whose `starts_at` has passed
+- `poll-vote:auto-close` -- Closes active polls whose `ends_at` has passed
 
 ### Maintenance Commands
 
 ```bash
 # Recalculate all option vote counts from actual vote records
-php artisan larapoll:reconcile-counts
+php artisan poll-vote:reconcile-counts
 ```
 
 ---
 
 ## Events
 
-All events are configurable via `config/larapoll.php`. Set to `null` to disable.
+All events are configurable via `config/poll-vote.php`. Set to `null` to disable.
 
 | Event | Payload |
 |-------|---------|
@@ -434,14 +434,14 @@ Event::listen(VoteCast::class, function ($event) {
 All voting errors throw typed exceptions:
 
 ```php
-use Aftandilmmd\Larapoll\Exceptions\PollClosedException;
-use Aftandilmmd\Larapoll\Exceptions\AlreadyVotedException;
-use Aftandilmmd\Larapoll\Exceptions\InvalidSelectionException;
-use Aftandilmmd\Larapoll\Exceptions\UnauthorizedVoteException;
-use Aftandilmmd\Larapoll\Exceptions\CustomOptionException;
+use Aftandilmmd\PollVote\Exceptions\PollClosedException;
+use Aftandilmmd\PollVote\Exceptions\AlreadyVotedException;
+use Aftandilmmd\PollVote\Exceptions\InvalidSelectionException;
+use Aftandilmmd\PollVote\Exceptions\UnauthorizedVoteException;
+use Aftandilmmd\PollVote\Exceptions\CustomOptionException;
 
 try {
-    Larapoll::castVote($poll, $user, $optionId);
+    PollVote::castVote($poll, $user, $optionId);
 } catch (PollClosedException $e) {
     // Poll is not accepting votes
 } catch (AlreadyVotedException $e) {
@@ -460,8 +460,8 @@ try {
 ## Enums
 
 ```php
-use Aftandilmmd\Larapoll\Enums\PollType;
-use Aftandilmmd\Larapoll\Enums\PollStatus;
+use Aftandilmmd\PollVote\Enums\PollType;
+use Aftandilmmd\PollVote\Enums\PollStatus;
 
 PollType::SingleChoice->value;   // "single_choice"
 PollType::SingleChoice->label(); // "Single Choice"
@@ -508,17 +508,17 @@ Replace event classes or disable them:
 The package includes translations for English, Turkish, and Azerbaijani. To customize or add new languages:
 
 ```bash
-php artisan vendor:publish --tag=larapoll-translations
+php artisan vendor:publish --tag=poll-vote-translations
 ```
 
-Translation files will be published to `lang/vendor/larapoll/`.
+Translation files will be published to `lang/vendor/poll-vote/`.
 
 ---
 
 ## Testing
 
 ```bash
-php artisan test --filter=Larapoll
+php artisan test --filter=PollVote
 ```
 
 ---

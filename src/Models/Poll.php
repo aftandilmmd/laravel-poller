@@ -1,9 +1,9 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Models;
+namespace Aftandilmmd\PollVote\Models;
 
-use Aftandilmmd\Larapoll\Enums\PollStatus;
-use Aftandilmmd\Larapoll\Enums\PollType;
+use Aftandilmmd\PollVote\Enums\PollStatus;
+use Aftandilmmd\PollVote\Enums\PollType;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,9 +19,9 @@ class Poll extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected static function newFactory(): \Aftandilmmd\Larapoll\Database\Factories\PollFactory
+    protected static function newFactory(): \Aftandilmmd\PollVote\Database\Factories\PollFactory
     {
-        return \Aftandilmmd\Larapoll\Database\Factories\PollFactory::new();
+        return \Aftandilmmd\PollVote\Database\Factories\PollFactory::new();
     }
 
     protected $fillable = [
@@ -53,7 +53,7 @@ class Poll extends Model
 
     public function getTable(): string
     {
-        return config('larapoll.tables.polls', 'larapoll_polls');
+        return config('poll-vote.tables.polls', 'poll_vote_polls');
     }
 
     protected function casts(): array
@@ -82,17 +82,17 @@ class Poll extends Model
 
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(config('larapoll.user_model', \App\Models\User::class), 'created_by');
+        return $this->belongsTo(config('poll-vote.user_model', \App\Models\User::class), 'created_by');
     }
 
     public function options(): HasMany
     {
-        return $this->hasMany(config('larapoll.models.option', PollOption::class))->orderBy('sort_order');
+        return $this->hasMany(config('poll-vote.models.option', PollOption::class))->orderBy('sort_order');
     }
 
     public function votes(): HasMany
     {
-        return $this->hasMany(config('larapoll.models.vote', PollVote::class));
+        return $this->hasMany(config('poll-vote.models.vote', PollVote::class));
     }
 
     // ── Scopes ─────────────────────────────────────────────────────
@@ -303,7 +303,7 @@ class Poll extends Model
 
     public function reorderOptions(array $optionIds): self
     {
-        app('larapoll')->reorderOptions($this, $optionIds);
+        app('poll-vote')->reorderOptions($this, $optionIds);
 
         return $this;
     }
@@ -348,12 +348,12 @@ class Poll extends Model
 
     public function allowsCustomOptions(): bool
     {
-        return $this->allow_custom_options && config('larapoll.features.custom_options', true);
+        return $this->allow_custom_options && config('poll-vote.features.custom_options', true);
     }
 
     public function customOptions(): HasMany
     {
-        return $this->hasMany(config('larapoll.models.option', PollOption::class))->where('is_custom', true);
+        return $this->hasMany(config('poll-vote.models.option', PollOption::class))->where('is_custom', true);
     }
 
     public function getCustomOptionCount(): int
@@ -389,7 +389,7 @@ class Poll extends Model
 
     protected function fireEvent(string $key, mixed ...$args): void
     {
-        $eventClass = config("larapoll.events.{$key}");
+        $eventClass = config("poll-vote.events.{$key}");
 
         if ($eventClass) {
             event(new $eventClass(...$args));

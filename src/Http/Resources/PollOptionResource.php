@@ -1,6 +1,6 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Http\Resources;
+namespace Aftandilmmd\PollVote\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;

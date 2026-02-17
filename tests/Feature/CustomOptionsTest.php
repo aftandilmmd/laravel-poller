@@ -1,9 +1,9 @@
 <?php
 
-use Aftandilmmd\Larapoll\Exceptions\CustomOptionException;
-use Aftandilmmd\Larapoll\Exceptions\PollClosedException;
-use Aftandilmmd\Larapoll\Models\Poll;
-use Aftandilmmd\Larapoll\Models\PollOption;
+use Aftandilmmd\PollVote\Exceptions\CustomOptionException;
+use Aftandilmmd\PollVote\Exceptions\PollClosedException;
+use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\PollVote\Models\PollOption;
 use Illuminate\Foundation\Auth\User;
 
 beforeEach(function () {
@@ -25,7 +25,7 @@ beforeEach(function () {
 });
 
 it('adds a custom option to a poll', function () {
-    $option = app('larapoll')->addCustomOption($this->poll, $this->user, ['title' => 'My Custom Option']);
+    $option = app('poll-vote')->addCustomOption($this->poll, $this->user, ['title' => 'My Custom Option']);
 
     expect($option)->toBeInstanceOf(PollOption::class);
     expect($option->title)->toBe('My Custom Option');
@@ -40,19 +40,19 @@ it('prevents custom options when not allowed on poll', function () {
         'allow_custom_options' => false,
     ]);
 
-    app('larapoll')->addCustomOption($poll, $this->user, ['title' => 'Should fail']);
+    app('poll-vote')->addCustomOption($poll, $this->user, ['title' => 'Should fail']);
 })->throws(CustomOptionException::class, 'Custom options are not allowed for this poll.');
 
 it('prevents custom options when feature is disabled globally', function () {
-    config()->set('larapoll.features.custom_options', false);
+    config()->set('poll-vote.features.custom_options', false);
 
-    app('larapoll')->addCustomOption($this->poll, $this->user, ['title' => 'Should fail']);
+    app('poll-vote')->addCustomOption($this->poll, $this->user, ['title' => 'Should fail']);
 })->throws(CustomOptionException::class, 'Custom options are not allowed for this poll.');
 
 it('prevents custom options on closed poll', function () {
     $this->poll->close();
 
-    app('larapoll')->addCustomOption($this->poll, $this->user, ['title' => 'Should fail']);
+    app('poll-vote')->addCustomOption($this->poll, $this->user, ['title' => 'Should fail']);
 })->throws(PollClosedException::class);
 
 it('enforces max custom options limit', function () {
@@ -60,9 +60,9 @@ it('enforces max custom options limit', function () {
         'created_by' => $this->user->id,
     ]);
 
-    app('larapoll')->addCustomOption($poll, $this->user, ['title' => 'Custom 1']);
-    app('larapoll')->addCustomOption($poll, $this->user, ['title' => 'Custom 2']);
-    app('larapoll')->addCustomOption($poll, $this->user, ['title' => 'Custom 3']);
+    app('poll-vote')->addCustomOption($poll, $this->user, ['title' => 'Custom 1']);
+    app('poll-vote')->addCustomOption($poll, $this->user, ['title' => 'Custom 2']);
+    app('poll-vote')->addCustomOption($poll, $this->user, ['title' => 'Custom 3']);
 })->throws(CustomOptionException::class, 'maximum of 2 custom options');
 
 it('allows unlimited custom options when max is null', function () {
@@ -71,14 +71,14 @@ it('allows unlimited custom options when max is null', function () {
     ]);
 
     for ($i = 1; $i <= 10; $i++) {
-        app('larapoll')->addCustomOption($poll, $this->user, ['title' => "Custom {$i}"]);
+        app('poll-vote')->addCustomOption($poll, $this->user, ['title' => "Custom {$i}"]);
     }
 
     expect($poll->customOptions()->count())->toBe(10);
 });
 
 it('auto assigns sort order to custom options', function () {
-    $option = app('larapoll')->addCustomOption($this->poll, $this->user, ['title' => 'Custom']);
+    $option = app('poll-vote')->addCustomOption($this->poll, $this->user, ['title' => 'Custom']);
 
     expect($option->sort_order)->toBe(1);
 });
@@ -91,8 +91,8 @@ it('counts only custom options toward the limit', function () {
     PollOption::factory()->create(['poll_id' => $poll->id, 'title' => 'Regular 1']);
     PollOption::factory()->create(['poll_id' => $poll->id, 'title' => 'Regular 2']);
 
-    app('larapoll')->addCustomOption($poll, $this->user, ['title' => 'Custom 1']);
-    app('larapoll')->addCustomOption($poll, $this->user, ['title' => 'Custom 2']);
+    app('poll-vote')->addCustomOption($poll, $this->user, ['title' => 'Custom 1']);
+    app('poll-vote')->addCustomOption($poll, $this->user, ['title' => 'Custom 2']);
 
     expect($poll->options()->count())->toBe(4);
     expect($poll->customOptions()->count())->toBe(2);

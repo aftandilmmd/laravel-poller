@@ -1,10 +1,10 @@
 <?php
 
-use Aftandilmmd\Larapoll\Exceptions\AlreadyVotedException;
-use Aftandilmmd\Larapoll\Exceptions\InvalidSelectionException;
-use Aftandilmmd\Larapoll\Exceptions\PollClosedException;
-use Aftandilmmd\Larapoll\Models\Poll;
-use Aftandilmmd\Larapoll\Models\PollOption;
+use Aftandilmmd\PollVote\Exceptions\AlreadyVotedException;
+use Aftandilmmd\PollVote\Exceptions\InvalidSelectionException;
+use Aftandilmmd\PollVote\Exceptions\PollClosedException;
+use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\PollVote\Models\PollOption;
 use Illuminate\Foundation\Auth\User;
 
 beforeEach(function () {
@@ -32,7 +32,7 @@ beforeEach(function () {
 });
 
 it('casts a vote on single choice poll', function () {
-    $votes = app('larapoll')->castVote($this->poll, $this->user, $this->optionA->id);
+    $votes = app('poll-vote')->castVote($this->poll, $this->user, $this->optionA->id);
 
     expect($votes)->toHaveCount(1);
     expect($votes->first()->poll_option_id)->toBe($this->optionA->id);
@@ -40,19 +40,19 @@ it('casts a vote on single choice poll', function () {
 });
 
 it('prevents duplicate voting', function () {
-    app('larapoll')->castVote($this->poll, $this->user, $this->optionA->id);
+    app('poll-vote')->castVote($this->poll, $this->user, $this->optionA->id);
 
-    app('larapoll')->castVote($this->poll, $this->user, $this->optionB->id);
+    app('poll-vote')->castVote($this->poll, $this->user, $this->optionB->id);
 })->throws(AlreadyVotedException::class);
 
 it('prevents voting on closed poll', function () {
     $this->poll->close();
 
-    app('larapoll')->castVote($this->poll, $this->user, $this->optionA->id);
+    app('poll-vote')->castVote($this->poll, $this->user, $this->optionA->id);
 })->throws(PollClosedException::class);
 
 it('prevents multiple selections on single choice poll', function () {
-    app('larapoll')->castVote($this->poll, $this->user, [$this->optionA->id, $this->optionB->id]);
+    app('poll-vote')->castVote($this->poll, $this->user, [$this->optionA->id, $this->optionB->id]);
 })->throws(InvalidSelectionException::class);
 
 it('allows multiple selections on multiple choice poll', function () {
@@ -63,7 +63,7 @@ it('allows multiple selections on multiple choice poll', function () {
     $optA = PollOption::factory()->create(['poll_id' => $poll->id]);
     $optB = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    $votes = app('larapoll')->castVote($poll, $this->user, [$optA->id, $optB->id]);
+    $votes = app('poll-vote')->castVote($poll, $this->user, [$optA->id, $optB->id]);
 
     expect($votes)->toHaveCount(2);
 });
@@ -71,12 +71,12 @@ it('allows multiple selections on multiple choice poll', function () {
 it('changes a vote when allowed', function () {
     $this->poll->update(['allow_vote_change' => true]);
 
-    app('larapoll')->castVote($this->poll, $this->user, $this->optionA->id);
+    app('poll-vote')->castVote($this->poll, $this->user, $this->optionA->id);
 
     expect($this->optionA->fresh()->votes_count)->toBe(1);
     expect($this->optionB->fresh()->votes_count)->toBe(0);
 
-    $newVotes = app('larapoll')->changeVote($this->poll, $this->user, $this->optionB->id);
+    $newVotes = app('poll-vote')->changeVote($this->poll, $this->user, $this->optionB->id);
 
     expect($newVotes)->toHaveCount(1);
     expect($newVotes->first()->poll_option_id)->toBe($this->optionB->id);
@@ -85,18 +85,18 @@ it('changes a vote when allowed', function () {
 });
 
 it('retracts a vote', function () {
-    app('larapoll')->castVote($this->poll, $this->user, $this->optionA->id);
+    app('poll-vote')->castVote($this->poll, $this->user, $this->optionA->id);
 
     expect($this->optionA->fresh()->votes_count)->toBe(1);
 
-    app('larapoll')->retractVote($this->poll, $this->user);
+    app('poll-vote')->retractVote($this->poll, $this->user);
 
     expect($this->optionA->fresh()->votes_count)->toBe(0);
     expect($this->poll->hasUserVoted($this->user))->toBeFalse();
 });
 
 it('casts vote with comment', function () {
-    $votes = app('larapoll')->castVote(
+    $votes = app('poll-vote')->castVote(
         $this->poll,
         $this->user,
         $this->optionA->id,
@@ -112,7 +112,7 @@ it('casts vote with rating', function () {
     ]);
     $option = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    $votes = app('larapoll')->castVote(
+    $votes = app('poll-vote')->castVote(
         $poll,
         $this->user,
         $option->id,
@@ -133,5 +133,5 @@ it('validates min selections', function () {
     PollOption::factory()->create(['poll_id' => $poll->id]);
     PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    app('larapoll')->castVote($poll, $this->user, [$optA->id]);
+    app('poll-vote')->castVote($poll, $this->user, [$optA->id]);
 })->throws(InvalidSelectionException::class);

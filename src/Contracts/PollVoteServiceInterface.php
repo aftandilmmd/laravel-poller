@@ -1,14 +1,14 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Contracts;
+namespace Aftandilmmd\PollVote\Contracts;
 
-use Aftandilmmd\Larapoll\Models\Poll;
-use Aftandilmmd\Larapoll\Models\PollOption;
+use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\PollVote\Models\PollOption;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-interface LarapollServiceInterface
+interface PollVoteServiceInterface
 {
     // ── CRUD ────────────────────────────────────────────────────────
 

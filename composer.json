@@ -1,5 +1,5 @@
 {
-    "name": "aftandilmmd/larapoll",
+    "name": "aftandilmmd/laravel-poll-vote",
     "description": "A powerful, flexible poll and voting package for Laravel. Supports multiple poll types, anonymous voting, scheduled polls, and Livewire components.",
     "keywords": ["laravel", "poll", "voting", "survey", "livewire"],
     "license": "MIT",
@@ -23,22 +23,22 @@
     },
     "autoload": {
         "psr-4": {
-            "Aftandilmmd\\Larapoll\\": "src/"
+            "Aftandilmmd\\PollVote\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Aftandilmmd\\Larapoll\\Tests\\": "tests/",
-            "Aftandilmmd\\Larapoll\\Database\\Factories\\": "database/factories/"
+            "Aftandilmmd\\PollVote\\Tests\\": "tests/",
+            "Aftandilmmd\\PollVote\\Database\\Factories\\": "database/factories/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Aftandilmmd\\Larapoll\\LarapollServiceProvider"
+                "Aftandilmmd\\PollVote\\PollVoteServiceProvider"
             ],
             "aliases": {
-                "Larapoll": "Aftandilmmd\\Larapoll\\Facades\\Larapoll"
+                "PollVote": "Aftandilmmd\\PollVote\\Facades\\PollVote"
             }
         }
     }

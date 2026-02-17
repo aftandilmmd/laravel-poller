@@ -1,8 +1,8 @@
 <?php
 
-use Aftandilmmd\Larapoll\Http\Controllers\Api\PollController;
-use Aftandilmmd\Larapoll\Models\Poll;
-use Aftandilmmd\Larapoll\Models\PollOption;
+use Aftandilmmd\PollVote\Http\Controllers\Api\PollController;
+use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\PollVote\Models\PollOption;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Route;
 

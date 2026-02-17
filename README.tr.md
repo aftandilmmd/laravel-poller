@@ -1,6 +1,6 @@
 [English](README.md) | **Türkçe** | [Azərbaycanca](README.az.md)
 
-# Larapoll
+# Laravel Poll Vote
 
 Laravel için güçlü ve esnek bir anket ve oylama paketi. 5 anket türünü, anonim oylamayı, zamanlanmış anketleri, oy değiştirmeyi ve hem Livewire bileşenleri hem de RESTful API destekler.
 
@@ -12,7 +12,7 @@ Laravel için güçlü ve esnek bir anket ve oylama paketi. 5 anket türünü, a
 ## Kurulum
 
 ```bash
-composer require aftandilmmd/larapoll
+composer require aftandilmmd/laravel-poll-vote
 ```
 
 Servis sağlayıcı ve facade otomatik olarak keşfedilir.
@@ -20,25 +20,25 @@ Servis sağlayıcı ve facade otomatik olarak keşfedilir.
 Yapılandırma dosyasını yayınlayın:
 
 ```bash
-php artisan vendor:publish --tag=larapoll-config
+php artisan vendor:publish --tag=poll-vote-config
 ```
 
 Migration dosyalarını yayınlayın (isteğe bağlı - migration'lar otomatik çalışır):
 
 ```bash
-php artisan vendor:publish --tag=larapoll-migrations
+php artisan vendor:publish --tag=poll-vote-migrations
 ```
 
 Görünümleri yayınlayın (isteğe bağlı - özelleştirme için):
 
 ```bash
-php artisan vendor:publish --tag=larapoll-views
+php artisan vendor:publish --tag=poll-vote-views
 ```
 
 Çevirileri yayınlayın (isteğe bağlı - özelleştirme için):
 
 ```bash
-php artisan vendor:publish --tag=larapoll-translations
+php artisan vendor:publish --tag=poll-vote-translations
 ```
 
 Migration'ları çalıştırın:
@@ -49,14 +49,14 @@ php artisan migrate
 
 ## Yapılandırma
 
-Tüm yapılandırma seçenekleri `config/larapoll.php` dosyasında:
+Tüm yapılandırma seçenekleri `config/poll-vote.php` dosyasında:
 
 | Anahtar | Açıklama | Varsayılan |
 |---------|----------|------------|
 | `user_model` | Kullanıcı model sınıfı | `App\Models\User` |
-| `tables.polls` | Anketler tablo adı | `larapoll_polls` |
-| `tables.options` | Seçenekler tablo adı | `larapoll_poll_options` |
-| `tables.votes` | Oylar tablo adı | `larapoll_poll_votes` |
+| `tables.polls` | Anketler tablo adı | `poll_vote_polls` |
+| `tables.options` | Seçenekler tablo adı | `poll_vote_poll_options` |
+| `tables.votes` | Oylar tablo adı | `poll_vote_poll_votes` |
 | `features.anonymous_voting` | Anonim oylamayı etkinleştir | `true` |
 | `features.vote_changing` | Oy değiştirmeyi etkinleştir | `true` |
 | `features.vote_retraction` | Oy geri çekmeyi etkinleştir | `true` |
@@ -80,7 +80,7 @@ Tüm yapılandırma seçenekleri `config/larapoll.php` dosyasında:
 ### Herhangi bir modele anket desteği ekleyin (Pollable)
 
 ```php
-use Aftandilmmd\Larapoll\Traits\HasPolls;
+use Aftandilmmd\PollVote\Traits\HasPolls;
 
 class Meeting extends Model
 {
@@ -91,7 +91,7 @@ class Meeting extends Model
 ### Kullanıcı modeline oylama yeteneği ekleyin
 
 ```php
-use Aftandilmmd\Larapoll\Traits\InteractsWithPolls;
+use Aftandilmmd\PollVote\Traits\InteractsWithPolls;
 
 class User extends Authenticatable
 {
@@ -139,10 +139,10 @@ class User extends Authenticatable
 ### Facade ile
 
 ```php
-use Aftandilmmd\Larapoll\Facades\Larapoll;
+use Aftandilmmd\PollVote\Facades\PollVote;
 
 // Anket oluştur
-$poll = Larapoll::create([
+$poll = PollVote::create([
     'title' => 'En iyi framework?',
     'type' => 'single_choice',
     'is_anonymous' => false,
@@ -151,41 +151,41 @@ $poll = Larapoll::create([
 ], $user);
 
 // Seçenek ekle
-Larapoll::addOption($poll, ['title' => 'Laravel']);
-Larapoll::addOption($poll, ['title' => 'Django']);
-Larapoll::addOption($poll, ['title' => 'Rails']);
+PollVote::addOption($poll, ['title' => 'Laravel']);
+PollVote::addOption($poll, ['title' => 'Django']);
+PollVote::addOption($poll, ['title' => 'Rails']);
 
 // Anketi etkinleştir
-Larapoll::activate($poll);
+PollVote::activate($poll);
 
 // Oy ver
-Larapoll::castVote($poll, $user, $optionId);
+PollVote::castVote($poll, $user, $optionId);
 
 // Yorumla oy ver
-Larapoll::castVote($poll, $user, $optionId, ['comment' => 'Harika seçim!']);
+PollVote::castVote($poll, $user, $optionId, ['comment' => 'Harika seçim!']);
 
 // Oy değiştir
-Larapoll::changeVote($poll, $user, $newOptionId);
+PollVote::changeVote($poll, $user, $newOptionId);
 
 // Oy geri çek
-Larapoll::retractVote($poll, $user);
+PollVote::retractVote($poll, $user);
 
 // Sonuçları al
-$results = Larapoll::getResults($poll);
+$results = PollVote::getResults($poll);
 // [['option_id' => 1, 'title' => 'Laravel', 'votes_count' => 15, 'percentage' => 75.0], ...]
 
-$detailed = Larapoll::getDetailedResults($poll);
+$detailed = PollVote::getDetailedResults($poll);
 // ['poll' => ..., 'total_votes' => 20, 'unique_voters' => 18, 'options' => [...], 'leading_option' => ...]
 
 // Yaşam döngüsü
-Larapoll::close($poll);
-Larapoll::cancel($poll);
+PollVote::close($poll);
+PollVote::cancel($poll);
 
 // Seçenekleri yeniden sırala
-Larapoll::reorderOptions($poll, [$optionId3, $optionId1, $optionId2]);
+PollVote::reorderOptions($poll, [$optionId3, $optionId1, $optionId2]);
 
 // Anketi kopyala (tüm seçenekleriyle)
-$newPoll = Larapoll::duplicate($poll, ['title' => 'Anketin kopyası']);
+$newPoll = PollVote::duplicate($poll, ['title' => 'Anketin kopyası']);
 ```
 
 ### Özel Seçenekler
@@ -194,7 +194,7 @@ Oy verenlerin ankete kendi seçeneklerini eklemesine izin verin. Maksimum sayıy
 
 ```php
 // Özel seçenekler etkin bir anket oluşturun (maks 5)
-$poll = Larapoll::create([
+$poll = PollVote::create([
     'title' => 'En iyi framework?',
     'type' => 'single_choice',
     'allow_custom_options' => true,
@@ -202,7 +202,7 @@ $poll = Larapoll::create([
 ], $user);
 
 // Özel seçenek ekle (Facade ile)
-Larapoll::addCustomOption($poll, $user, ['title' => 'Benim önerim']);
+PollVote::addCustomOption($poll, $user, ['title' => 'Benim önerim']);
 
 // Özel seçenek ekle (Kullanıcı modeli ile)
 $user->addCustomOption($poll, ['title' => 'Benim önerim']);
@@ -282,10 +282,10 @@ Paket, tam Tailwind CSS arayüzü ile (karanlık mod destekli) kullanıma hazır
 ### Anket Yöneticisi (Tam CRUD)
 
 ```blade
-<livewire:larapoll-poll-manager />
+<livewire:poll-vote-poll-manager />
 
 {{-- Belirli bir modele kapsamlı --}}
-<livewire:larapoll-poll-manager :pollable="$meeting" />
+<livewire:poll-vote-poll-manager :pollable="$meeting" />
 ```
 
 Özellikler: Arama, duruma/türe göre filtreleme, oluşturma, düzenleme, silme, etkinleştirme, kapatma, anket kopyalama.
@@ -293,14 +293,14 @@ Paket, tam Tailwind CSS arayüzü ile (karanlık mod destekli) kullanıma hazır
 ### Anket Formu (Oluştur/Düzenle)
 
 ```blade
-<livewire:larapoll-poll-form />
-<livewire:larapoll-poll-form :poll-id="$poll->id" />
+<livewire:poll-vote-poll-form />
+<livewire:poll-vote-poll-form :poll-id="$poll->id" />
 ```
 
 ### Anket Görünümü (Tam Görüntüleme)
 
 ```blade
-<livewire:larapoll-poll-display :poll="$poll" />
+<livewire:poll-vote-poll-display :poll="$poll" />
 ```
 
 Anket bilgilerini, istatistikleri, oylama arayüzünü, sonuçları ve oy geçmişi sekmelerini gösterir.
@@ -308,7 +308,7 @@ Anket bilgilerini, istatistikleri, oylama arayüzünü, sonuçları ve oy geçmi
 ### Anket Sonuçları (Analiz)
 
 ```blade
-<livewire:larapoll-poll-results :poll="$poll" />
+<livewire:poll-vote-poll-results :poll="$poll" />
 ```
 
 Yüzdelikler ve önde gelen seçenek ile çubuk grafik sonuçlarını gösterir.
@@ -316,7 +316,7 @@ Yüzdelikler ve önde gelen seçenek ile çubuk grafik sonuçlarını gösterir.
 ### Anket Oyu (Kompakt Widget)
 
 ```blade
-<livewire:larapoll-poll-vote :poll="$poll" />
+<livewire:poll-vote-poll-vote :poll="$poll" />
 ```
 
 Gömülür oylama widget'ı. Uygun arayüz ile (radyo, onay kutusu, derecelendirme ölçeği, sıralama) tüm 5 anket türünü destekler.
@@ -324,10 +324,10 @@ Gömülür oylama widget'ı. Uygun arayüz ile (radyo, onay kutusu, derecelendir
 ### Görünümleri Özelleştirme
 
 ```bash
-php artisan vendor:publish --tag=larapoll-views
+php artisan vendor:publish --tag=poll-vote-views
 ```
 
-Görünümler `resources/views/vendor/larapoll/` dizinine yayınlanacaktır.
+Görünümler `resources/views/vendor/poll-vote/` dizinine yayınlanacaktır.
 
 ---
 
@@ -336,7 +336,7 @@ Görünümler `resources/views/vendor/larapoll/` dizinine yayınlanacaktır.
 Yapılandırma dosyasında API'yi etkinleştirin:
 
 ```php
-// config/larapoll.php
+// config/poll-vote.php
 'api' => [
     'enabled' => true,
     'prefix' => 'api/polls',
@@ -390,25 +390,25 @@ Otomatik anket yaşam döngüsü yönetimi için zamanlayıcınıza ekleyin:
 
 ```php
 // routes/console.php veya bootstrap/app.php
-Schedule::command('larapoll:auto-open')->everyMinute();
-Schedule::command('larapoll:auto-close')->everyMinute();
+Schedule::command('poll-vote:auto-open')->everyMinute();
+Schedule::command('poll-vote:auto-close')->everyMinute();
 ```
 
-- `larapoll:auto-open` -- `starts_at` tarihi geçmiş taslak anketleri etkinleştirir
-- `larapoll:auto-close` -- `ends_at` tarihi geçmiş aktif anketleri kapatır
+- `poll-vote:auto-open` -- `starts_at` tarihi geçmiş taslak anketleri etkinleştirir
+- `poll-vote:auto-close` -- `ends_at` tarihi geçmiş aktif anketleri kapatır
 
 ### Bakım Komutları
 
 ```bash
 # Tüm seçenek oy sayılarını gerçek oy kayıtlarından yeniden hesapla
-php artisan larapoll:reconcile-counts
+php artisan poll-vote:reconcile-counts
 ```
 
 ---
 
 ## Olaylar
 
-Tüm olaylar `config/larapoll.php` üzerinden yapılandırılabilir. Devre dışı bırakmak için `null` olarak ayarlayın.
+Tüm olaylar `config/poll-vote.php` üzerinden yapılandırılabilir. Devre dışı bırakmak için `null` olarak ayarlayın.
 
 | Olay | Veri |
 |------|------|
@@ -434,14 +434,14 @@ Event::listen(VoteCast::class, function ($event) {
 Tüm oylama hataları tipli istisnalar fırlatır:
 
 ```php
-use Aftandilmmd\Larapoll\Exceptions\PollClosedException;
-use Aftandilmmd\Larapoll\Exceptions\AlreadyVotedException;
-use Aftandilmmd\Larapoll\Exceptions\InvalidSelectionException;
-use Aftandilmmd\Larapoll\Exceptions\UnauthorizedVoteException;
-use Aftandilmmd\Larapoll\Exceptions\CustomOptionException;
+use Aftandilmmd\PollVote\Exceptions\PollClosedException;
+use Aftandilmmd\PollVote\Exceptions\AlreadyVotedException;
+use Aftandilmmd\PollVote\Exceptions\InvalidSelectionException;
+use Aftandilmmd\PollVote\Exceptions\UnauthorizedVoteException;
+use Aftandilmmd\PollVote\Exceptions\CustomOptionException;
 
 try {
-    Larapoll::castVote($poll, $user, $optionId);
+    PollVote::castVote($poll, $user, $optionId);
 } catch (PollClosedException $e) {
     // Anket oy kabul etmiyor
 } catch (AlreadyVotedException $e) {
@@ -460,8 +460,8 @@ try {
 ## Enum'lar
 
 ```php
-use Aftandilmmd\Larapoll\Enums\PollType;
-use Aftandilmmd\Larapoll\Enums\PollStatus;
+use Aftandilmmd\PollVote\Enums\PollType;
+use Aftandilmmd\PollVote\Enums\PollStatus;
 
 PollType::SingleChoice->value;   // "single_choice"
 PollType::SingleChoice->label(); // "Single Choice"
@@ -508,17 +508,17 @@ Olay sınıflarını değiştirin veya devre dışı bırakın:
 Paket İngilizce, Türkçe ve Azerbaycanca çeviriler içerir. Özelleştirmek veya yeni dil eklemek için:
 
 ```bash
-php artisan vendor:publish --tag=larapoll-translations
+php artisan vendor:publish --tag=poll-vote-translations
 ```
 
-Çeviri dosyaları `lang/vendor/larapoll/` dizinine yayınlanır.
+Çeviri dosyaları `lang/vendor/poll-vote/` dizinine yayınlanır.
 
 ---
 
 ## Test
 
 ```bash
-php artisan test --filter=Larapoll
+php artisan test --filter=PollVote
 ```
 
 ---

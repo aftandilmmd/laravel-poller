@@ -1,21 +1,21 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Commands;
+namespace Aftandilmmd\PollVote\Commands;
 
-use Aftandilmmd\Larapoll\Models\PollOption;
+use Aftandilmmd\PollVote\Models\PollOption;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
 class ReconcileVoteCountsCommand extends Command
 {
-    protected $signature = 'larapoll:reconcile-counts';
+    protected $signature = 'poll-vote:reconcile-counts';
 
     protected $description = 'Recalculate votes_count on all poll options from actual vote records';
 
     public function handle(): int
     {
-        $optionsTable = config('larapoll.tables.options', 'larapoll_poll_options');
-        $votesTable = config('larapoll.tables.votes', 'larapoll_poll_votes');
+        $optionsTable = config('poll-vote.tables.options', 'poll_vote_poll_options');
+        $votesTable = config('poll-vote.tables.votes', 'poll_vote_poll_votes');
 
         $updated = DB::statement("
             UPDATE {$optionsTable}

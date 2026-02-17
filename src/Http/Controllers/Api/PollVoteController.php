@@ -1,10 +1,10 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Http\Controllers\Api;
+namespace Aftandilmmd\PollVote\Http\Controllers\Api;
 
-use Aftandilmmd\Larapoll\Exceptions\PollException;
-use Aftandilmmd\Larapoll\Http\Resources\PollVoteResource;
-use Aftandilmmd\Larapoll\Models\Poll;
+use Aftandilmmd\PollVote\Exceptions\PollException;
+use Aftandilmmd\PollVote\Http\Resources\PollVoteResource;
+use Aftandilmmd\PollVote\Models\Poll;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -14,13 +14,13 @@ class PollVoteController extends Controller
     public function index(Poll $poll): JsonResponse
     {
         if ($poll->is_anonymous) {
-            return response()->json(['message' => __('larapoll::messages.votes_anonymous')], 403);
+            return response()->json(['message' => __('poll-vote::messages.votes_anonymous')], 403);
         }
 
         $votes = $poll->votes()
             ->with(['user', 'option'])
             ->latest()
-            ->paginate(config('larapoll.pagination.votes', 50));
+            ->paginate(config('poll-vote.pagination.votes', 50));
 
         return PollVoteResource::collection($votes)->response();
     }
@@ -31,13 +31,13 @@ class PollVoteController extends Controller
             'options' => 'required|array',
             'options.*' => 'integer',
             'comment' => 'nullable|string|max:5000',
-            'rating' => 'nullable|integer|min:'.config('larapoll.rating.min', 1).'|max:'.config('larapoll.rating.max', 5),
+            'rating' => 'nullable|integer|min:'.config('poll-vote.rating.min', 1).'|max:'.config('poll-vote.rating.max', 5),
             'ranks' => 'nullable|array',
             'ranks.*' => 'integer|min:1',
         ]);
 
         try {
-            $votes = app('larapoll')->castVote(
+            $votes = app('poll-vote')->castVote(
                 $poll,
                 $request->user(),
                 $validated['options'],
@@ -60,13 +60,13 @@ class PollVoteController extends Controller
             'options' => 'required|array',
             'options.*' => 'integer',
             'comment' => 'nullable|string|max:5000',
-            'rating' => 'nullable|integer|min:'.config('larapoll.rating.min', 1).'|max:'.config('larapoll.rating.max', 5),
+            'rating' => 'nullable|integer|min:'.config('poll-vote.rating.min', 1).'|max:'.config('poll-vote.rating.max', 5),
             'ranks' => 'nullable|array',
             'ranks.*' => 'integer|min:1',
         ]);
 
         try {
-            $votes = app('larapoll')->changeVote(
+            $votes = app('poll-vote')->changeVote(
                 $poll,
                 $request->user(),
                 $validated['options'],
@@ -86,7 +86,7 @@ class PollVoteController extends Controller
     public function destroy(Request $request, Poll $poll): JsonResponse
     {
         try {
-            app('larapoll')->retractVote($poll, $request->user());
+            app('poll-vote')->retractVote($poll, $request->user());
 
             return response()->json(null, 204);
         } catch (PollException $e) {

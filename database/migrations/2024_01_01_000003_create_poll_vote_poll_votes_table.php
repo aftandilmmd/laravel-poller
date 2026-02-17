@@ -8,9 +8,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $pollsTable = config('larapoll.tables.polls', 'larapoll_polls');
-        $optionsTable = config('larapoll.tables.options', 'larapoll_poll_options');
-        $table = config('larapoll.tables.votes', 'larapoll_poll_votes');
+        $pollsTable = config('poll-vote.tables.polls', 'poll_vote_polls');
+        $optionsTable = config('poll-vote.tables.options', 'poll_vote_poll_options');
+        $table = config('poll-vote.tables.votes', 'poll_vote_poll_votes');
 
         Schema::create($table, function (Blueprint $table) use ($pollsTable, $optionsTable) {
             $table->id();
@@ -30,6 +30,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists(config('larapoll.tables.votes', 'larapoll_poll_votes'));
+        Schema::dropIfExists(config('poll-vote.tables.votes', 'poll_vote_poll_votes'));
     }
 };

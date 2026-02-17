@@ -1,10 +1,10 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Database\Factories;
+namespace Aftandilmmd\PollVote\Database\Factories;
 
-use Aftandilmmd\Larapoll\Enums\PollStatus;
-use Aftandilmmd\Larapoll\Enums\PollType;
-use Aftandilmmd\Larapoll\Models\Poll;
+use Aftandilmmd\PollVote\Enums\PollStatus;
+use Aftandilmmd\PollVote\Enums\PollType;
+use Aftandilmmd\PollVote\Models\Poll;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /** @extends Factory<Poll> */

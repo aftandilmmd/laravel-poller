@@ -1,10 +1,10 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Livewire;
+namespace Aftandilmmd\PollVote\Livewire;
 
-use Aftandilmmd\Larapoll\Enums\PollStatus;
-use Aftandilmmd\Larapoll\Enums\PollType;
-use Aftandilmmd\Larapoll\Models\Poll;
+use Aftandilmmd\PollVote\Enums\PollStatus;
+use Aftandilmmd\PollVote\Enums\PollType;
+use Aftandilmmd\PollVote\Models\Poll;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Attributes\Url;
@@ -69,8 +69,8 @@ class PollManager extends Component
             $query->where('type', $this->typeFilter);
         }
 
-        return view('larapoll::livewire.poll-manager', [
-            'polls' => $query->paginate(config('larapoll.pagination.polls', 20)),
+        return view('poll-vote::livewire.poll-manager', [
+            'polls' => $query->paginate(config('poll-vote.pagination.polls', 20)),
             'statuses' => PollStatus::options(),
             'types' => PollType::options(),
         ]);
@@ -92,35 +92,35 @@ class PollManager extends Component
     {
         $poll = Poll::findOrFail($pollId);
         $this->authorizePollManagement($poll);
-        app('larapoll')->delete($poll);
+        app('poll-vote')->delete($poll);
     }
 
     public function activatePoll(int $pollId): void
     {
         $poll = Poll::findOrFail($pollId);
         $this->authorizePollManagement($poll);
-        app('larapoll')->activate($poll);
+        app('poll-vote')->activate($poll);
     }
 
     public function closePoll(int $pollId): void
     {
         $poll = Poll::findOrFail($pollId);
         $this->authorizePollManagement($poll);
-        app('larapoll')->close($poll);
+        app('poll-vote')->close($poll);
     }
 
     public function cancelPoll(int $pollId): void
     {
         $poll = Poll::findOrFail($pollId);
         $this->authorizePollManagement($poll);
-        app('larapoll')->cancel($poll);
+        app('poll-vote')->cancel($poll);
     }
 
     public function duplicatePoll(int $pollId): void
     {
         $poll = Poll::findOrFail($pollId);
         $this->authorizePollManagement($poll);
-        app('larapoll')->duplicate($poll);
+        app('poll-vote')->duplicate($poll);
     }
 
     protected function authorizePollManagement(Poll $poll): void

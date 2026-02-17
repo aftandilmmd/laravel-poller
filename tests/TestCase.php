@@ -1,6 +1,6 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Tests;
+namespace Aftandilmmd\PollVote\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -13,7 +13,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        config()->set('larapoll.user_model', \Illuminate\Foundation\Auth\User::class);
+        config()->set('poll-vote.user_model', \Illuminate\Foundation\Auth\User::class);
     }
 
     protected function defineDatabaseMigrations(): void

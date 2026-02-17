@@ -1,14 +1,14 @@
 <?php
 
-use Aftandilmmd\Larapoll\Events\PollActivated;
-use Aftandilmmd\Larapoll\Events\PollCancelled;
-use Aftandilmmd\Larapoll\Events\PollClosed;
-use Aftandilmmd\Larapoll\Events\PollCreated;
-use Aftandilmmd\Larapoll\Events\VoteCast;
-use Aftandilmmd\Larapoll\Events\VoteChanged;
-use Aftandilmmd\Larapoll\Events\VoteRetracted;
-use Aftandilmmd\Larapoll\Models\Poll;
-use Aftandilmmd\Larapoll\Models\PollOption;
+use Aftandilmmd\PollVote\Events\PollActivated;
+use Aftandilmmd\PollVote\Events\PollCancelled;
+use Aftandilmmd\PollVote\Events\PollClosed;
+use Aftandilmmd\PollVote\Events\PollCreated;
+use Aftandilmmd\PollVote\Events\VoteCast;
+use Aftandilmmd\PollVote\Events\VoteChanged;
+use Aftandilmmd\PollVote\Events\VoteRetracted;
+use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\PollVote\Models\PollOption;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Event;
 
@@ -23,7 +23,7 @@ beforeEach(function () {
 it('dispatches PollCreated event when poll is created', function () {
     Event::fake([PollCreated::class]);
 
-    $poll = app('larapoll')->create(['title' => 'Test'], $this->user);
+    $poll = app('poll-vote')->create(['title' => 'Test'], $this->user);
 
     Event::assertDispatched(PollCreated::class, function ($event) use ($poll) {
         return $event->poll->id === $poll->id && $event->creator->getAuthIdentifier() === $this->user->id;
@@ -35,7 +35,7 @@ it('dispatches PollActivated event when poll is activated', function () {
 
     $poll = Poll::factory()->draft()->create(['created_by' => $this->user->id]);
 
-    app('larapoll')->activate($poll);
+    app('poll-vote')->activate($poll);
 
     Event::assertDispatched(PollActivated::class, fn ($event) => $event->poll->id === $poll->id);
 });
@@ -55,7 +55,7 @@ it('dispatches PollClosed event when poll is closed', function () {
 
     $poll = Poll::factory()->active()->create(['created_by' => $this->user->id]);
 
-    app('larapoll')->close($poll);
+    app('poll-vote')->close($poll);
 
     Event::assertDispatched(PollClosed::class, fn ($event) => $event->poll->id === $poll->id);
 });
@@ -75,7 +75,7 @@ it('dispatches PollCancelled event when poll is cancelled', function () {
 
     $poll = Poll::factory()->active()->create(['created_by' => $this->user->id]);
 
-    app('larapoll')->cancel($poll);
+    app('poll-vote')->cancel($poll);
 
     Event::assertDispatched(PollCancelled::class, fn ($event) => $event->poll->id === $poll->id);
 });
@@ -96,7 +96,7 @@ it('dispatches VoteCast event when a vote is cast', function () {
     $poll = Poll::factory()->active()->singleChoice()->create(['created_by' => $this->user->id]);
     $option = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    app('larapoll')->castVote($poll, $this->user, $option->id);
+    app('poll-vote')->castVote($poll, $this->user, $option->id);
 
     Event::assertDispatched(VoteCast::class, function ($event) use ($poll) {
         return $event->poll->id === $poll->id
@@ -115,8 +115,8 @@ it('dispatches VoteChanged event when a vote is changed', function () {
     $optA = PollOption::factory()->create(['poll_id' => $poll->id]);
     $optB = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    app('larapoll')->castVote($poll, $this->user, $optA->id);
-    app('larapoll')->changeVote($poll, $this->user, $optB->id);
+    app('poll-vote')->castVote($poll, $this->user, $optA->id);
+    app('poll-vote')->changeVote($poll, $this->user, $optB->id);
 
     Event::assertDispatched(VoteChanged::class);
 });
@@ -127,8 +127,8 @@ it('dispatches VoteRetracted event when a vote is retracted', function () {
     $poll = Poll::factory()->active()->singleChoice()->create(['created_by' => $this->user->id]);
     $option = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    app('larapoll')->castVote($poll, $this->user, $option->id);
-    app('larapoll')->retractVote($poll, $this->user);
+    app('poll-vote')->castVote($poll, $this->user, $option->id);
+    app('poll-vote')->retractVote($poll, $this->user);
 
     Event::assertDispatched(VoteRetracted::class, function ($event) use ($poll) {
         return $event->poll->id === $poll->id
@@ -137,11 +137,11 @@ it('dispatches VoteRetracted event when a vote is retracted', function () {
 });
 
 it('does not dispatch event when event class is null in config', function () {
-    config()->set('larapoll.events.poll_created', null);
+    config()->set('poll-vote.events.poll_created', null);
 
     Event::fake([PollCreated::class]);
 
-    app('larapoll')->create(['title' => 'Test'], $this->user);
+    app('poll-vote')->create(['title' => 'Test'], $this->user);
 
     Event::assertNotDispatched(PollCreated::class);
 });

@@ -1,9 +1,9 @@
 <?php
 
-use Aftandilmmd\Larapoll\Enums\PollStatus;
-use Aftandilmmd\Larapoll\Enums\PollType;
-use Aftandilmmd\Larapoll\Models\Poll;
-use Aftandilmmd\Larapoll\Models\PollOption;
+use Aftandilmmd\PollVote\Enums\PollStatus;
+use Aftandilmmd\PollVote\Enums\PollType;
+use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\PollVote\Models\PollOption;
 use Illuminate\Foundation\Auth\User;
 
 beforeEach(function () {
@@ -15,7 +15,7 @@ beforeEach(function () {
 });
 
 it('creates a poll via service', function () {
-    $poll = app('larapoll')->create([
+    $poll = app('poll-vote')->create([
         'title' => 'Test Poll',
         'type' => PollType::SingleChoice,
     ], $this->user);
@@ -31,7 +31,7 @@ it('creates a poll via service', function () {
 it('updates a poll', function () {
     $poll = Poll::factory()->create(['created_by' => $this->user->id]);
 
-    $updated = app('larapoll')->update($poll, ['title' => 'Updated Title']);
+    $updated = app('poll-vote')->update($poll, ['title' => 'Updated Title']);
 
     expect($updated->title)->toBe('Updated Title');
 });
@@ -39,7 +39,7 @@ it('updates a poll', function () {
 it('deletes a poll', function () {
     $poll = Poll::factory()->create(['created_by' => $this->user->id]);
 
-    app('larapoll')->delete($poll);
+    app('poll-vote')->delete($poll);
 
     expect(Poll::find($poll->id))->toBeNull();
     expect(Poll::withTrashed()->find($poll->id))->not->toBeNull();
@@ -49,7 +49,7 @@ it('duplicates a poll with options', function () {
     $poll = Poll::factory()->create(['created_by' => $this->user->id]);
     PollOption::factory()->count(3)->create(['poll_id' => $poll->id]);
 
-    $duplicate = app('larapoll')->duplicate($poll);
+    $duplicate = app('poll-vote')->duplicate($poll);
 
     expect($duplicate)
         ->id->not->toBe($poll->id)
@@ -62,7 +62,7 @@ it('duplicates a poll with options', function () {
 it('adds an option to a poll', function () {
     $poll = Poll::factory()->create(['created_by' => $this->user->id]);
 
-    $option = app('larapoll')->addOption($poll, [
+    $option = app('poll-vote')->addOption($poll, [
         'title' => 'Option A',
         'description' => 'Description A',
     ]);
@@ -79,7 +79,7 @@ it('reorders options', function () {
     $opt2 = PollOption::factory()->create(['poll_id' => $poll->id, 'sort_order' => 1]);
     $opt3 = PollOption::factory()->create(['poll_id' => $poll->id, 'sort_order' => 2]);
 
-    app('larapoll')->reorderOptions($poll, [$opt3->id, $opt1->id, $opt2->id]);
+    app('poll-vote')->reorderOptions($poll, [$opt3->id, $opt1->id, $opt2->id]);
 
     expect($opt3->fresh()->sort_order)->toBe(0);
     expect($opt1->fresh()->sort_order)->toBe(1);
@@ -90,7 +90,7 @@ it('gets active polls', function () {
     Poll::factory()->active()->count(3)->create(['created_by' => $this->user->id]);
     Poll::factory()->draft()->count(2)->create(['created_by' => $this->user->id]);
 
-    $active = app('larapoll')->getActivePolls();
+    $active = app('poll-vote')->getActivePolls();
 
     expect($active)->toHaveCount(3);
 });

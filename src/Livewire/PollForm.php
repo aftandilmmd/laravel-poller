@@ -1,10 +1,10 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Livewire;
+namespace Aftandilmmd\PollVote\Livewire;
 
-use Aftandilmmd\Larapoll\Enums\PollStatus;
-use Aftandilmmd\Larapoll\Enums\PollType;
-use Aftandilmmd\Larapoll\Models\Poll;
+use Aftandilmmd\PollVote\Enums\PollStatus;
+use Aftandilmmd\PollVote\Enums\PollType;
+use Aftandilmmd\PollVote\Models\Poll;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
@@ -93,7 +93,7 @@ class PollForm extends Component
 
     public function render(): View
     {
-        return view('larapoll::livewire.poll-form', [
+        return view('poll-vote::livewire.poll-form', [
             'types' => PollType::options(),
             'statuses' => PollStatus::options(),
         ]);
@@ -116,7 +116,7 @@ class PollForm extends Component
     {
         $this->validate();
 
-        $service = app('larapoll');
+        $service = app('poll-vote');
         $attributes = [
             'title' => $this->title,
             'description' => $this->description ?: null,
@@ -213,11 +213,11 @@ class PollForm extends Component
     protected function messages(): array
     {
         return [
-            'title.required' => __('larapoll::messages.poll_title_required'),
-            'options.min' => __('larapoll::messages.options_min'),
-            'options.*.title.required' => __('larapoll::messages.option_title_required'),
-            'ends_at.after' => __('larapoll::messages.ends_at_after'),
-            'max_selections.gte' => __('larapoll::messages.max_selections_gte'),
+            'title.required' => __('poll-vote::messages.poll_title_required'),
+            'options.min' => __('poll-vote::messages.options_min'),
+            'options.*.title.required' => __('poll-vote::messages.option_title_required'),
+            'ends_at.after' => __('poll-vote::messages.ends_at_after'),
+            'max_selections.gte' => __('poll-vote::messages.max_selections_gte'),
         ];
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Http\Controllers\Api;
+namespace Aftandilmmd\PollVote\Http\Controllers\Api;
 
-use Aftandilmmd\Larapoll\Http\Controllers\Api\Concerns\AuthorizesPollManagement;
-use Aftandilmmd\Larapoll\Http\Resources\PollOptionResource;
-use Aftandilmmd\Larapoll\Models\Poll;
-use Aftandilmmd\Larapoll\Models\PollOption;
+use Aftandilmmd\PollVote\Http\Controllers\Api\Concerns\AuthorizesPollManagement;
+use Aftandilmmd\PollVote\Http\Resources\PollOptionResource;
+use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\PollVote\Models\PollOption;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -24,7 +24,7 @@ class PollOptionController extends Controller
             'sort_order' => 'nullable|integer|min:0',
         ]);
 
-        $option = app('larapoll')->addOption($poll, $validated);
+        $option = app('poll-vote')->addOption($poll, $validated);
 
         return new PollOptionResource($option);
     }
@@ -40,7 +40,7 @@ class PollOptionController extends Controller
             'sort_order' => 'nullable|integer|min:0',
         ]);
 
-        $option = app('larapoll')->updateOption($option, $validated);
+        $option = app('poll-vote')->updateOption($option, $validated);
 
         return new PollOptionResource($option);
     }
@@ -50,7 +50,7 @@ class PollOptionController extends Controller
         $this->authorizeManagement($poll);
         $this->ensureOptionBelongsToPoll($poll, $option);
 
-        app('larapoll')->removeOption($option);
+        app('poll-vote')->removeOption($option);
 
         return response()->json(null, 204);
     }
@@ -61,11 +61,11 @@ class PollOptionController extends Controller
 
         $validated = $request->validate([
             'option_ids' => 'required|array',
-            'option_ids.*' => 'integer|exists:'.config('larapoll.tables.options', 'larapoll_poll_options').',id',
+            'option_ids.*' => 'integer|exists:'.config('poll-vote.tables.options', 'poll_vote_poll_options').',id',
         ]);
 
-        app('larapoll')->reorderOptions($poll, $validated['option_ids']);
+        app('poll-vote')->reorderOptions($poll, $validated['option_ids']);
 
-        return response()->json(['message' => __('larapoll::messages.options_reordered')]);
+        return response()->json(['message' => __('poll-vote::messages.options_reordered')]);
     }
 }

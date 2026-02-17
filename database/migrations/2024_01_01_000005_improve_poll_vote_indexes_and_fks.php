@@ -8,9 +8,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $pollsTable = config('larapoll.tables.polls', 'larapoll_polls');
-        $optionsTable = config('larapoll.tables.options', 'larapoll_poll_options');
-        $votesTable = config('larapoll.tables.votes', 'larapoll_poll_votes');
+        $pollsTable = config('poll-vote.tables.polls', 'poll_vote_polls');
+        $optionsTable = config('poll-vote.tables.options', 'poll_vote_poll_options');
+        $votesTable = config('poll-vote.tables.votes', 'poll_vote_poll_votes');
 
         // Add standalone user_id index on votes table
         Schema::table($votesTable, function (Blueprint $table) {
@@ -39,9 +39,9 @@ return new class extends Migration
 
     public function down(): void
     {
-        $pollsTable = config('larapoll.tables.polls', 'larapoll_polls');
-        $optionsTable = config('larapoll.tables.options', 'larapoll_poll_options');
-        $votesTable = config('larapoll.tables.votes', 'larapoll_poll_votes');
+        $pollsTable = config('poll-vote.tables.polls', 'poll_vote_polls');
+        $optionsTable = config('poll-vote.tables.options', 'poll_vote_poll_options');
+        $votesTable = config('poll-vote.tables.votes', 'poll_vote_poll_votes');
 
         Schema::table($votesTable, function (Blueprint $table) {
             $table->dropIndex(['user_id']);

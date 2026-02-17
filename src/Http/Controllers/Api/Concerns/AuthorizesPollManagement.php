@@ -1,9 +1,9 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Http\Controllers\Api\Concerns;
+namespace Aftandilmmd\PollVote\Http\Controllers\Api\Concerns;
 
-use Aftandilmmd\Larapoll\Models\Poll;
-use Aftandilmmd\Larapoll\Models\PollOption;
+use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\PollVote\Models\PollOption;
 
 trait AuthorizesPollManagement
 {
@@ -13,10 +13,10 @@ trait AuthorizesPollManagement
 
         if (method_exists($user, 'canManagePoll')) {
             if (! $user->canManagePoll($poll)) {
-                abort(403, __('larapoll::messages.unauthorized'));
+                abort(403, __('poll-vote::messages.unauthorized'));
             }
         } elseif ($poll->created_by !== $user?->getAuthIdentifier()) {
-            abort(403, __('larapoll::messages.unauthorized'));
+            abort(403, __('poll-vote::messages.unauthorized'));
         }
     }
 

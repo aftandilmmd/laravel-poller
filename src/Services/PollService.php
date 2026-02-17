@@ -1,24 +1,24 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Services;
+namespace Aftandilmmd\PollVote\Services;
 
-use Aftandilmmd\Larapoll\Contracts\LarapollServiceInterface;
-use Aftandilmmd\Larapoll\Enums\PollStatus;
-use Aftandilmmd\Larapoll\Exceptions\AlreadyVotedException;
-use Aftandilmmd\Larapoll\Exceptions\CustomOptionException;
-use Aftandilmmd\Larapoll\Exceptions\InvalidSelectionException;
-use Aftandilmmd\Larapoll\Exceptions\PollClosedException;
-use Aftandilmmd\Larapoll\Exceptions\PollException;
-use Aftandilmmd\Larapoll\Exceptions\UnauthorizedVoteException;
-use Aftandilmmd\Larapoll\Models\Poll;
-use Aftandilmmd\Larapoll\Models\PollOption;
-use Aftandilmmd\Larapoll\Models\PollVote;
+use Aftandilmmd\PollVote\Contracts\PollVoteServiceInterface;
+use Aftandilmmd\PollVote\Enums\PollStatus;
+use Aftandilmmd\PollVote\Exceptions\AlreadyVotedException;
+use Aftandilmmd\PollVote\Exceptions\CustomOptionException;
+use Aftandilmmd\PollVote\Exceptions\InvalidSelectionException;
+use Aftandilmmd\PollVote\Exceptions\PollClosedException;
+use Aftandilmmd\PollVote\Exceptions\PollException;
+use Aftandilmmd\PollVote\Exceptions\UnauthorizedVoteException;
+use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\PollVote\Models\PollOption;
+use Aftandilmmd\PollVote\Models\PollVote;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class PollService implements LarapollServiceInterface
+class PollService implements PollVoteServiceInterface
 {
     // ── CRUD ────────────────────────────────────────────────────────
 
@@ -48,7 +48,7 @@ class PollService implements LarapollServiceInterface
 
     public function delete(Poll $poll): bool
     {
-        if (config('larapoll.features.soft_deletes', true)) {
+        if (config('poll-vote.features.soft_deletes', true)) {
             return (bool) $poll->delete();
         }
 
@@ -150,7 +150,7 @@ class PollService implements LarapollServiceInterface
         $this->validateExtra($poll, $extra);
 
         if ($poll->hasUserVoted($voter)) {
-            if ($poll->allow_vote_change && config('larapoll.features.vote_changing', true)) {
+            if ($poll->allow_vote_change && config('poll-vote.features.vote_changing', true)) {
                 return $this->changeVote($poll, $voter, $options, $extra);
             }
 
@@ -201,7 +201,7 @@ class PollService implements LarapollServiceInterface
 
     public function changeVote(Poll $poll, Authenticatable $voter, PollOption|int|array $options, array $extra = []): Collection
     {
-        if (! $poll->allow_vote_change && ! config('larapoll.features.vote_changing', true)) {
+        if (! $poll->allow_vote_change && ! config('poll-vote.features.vote_changing', true)) {
             throw new AlreadyVotedException('Vote changing is not allowed for this poll.');
         }
 
@@ -253,7 +253,7 @@ class PollService implements LarapollServiceInterface
 
     public function retractVote(Poll $poll, Authenticatable $voter): void
     {
-        if (! config('larapoll.features.vote_retraction', true)) {
+        if (! config('poll-vote.features.vote_retraction', true)) {
             throw new AlreadyVotedException('Vote retraction is not allowed.');
         }
 
@@ -346,7 +346,7 @@ class PollService implements LarapollServiceInterface
         }
 
         if ($checkExisting && $poll->hasUserVoted($voter)) {
-            if (! $poll->allow_vote_change || ! config('larapoll.features.vote_changing', true)) {
+            if (! $poll->allow_vote_change || ! config('poll-vote.features.vote_changing', true)) {
                 throw new AlreadyVotedException;
             }
         }
@@ -359,8 +359,8 @@ class PollService implements LarapollServiceInterface
         }
 
         if ($poll->isRating() && isset($extra['rating'])) {
-            $min = config('larapoll.rating.min', 1);
-            $max = config('larapoll.rating.max', 5);
+            $min = config('poll-vote.rating.min', 1);
+            $max = config('poll-vote.rating.max', 5);
 
             if ($extra['rating'] < $min || $extra['rating'] > $max) {
                 throw new InvalidSelectionException("Rating must be between {$min} and {$max}.");
@@ -419,7 +419,7 @@ class PollService implements LarapollServiceInterface
 
     protected function fireEvent(string $key, mixed ...$args): void
     {
-        $eventClass = config("larapoll.events.{$key}");
+        $eventClass = config("poll-vote.events.{$key}");
 
         if ($eventClass) {
             event(new $eventClass(...$args));
@@ -428,16 +428,16 @@ class PollService implements LarapollServiceInterface
 
     protected function pollModel(): string
     {
-        return config('larapoll.models.poll', Poll::class);
+        return config('poll-vote.models.poll', Poll::class);
     }
 
     protected function optionModel(): string
     {
-        return config('larapoll.models.option', PollOption::class);
+        return config('poll-vote.models.option', PollOption::class);
     }
 
     protected function voteModel(): string
     {
-        return config('larapoll.models.vote', PollVote::class);
+        return config('poll-vote.models.vote', PollVote::class);
     }
 }

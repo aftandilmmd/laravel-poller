@@ -1,10 +1,10 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Database\Factories;
+namespace Aftandilmmd\PollVote\Database\Factories;
 
-use Aftandilmmd\Larapoll\Models\Poll;
-use Aftandilmmd\Larapoll\Models\PollOption;
-use Aftandilmmd\Larapoll\Models\PollVote;
+use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\PollVote\Models\PollOption;
+use Aftandilmmd\PollVote\Models\PollVote;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /** @extends Factory<PollVote> */
@@ -17,7 +17,7 @@ class PollVoteFactory extends Factory
         return [
             'poll_id' => Poll::factory(),
             'poll_option_id' => PollOption::factory(),
-            'user_id' => config('larapoll.user_model', \App\Models\User::class)::factory(),
+            'user_id' => config('poll-vote.user_model', \App\Models\User::class)::factory(),
         ];
     }
 

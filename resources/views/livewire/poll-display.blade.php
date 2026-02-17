@@ -27,15 +27,15 @@
             <div class="mt-4 grid grid-cols-4 gap-px overflow-hidden rounded-lg border border-gray-100 bg-gray-100 dark:border-gray-700 dark:bg-gray-700">
                 <div class="bg-white px-3 py-2.5 text-center dark:bg-gray-800">
                     <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $totalVotes }}</p>
-                    <p class="text-[10px] font-medium uppercase tracking-wider text-gray-400">{{ __('larapoll::messages.total_votes') }}</p>
+                    <p class="text-[10px] font-medium uppercase tracking-wider text-gray-400">{{ __('poll-vote::messages.total_votes') }}</p>
                 </div>
                 <div class="bg-white px-3 py-2.5 text-center dark:bg-gray-800">
                     <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $uniqueVoters }}</p>
-                    <p class="text-[10px] font-medium uppercase tracking-wider text-gray-400">{{ __('larapoll::messages.voters') }}</p>
+                    <p class="text-[10px] font-medium uppercase tracking-wider text-gray-400">{{ __('poll-vote::messages.voters') }}</p>
                 </div>
                 <div class="bg-white px-3 py-2.5 text-center dark:bg-gray-800">
                     <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $poll->options->count() }}</p>
-                    <p class="text-[10px] font-medium uppercase tracking-wider text-gray-400">{{ __('larapoll::messages.options_count') }}</p>
+                    <p class="text-[10px] font-medium uppercase tracking-wider text-gray-400">{{ __('poll-vote::messages.options_count') }}</p>
                 </div>
                 <div class="bg-white px-3 py-2.5 text-center dark:bg-gray-800">
                     @if($poll->ends_at && $poll->isActive())
@@ -43,7 +43,7 @@
                     @else
                         <p class="text-lg font-bold text-gray-400">-</p>
                     @endif
-                    <p class="text-[10px] font-medium uppercase tracking-wider text-gray-400">{{ $poll->ends_at ? __('larapoll::messages.ends') : __('larapoll::messages.no_deadline') }}</p>
+                    <p class="text-[10px] font-medium uppercase tracking-wider text-gray-400">{{ $poll->ends_at ? __('poll-vote::messages.ends') : __('poll-vote::messages.no_deadline') }}</p>
                 </div>
             </div>
         </div>
@@ -52,16 +52,16 @@
         @if($poll->is_anonymous || $poll->allow_vote_change || $poll->requires_comment || $poll->show_results_before_close)
             <div class="flex flex-wrap gap-1.5 border-t border-gray-100 px-5 py-3 dark:border-gray-700">
                 @if($poll->is_anonymous)
-                    <span class="rounded-md bg-purple-50 px-2 py-0.5 text-[10px] font-medium text-purple-600 dark:bg-purple-900/20 dark:text-purple-400">{{ __('larapoll::messages.anonymous') }}</span>
+                    <span class="rounded-md bg-purple-50 px-2 py-0.5 text-[10px] font-medium text-purple-600 dark:bg-purple-900/20 dark:text-purple-400">{{ __('poll-vote::messages.anonymous') }}</span>
                 @endif
                 @if($poll->allow_vote_change)
-                    <span class="rounded-md bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-600 dark:bg-amber-900/20 dark:text-amber-400">{{ __('larapoll::messages.vote_change_allowed') }}</span>
+                    <span class="rounded-md bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-600 dark:bg-amber-900/20 dark:text-amber-400">{{ __('poll-vote::messages.vote_change_allowed') }}</span>
                 @endif
                 @if($poll->requires_comment)
-                    <span class="rounded-md bg-sky-50 px-2 py-0.5 text-[10px] font-medium text-sky-600 dark:bg-sky-900/20 dark:text-sky-400">{{ __('larapoll::messages.comment_required_badge') }}</span>
+                    <span class="rounded-md bg-sky-50 px-2 py-0.5 text-[10px] font-medium text-sky-600 dark:bg-sky-900/20 dark:text-sky-400">{{ __('poll-vote::messages.comment_required_badge') }}</span>
                 @endif
                 @if($poll->show_results_before_close)
-                    <span class="rounded-md bg-teal-50 px-2 py-0.5 text-[10px] font-medium text-teal-600 dark:bg-teal-900/20 dark:text-teal-400">{{ __('larapoll::messages.live_results') }}</span>
+                    <span class="rounded-md bg-teal-50 px-2 py-0.5 text-[10px] font-medium text-teal-600 dark:bg-teal-900/20 dark:text-teal-400">{{ __('poll-vote::messages.live_results') }}</span>
                 @endif
             </div>
         @endif
@@ -69,7 +69,7 @@
 
     {{-- Tabs --}}
     <div class="flex gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-800">
-        @foreach(['overview' => __('larapoll::messages.overview'), 'results' => __('larapoll::messages.results'), 'votes' => __('larapoll::messages.votes_tab')] as $tab => $label)
+        @foreach(['overview' => __('poll-vote::messages.overview'), 'results' => __('poll-vote::messages.results'), 'votes' => __('poll-vote::messages.votes_tab')] as $tab => $label)
             <button wire:click="setTab('{{ $tab }}')"
                 class="flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition
                     {{ $activeTab === $tab
@@ -82,13 +82,13 @@
 
     {{-- Tab Content --}}
     @if($activeTab === 'overview')
-        <livewire:larapoll-poll-vote :poll="$poll" :key="'vote-' . $poll->id" />
+        <livewire:poll-vote-poll-vote :poll="$poll" :key="'vote-' . $poll->id" />
     @elseif($activeTab === 'results')
         @if($canShowResults)
-            <livewire:larapoll-poll-results :poll="$poll" :key="'results-' . $poll->id" />
+            <livewire:poll-vote-poll-results :poll="$poll" :key="'results-' . $poll->id" />
         @else
             <div class="rounded-xl border border-dashed border-gray-200 px-4 py-12 text-center dark:border-gray-700">
-                <p class="text-xs text-gray-400">{{ __('larapoll::messages.results_available_after_close') }}</p>
+                <p class="text-xs text-gray-400">{{ __('poll-vote::messages.results_available_after_close') }}</p>
             </div>
         @endif
     @elseif($activeTab === 'votes')
@@ -97,16 +97,16 @@
                 <table class="w-full text-left text-sm">
                     <thead>
                         <tr class="border-b border-gray-100 dark:border-gray-700">
-                            <th class="px-4 py-2.5 text-xs font-medium text-gray-500 dark:text-gray-400">{{ __('larapoll::messages.voter') }}</th>
-                            <th class="px-4 py-2.5 text-xs font-medium text-gray-500 dark:text-gray-400">{{ __('larapoll::messages.option_column') }}</th>
-                            <th class="px-4 py-2.5 text-xs font-medium text-gray-500 dark:text-gray-400">{{ __('larapoll::messages.comment') }}</th>
-                            <th class="px-4 py-2.5 text-xs font-medium text-gray-500 dark:text-gray-400">{{ __('larapoll::messages.date') }}</th>
+                            <th class="px-4 py-2.5 text-xs font-medium text-gray-500 dark:text-gray-400">{{ __('poll-vote::messages.voter') }}</th>
+                            <th class="px-4 py-2.5 text-xs font-medium text-gray-500 dark:text-gray-400">{{ __('poll-vote::messages.option_column') }}</th>
+                            <th class="px-4 py-2.5 text-xs font-medium text-gray-500 dark:text-gray-400">{{ __('poll-vote::messages.comment') }}</th>
+                            <th class="px-4 py-2.5 text-xs font-medium text-gray-500 dark:text-gray-400">{{ __('poll-vote::messages.date') }}</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50 dark:divide-gray-700/50">
                         @foreach($poll->votes()->with(['user', 'option'])->latest()->get() as $vote)
                             <tr class="transition hover:bg-gray-50/50 dark:hover:bg-gray-750">
-                                <td class="px-4 py-2.5 text-sm text-gray-900 dark:text-white">{{ $vote->user?->name ?? __('larapoll::messages.unknown') }}</td>
+                                <td class="px-4 py-2.5 text-sm text-gray-900 dark:text-white">{{ $vote->user?->name ?? __('poll-vote::messages.unknown') }}</td>
                                 <td class="px-4 py-2.5 text-sm text-gray-500 dark:text-gray-400">{{ $vote->option?->title }}</td>
                                 <td class="px-4 py-2.5 text-sm text-gray-400">{{ $vote->comment ?? '-' }}</td>
                                 <td class="px-4 py-2.5 text-xs text-gray-400">{{ $vote->created_at->format('M d, Y H:i') }}</td>
@@ -117,7 +117,7 @@
             </div>
         @else
             <div class="rounded-xl border border-dashed border-gray-200 px-4 py-12 text-center dark:border-gray-700">
-                <p class="text-xs text-gray-400">{{ __('larapoll::messages.anonymous_votes_hidden') }}</p>
+                <p class="text-xs text-gray-400">{{ __('poll-vote::messages.anonymous_votes_hidden') }}</p>
             </div>
         @endif
     @endif

@@ -1,6 +1,6 @@
 <?php
 
-namespace Aftandilmmd\Larapoll\Models;
+namespace Aftandilmmd\PollVote\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,9 +10,9 @@ class PollVote extends Model
 {
     use HasFactory;
 
-    protected static function newFactory(): \Aftandilmmd\Larapoll\Database\Factories\PollVoteFactory
+    protected static function newFactory(): \Aftandilmmd\PollVote\Database\Factories\PollVoteFactory
     {
-        return \Aftandilmmd\Larapoll\Database\Factories\PollVoteFactory::new();
+        return \Aftandilmmd\PollVote\Database\Factories\PollVoteFactory::new();
     }
 
     protected $fillable = [
@@ -27,7 +27,7 @@ class PollVote extends Model
 
     public function getTable(): string
     {
-        return config('larapoll.tables.votes', 'larapoll_poll_votes');
+        return config('poll-vote.tables.votes', 'poll_vote_poll_votes');
     }
 
     protected function casts(): array
@@ -39,16 +39,16 @@ class PollVote extends Model
 
     public function poll(): BelongsTo
     {
-        return $this->belongsTo(config('larapoll.models.poll', Poll::class));
+        return $this->belongsTo(config('poll-vote.models.poll', Poll::class));
     }
 
     public function option(): BelongsTo
     {
-        return $this->belongsTo(config('larapoll.models.option', PollOption::class), 'poll_option_id');
+        return $this->belongsTo(config('poll-vote.models.option', PollOption::class), 'poll_option_id');
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(config('larapoll.user_model', \App\Models\User::class));
+        return $this->belongsTo(config('poll-vote.user_model', \App\Models\User::class));
     }
 }
