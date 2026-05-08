@@ -1,8 +1,8 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Traits;
+namespace Aftandilmmd\Poller\Traits;
 
-use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\Poller\Models\Poll;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\App;
@@ -11,7 +11,7 @@ trait HasPolls
 {
     public function polls(): MorphMany
     {
-        return $this->morphMany(config('poll-vote.models.poll', Poll::class), 'pollable');
+        return $this->morphMany(config('poller.models.poll', Poll::class), 'pollable');
     }
 
     public function activePolls(): MorphMany
@@ -33,7 +33,7 @@ trait HasPolls
     {
         $creator = $creator ?? auth()->user();
 
-        return App::make('poll-vote')->create(
+        return App::make('poller')->create(
             array_merge($attributes, [
                 'pollable_type' => $this->getMorphClass(),
                 'pollable_id' => $this->getKey(),

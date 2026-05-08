@@ -1,27 +1,27 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Commands;
+namespace Aftandilmmd\Poller\Commands;
 
-use Aftandilmmd\PollVote\Enums\PollStatus;
-use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\Poller\Enums\PollStatus;
+use Aftandilmmd\Poller\Models\Poll;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 
 class AutoClosePollsCommand extends Command
 {
-    protected $signature = 'poll-vote:auto-close';
+    protected $signature = 'poller:auto-close';
 
     protected $description = 'Close polls whose scheduled end time has passed';
 
     public function handle(): int
     {
-        if (! config('poll-vote.features.auto_close', true)) {
+        if (! config('poller.features.auto_close', true)) {
             $this->info('Auto-close feature is disabled.');
 
             return self::SUCCESS;
         }
 
-        $pollModel = config('poll-vote.models.poll', Poll::class);
+        $pollModel = config('poller.models.poll', Poll::class);
 
         $polls = $pollModel::query()
             ->where('status', PollStatus::Active)
@@ -29,7 +29,7 @@ class AutoClosePollsCommand extends Command
             ->where('ends_at', '<=', now())
             ->get();
 
-        $service = App::make('poll-vote');
+        $service = App::make('poller');
         $count = 0;
 
         foreach ($polls as $poll) {

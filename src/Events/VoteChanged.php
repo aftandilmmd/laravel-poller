@@ -1,8 +1,8 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Events;
+namespace Aftandilmmd\Poller\Events;
 
-use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\Poller\Models\Poll;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Livewire;
+namespace Aftandilmmd\Poller\Livewire;
 
-use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\Poller\Models\Poll;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
@@ -23,7 +23,7 @@ class PollResults extends Component
 
     public function render(): View
     {
-        return view('poll-vote::livewire.poll-results', [
+        return view('poller::livewire.poll-results', [
             'results' => $this->poll->getResultsAsPercentages(),
             'totalVotes' => $this->poll->getTotalVotes(),
             'uniqueVoters' => $this->poll->getUniqueVoterCount(),

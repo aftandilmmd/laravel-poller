@@ -1,6 +1,6 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Enums;
+namespace Aftandilmmd\Poller\Enums;
 
 enum PollStatus: string
 {
@@ -12,10 +12,10 @@ enum PollStatus: string
     public function label(): string
     {
         return match ($this) {
-            self::Draft => __('poll-vote::messages.status_draft'),
-            self::Active => __('poll-vote::messages.status_active'),
-            self::Closed => __('poll-vote::messages.status_closed'),
-            self::Cancelled => __('poll-vote::messages.status_cancelled'),
+            self::Draft => __('poller::messages.status_draft'),
+            self::Active => __('poller::messages.status_active'),
+            self::Closed => __('poller::messages.status_closed'),
+            self::Cancelled => __('poller::messages.status_cancelled'),
         };
     }
 

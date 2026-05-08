@@ -1,8 +1,8 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Livewire;
+namespace Aftandilmmd\Poller\Livewire;
 
-use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\Poller\Models\Poll;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
@@ -30,7 +30,7 @@ class PollDisplay extends Component
         $userVotes = $user ? $this->poll->getUserVotes($user) : collect();
         $canShowResults = $this->poll->canShowResults($user);
 
-        return view('poll-vote::livewire.poll-display', [
+        return view('poller::livewire.poll-display', [
             'hasVoted' => $hasVoted,
             'userVotes' => $userVotes,
             'canShowResults' => $canShowResults,

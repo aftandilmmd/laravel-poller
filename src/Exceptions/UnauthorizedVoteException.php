@@ -1,6 +1,6 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Exceptions;
+namespace Aftandilmmd\Poller\Exceptions;
 
 class UnauthorizedVoteException extends PollException
 {

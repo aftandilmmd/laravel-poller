@@ -1,9 +1,9 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Http\Controllers\Api\Concerns;
+namespace Aftandilmmd\Poller\Http\Controllers\Api\Concerns;
 
-use Aftandilmmd\PollVote\Models\Poll;
-use Aftandilmmd\PollVote\Models\PollOption;
+use Aftandilmmd\Poller\Models\Poll;
+use Aftandilmmd\Poller\Models\PollOption;
 
 trait AuthorizesPollManagement
 {
@@ -13,10 +13,10 @@ trait AuthorizesPollManagement
 
         if (method_exists($user, 'canManagePoll')) {
             if (! $user->canManagePoll($poll)) {
-                abort(403, __('poll-vote::messages.unauthorized'));
+                abort(403, __('poller::messages.unauthorized'));
             }
         } elseif ($poll->created_by !== $user?->getAuthIdentifier()) {
-            abort(403, __('poll-vote::messages.unauthorized'));
+            abort(403, __('poller::messages.unauthorized'));
         }
     }
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Livewire;
+namespace Aftandilmmd\Poller\Livewire;
 
-use Aftandilmmd\PollVote\Exceptions\PollException;
-use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\Poller\Exceptions\PollException;
+use Aftandilmmd\Poller\Models\Poll;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
@@ -55,12 +55,12 @@ class PollVote extends Component
             $canAddCustomOption = method_exists($user, 'canAddCustomOption') ? $user->canAddCustomOption($this->poll) : true;
         }
 
-        return view('poll-vote::livewire.poll-vote', [
+        return view('poller::livewire.poll-vote', [
             'hasVoted' => $hasVoted,
             'canVote' => $canVote,
             'canAddCustomOption' => $canAddCustomOption,
-            'canChange' => $hasVoted && $this->poll->allow_vote_change && config('poll-vote.features.vote_changing', true),
-            'canRetract' => $hasVoted && config('poll-vote.features.vote_retraction', true),
+            'canChange' => $hasVoted && $this->poll->allow_vote_change && config('poller.features.vote_changing', true),
+            'canRetract' => $hasVoted && config('poller.features.vote_retraction', true),
             'canShowResults' => $this->poll->canShowResults($user),
             'results' => $this->poll->canShowResults($user) ? $this->poll->getResultsAsPercentages() : [],
             'totalVotes' => $this->poll->getTotalVotes(),
@@ -72,7 +72,7 @@ class PollVote extends Component
         $this->errorMessage = null;
 
         try {
-            $service = app('poll-vote');
+            $service = app('poller');
             $user = auth()->user();
 
             $options = $this->getSelectedOptionIds();
@@ -101,13 +101,13 @@ class PollVote extends Component
         $title = trim($this->customOptionTitle);
 
         if ($title === '') {
-            $this->errorMessage = __('poll-vote::messages.please_enter_option_title');
+            $this->errorMessage = __('poller::messages.please_enter_option_title');
 
             return;
         }
 
         try {
-            $option = app('poll-vote')->addCustomOption($this->poll, auth()->user(), ['title' => $title]);
+            $option = app('poller')->addCustomOption($this->poll, auth()->user(), ['title' => $title]);
             $this->customOptionTitle = '';
             $this->poll->refresh();
             $this->poll->load('options');
@@ -122,7 +122,7 @@ class PollVote extends Component
         $this->errorMessage = null;
 
         try {
-            app('poll-vote')->retractVote($this->poll, auth()->user());
+            app('poller')->retractVote($this->poll, auth()->user());
             $this->reset(['selectedOptions', 'selectedOption', 'rating', 'rankings', 'comment', 'customOptionTitle', 'showResults']);
             $this->poll->refresh();
             $this->poll->load('options');
@@ -158,7 +158,7 @@ class PollVote extends Component
     {
         $extra = [];
 
-        if ($this->comment && ($this->poll->requires_comment || config('poll-vote.features.vote_comments', true))) {
+        if ($this->comment && ($this->poll->requires_comment || config('poller.features.vote_comments', true))) {
             $extra['comment'] = $this->comment;
         }
 

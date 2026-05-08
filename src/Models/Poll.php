@@ -1,9 +1,9 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Models;
+namespace Aftandilmmd\Poller\Models;
 
-use Aftandilmmd\PollVote\Enums\PollStatus;
-use Aftandilmmd\PollVote\Enums\PollType;
+use Aftandilmmd\Poller\Enums\PollStatus;
+use Aftandilmmd\Poller\Enums\PollType;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,9 +19,9 @@ class Poll extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected static function newFactory(): \Aftandilmmd\PollVote\Database\Factories\PollFactory
+    protected static function newFactory(): \Aftandilmmd\Poller\Database\Factories\PollFactory
     {
-        return \Aftandilmmd\PollVote\Database\Factories\PollFactory::new();
+        return \Aftandilmmd\Poller\Database\Factories\PollFactory::new();
     }
 
     protected $fillable = [
@@ -53,7 +53,7 @@ class Poll extends Model
 
     public function getTable(): string
     {
-        return config('poll-vote.tables.polls', 'poll_vote_polls');
+        return config('poller.tables.polls', 'poll_vote_polls');
     }
 
     protected function casts(): array
@@ -82,17 +82,17 @@ class Poll extends Model
 
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(config('poll-vote.user_model', \App\Models\User::class), 'created_by');
+        return $this->belongsTo(config('poller.user_model', \App\Models\User::class), 'created_by');
     }
 
     public function options(): HasMany
     {
-        return $this->hasMany(config('poll-vote.models.option', PollOption::class))->orderBy('sort_order');
+        return $this->hasMany(config('poller.models.option', PollOption::class))->orderBy('sort_order');
     }
 
     public function votes(): HasMany
     {
-        return $this->hasMany(config('poll-vote.models.vote', PollVote::class));
+        return $this->hasMany(config('poller.models.vote', PollVote::class));
     }
 
     // ── Scopes ─────────────────────────────────────────────────────
@@ -303,7 +303,7 @@ class Poll extends Model
 
     public function reorderOptions(array $optionIds): self
     {
-        app('poll-vote')->reorderOptions($this, $optionIds);
+        app('poller')->reorderOptions($this, $optionIds);
 
         return $this;
     }
@@ -348,12 +348,12 @@ class Poll extends Model
 
     public function allowsCustomOptions(): bool
     {
-        return $this->allow_custom_options && config('poll-vote.features.custom_options', true);
+        return $this->allow_custom_options && config('poller.features.custom_options', true);
     }
 
     public function customOptions(): HasMany
     {
-        return $this->hasMany(config('poll-vote.models.option', PollOption::class))->where('is_custom', true);
+        return $this->hasMany(config('poller.models.option', PollOption::class))->where('is_custom', true);
     }
 
     public function getCustomOptionCount(): int
@@ -389,7 +389,7 @@ class Poll extends Model
 
     protected function fireEvent(string $key, mixed ...$args): void
     {
-        $eventClass = config("poll-vote.events.{$key}");
+        $eventClass = config("poller.events.{$key}");
 
         if ($eventClass) {
             event(new $eventClass(...$args));

@@ -1,6 +1,6 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Enums;
+namespace Aftandilmmd\Poller\Enums;
 
 enum PollType: string
 {
@@ -13,11 +13,11 @@ enum PollType: string
     public function label(): string
     {
         return match ($this) {
-            self::YesNo => __('poll-vote::messages.type_yes_no'),
-            self::SingleChoice => __('poll-vote::messages.type_single_choice'),
-            self::MultipleChoice => __('poll-vote::messages.type_multiple_choice'),
-            self::Rating => __('poll-vote::messages.type_rating'),
-            self::Ranked => __('poll-vote::messages.type_ranked'),
+            self::YesNo => __('poller::messages.type_yes_no'),
+            self::SingleChoice => __('poller::messages.type_single_choice'),
+            self::MultipleChoice => __('poller::messages.type_multiple_choice'),
+            self::Rating => __('poller::messages.type_rating'),
+            self::Ranked => __('poller::messages.type_ranked'),
         };
     }
 
@@ -56,7 +56,7 @@ enum PollType: string
     public static function enabled(): array
     {
         return collect(self::cases())
-            ->filter(fn ($case) => config("poll-vote.types.{$case->value}", true))
+            ->filter(fn ($case) => config("poller.types.{$case->value}", true))
             ->all();
     }
 }

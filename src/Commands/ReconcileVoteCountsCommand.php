@@ -1,21 +1,21 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Commands;
+namespace Aftandilmmd\Poller\Commands;
 
-use Aftandilmmd\PollVote\Models\PollOption;
+use Aftandilmmd\Poller\Models\PollOption;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
 class ReconcileVoteCountsCommand extends Command
 {
-    protected $signature = 'poll-vote:reconcile-counts';
+    protected $signature = 'poller:reconcile-counts';
 
     protected $description = 'Recalculate votes_count on all poll options from actual vote records';
 
     public function handle(): int
     {
-        $optionsTable = config('poll-vote.tables.options', 'poll_vote_poll_options');
-        $votesTable = config('poll-vote.tables.votes', 'poll_vote_poll_votes');
+        $optionsTable = config('poller.tables.options', 'poll_vote_poll_options');
+        $votesTable = config('poller.tables.votes', 'poll_vote_poll_votes');
 
         $updated = DB::statement("
             UPDATE {$optionsTable}

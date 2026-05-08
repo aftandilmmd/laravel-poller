@@ -1,12 +1,12 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Http\Controllers\Api;
+namespace Aftandilmmd\Poller\Http\Controllers\Api;
 
-use Aftandilmmd\PollVote\Enums\PollStatus;
-use Aftandilmmd\PollVote\Enums\PollType;
-use Aftandilmmd\PollVote\Http\Controllers\Api\Concerns\AuthorizesPollManagement;
-use Aftandilmmd\PollVote\Http\Resources\PollResource;
-use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\Poller\Enums\PollStatus;
+use Aftandilmmd\Poller\Enums\PollType;
+use Aftandilmmd\Poller\Http\Controllers\Api\Concerns\AuthorizesPollManagement;
+use Aftandilmmd\Poller\Http\Resources\PollResource;
+use Aftandilmmd\Poller\Models\Poll;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -44,7 +44,7 @@ class PollController extends Controller
         }
 
         return PollResource::collection(
-            $query->latest()->paginate($request->input('per_page', config('poll-vote.pagination.polls', 20)))
+            $query->latest()->paginate($request->input('per_page', config('poller.pagination.polls', 20)))
         );
     }
 
@@ -77,7 +77,7 @@ class PollController extends Controller
             'options.*.description' => 'nullable|string',
         ]);
 
-        $service = app('poll-vote');
+        $service = app('poller');
         $poll = $service->create($validated, $request->user());
 
         if (! empty($validated['options'])) {
@@ -114,7 +114,7 @@ class PollController extends Controller
             'ends_at' => 'nullable|date',
         ]);
 
-        $poll = app('poll-vote')->update($poll, $validated);
+        $poll = app('poller')->update($poll, $validated);
 
         return new PollResource($poll->load('options'));
     }
@@ -123,7 +123,7 @@ class PollController extends Controller
     {
         $this->authorizeManagement($poll);
 
-        app('poll-vote')->delete($poll);
+        app('poller')->delete($poll);
 
         return response()->json(null, 204);
     }
@@ -132,32 +132,32 @@ class PollController extends Controller
     {
         $this->authorizeManagement($poll);
 
-        return new PollResource(app('poll-vote')->activate($poll));
+        return new PollResource(app('poller')->activate($poll));
     }
 
     public function close(Poll $poll): PollResource
     {
         $this->authorizeManagement($poll);
 
-        return new PollResource(app('poll-vote')->close($poll));
+        return new PollResource(app('poller')->close($poll));
     }
 
     public function cancel(Poll $poll): PollResource
     {
         $this->authorizeManagement($poll);
 
-        return new PollResource(app('poll-vote')->cancel($poll));
+        return new PollResource(app('poller')->cancel($poll));
     }
 
     public function duplicate(Poll $poll): PollResource
     {
         $this->authorizeManagement($poll);
 
-        return new PollResource(app('poll-vote')->duplicate($poll)->load('options'));
+        return new PollResource(app('poller')->duplicate($poll)->load('options'));
     }
 
     public function results(Poll $poll): JsonResponse
     {
-        return response()->json(app('poll-vote')->getDetailedResults($poll));
+        return response()->json(app('poller')->getDetailedResults($poll));
     }
 }

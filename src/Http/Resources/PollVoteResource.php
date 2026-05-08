@@ -1,6 +1,6 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Http\Resources;
+namespace Aftandilmmd\Poller\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;

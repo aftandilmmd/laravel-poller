@@ -1,10 +1,10 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Livewire;
+namespace Aftandilmmd\Poller\Livewire;
 
-use Aftandilmmd\PollVote\Enums\PollStatus;
-use Aftandilmmd\PollVote\Enums\PollType;
-use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\Poller\Enums\PollStatus;
+use Aftandilmmd\Poller\Enums\PollType;
+use Aftandilmmd\Poller\Models\Poll;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Attributes\Url;
@@ -69,8 +69,8 @@ class PollManager extends Component
             $query->where('type', $this->typeFilter);
         }
 
-        return view('poll-vote::livewire.poll-manager', [
-            'polls' => $query->paginate(config('poll-vote.pagination.polls', 20)),
+        return view('poller::livewire.poll-manager', [
+            'polls' => $query->paginate(config('poller.pagination.polls', 20)),
             'statuses' => PollStatus::options(),
             'types' => PollType::options(),
         ]);
@@ -92,35 +92,35 @@ class PollManager extends Component
     {
         $poll = Poll::findOrFail($pollId);
         $this->authorizePollManagement($poll);
-        app('poll-vote')->delete($poll);
+        app('poller')->delete($poll);
     }
 
     public function activatePoll(int $pollId): void
     {
         $poll = Poll::findOrFail($pollId);
         $this->authorizePollManagement($poll);
-        app('poll-vote')->activate($poll);
+        app('poller')->activate($poll);
     }
 
     public function closePoll(int $pollId): void
     {
         $poll = Poll::findOrFail($pollId);
         $this->authorizePollManagement($poll);
-        app('poll-vote')->close($poll);
+        app('poller')->close($poll);
     }
 
     public function cancelPoll(int $pollId): void
     {
         $poll = Poll::findOrFail($pollId);
         $this->authorizePollManagement($poll);
-        app('poll-vote')->cancel($poll);
+        app('poller')->cancel($poll);
     }
 
     public function duplicatePoll(int $pollId): void
     {
         $poll = Poll::findOrFail($pollId);
         $this->authorizePollManagement($poll);
-        app('poll-vote')->duplicate($poll);
+        app('poller')->duplicate($poll);
     }
 
     protected function authorizePollManagement(Poll $poll): void

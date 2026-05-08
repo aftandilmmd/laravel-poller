@@ -1,18 +1,18 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Services;
+namespace Aftandilmmd\Poller\Services;
 
-use Aftandilmmd\PollVote\Contracts\PollVoteServiceInterface;
-use Aftandilmmd\PollVote\Enums\PollStatus;
-use Aftandilmmd\PollVote\Exceptions\AlreadyVotedException;
-use Aftandilmmd\PollVote\Exceptions\CustomOptionException;
-use Aftandilmmd\PollVote\Exceptions\InvalidSelectionException;
-use Aftandilmmd\PollVote\Exceptions\PollClosedException;
-use Aftandilmmd\PollVote\Exceptions\PollException;
-use Aftandilmmd\PollVote\Exceptions\UnauthorizedVoteException;
-use Aftandilmmd\PollVote\Models\Poll;
-use Aftandilmmd\PollVote\Models\PollOption;
-use Aftandilmmd\PollVote\Models\PollVote;
+use Aftandilmmd\Poller\Contracts\PollVoteServiceInterface;
+use Aftandilmmd\Poller\Enums\PollStatus;
+use Aftandilmmd\Poller\Exceptions\AlreadyVotedException;
+use Aftandilmmd\Poller\Exceptions\CustomOptionException;
+use Aftandilmmd\Poller\Exceptions\InvalidSelectionException;
+use Aftandilmmd\Poller\Exceptions\PollClosedException;
+use Aftandilmmd\Poller\Exceptions\PollException;
+use Aftandilmmd\Poller\Exceptions\UnauthorizedVoteException;
+use Aftandilmmd\Poller\Models\Poll;
+use Aftandilmmd\Poller\Models\PollOption;
+use Aftandilmmd\Poller\Models\PollVote;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -48,7 +48,7 @@ class PollService implements PollVoteServiceInterface
 
     public function delete(Poll $poll): bool
     {
-        if (config('poll-vote.features.soft_deletes', true)) {
+        if (config('poller.features.soft_deletes', true)) {
             return (bool) $poll->delete();
         }
 
@@ -150,7 +150,7 @@ class PollService implements PollVoteServiceInterface
         $this->validateExtra($poll, $extra);
 
         if ($poll->hasUserVoted($voter)) {
-            if ($poll->allow_vote_change && config('poll-vote.features.vote_changing', true)) {
+            if ($poll->allow_vote_change && config('poller.features.vote_changing', true)) {
                 return $this->changeVote($poll, $voter, $options, $extra);
             }
 
@@ -201,7 +201,7 @@ class PollService implements PollVoteServiceInterface
 
     public function changeVote(Poll $poll, Authenticatable $voter, PollOption|int|array $options, array $extra = []): Collection
     {
-        if (! $poll->allow_vote_change && ! config('poll-vote.features.vote_changing', true)) {
+        if (! $poll->allow_vote_change && ! config('poller.features.vote_changing', true)) {
             throw new AlreadyVotedException('Vote changing is not allowed for this poll.');
         }
 
@@ -253,7 +253,7 @@ class PollService implements PollVoteServiceInterface
 
     public function retractVote(Poll $poll, Authenticatable $voter): void
     {
-        if (! config('poll-vote.features.vote_retraction', true)) {
+        if (! config('poller.features.vote_retraction', true)) {
             throw new AlreadyVotedException('Vote retraction is not allowed.');
         }
 
@@ -346,7 +346,7 @@ class PollService implements PollVoteServiceInterface
         }
 
         if ($checkExisting && $poll->hasUserVoted($voter)) {
-            if (! $poll->allow_vote_change || ! config('poll-vote.features.vote_changing', true)) {
+            if (! $poll->allow_vote_change || ! config('poller.features.vote_changing', true)) {
                 throw new AlreadyVotedException;
             }
         }
@@ -359,8 +359,8 @@ class PollService implements PollVoteServiceInterface
         }
 
         if ($poll->isRating() && isset($extra['rating'])) {
-            $min = config('poll-vote.rating.min', 1);
-            $max = config('poll-vote.rating.max', 5);
+            $min = config('poller.rating.min', 1);
+            $max = config('poller.rating.max', 5);
 
             if ($extra['rating'] < $min || $extra['rating'] > $max) {
                 throw new InvalidSelectionException("Rating must be between {$min} and {$max}.");
@@ -419,7 +419,7 @@ class PollService implements PollVoteServiceInterface
 
     protected function fireEvent(string $key, mixed ...$args): void
     {
-        $eventClass = config("poll-vote.events.{$key}");
+        $eventClass = config("poller.events.{$key}");
 
         if ($eventClass) {
             event(new $eventClass(...$args));
@@ -428,16 +428,16 @@ class PollService implements PollVoteServiceInterface
 
     protected function pollModel(): string
     {
-        return config('poll-vote.models.poll', Poll::class);
+        return config('poller.models.poll', Poll::class);
     }
 
     protected function optionModel(): string
     {
-        return config('poll-vote.models.option', PollOption::class);
+        return config('poller.models.option', PollOption::class);
     }
 
     protected function voteModel(): string
     {
-        return config('poll-vote.models.vote', PollVote::class);
+        return config('poller.models.vote', PollVote::class);
     }
 }

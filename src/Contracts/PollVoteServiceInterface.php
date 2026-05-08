@@ -1,9 +1,9 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Contracts;
+namespace Aftandilmmd\Poller\Contracts;
 
-use Aftandilmmd\PollVote\Models\Poll;
-use Aftandilmmd\PollVote\Models\PollOption;
+use Aftandilmmd\Poller\Models\Poll;
+use Aftandilmmd\Poller\Models\PollOption;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;

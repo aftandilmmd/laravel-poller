@@ -1,11 +1,11 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Http\Controllers\Api;
+namespace Aftandilmmd\Poller\Http\Controllers\Api;
 
-use Aftandilmmd\PollVote\Http\Controllers\Api\Concerns\AuthorizesPollManagement;
-use Aftandilmmd\PollVote\Http\Resources\PollOptionResource;
-use Aftandilmmd\PollVote\Models\Poll;
-use Aftandilmmd\PollVote\Models\PollOption;
+use Aftandilmmd\Poller\Http\Controllers\Api\Concerns\AuthorizesPollManagement;
+use Aftandilmmd\Poller\Http\Resources\PollOptionResource;
+use Aftandilmmd\Poller\Models\Poll;
+use Aftandilmmd\Poller\Models\PollOption;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -24,7 +24,7 @@ class PollOptionController extends Controller
             'sort_order' => 'nullable|integer|min:0',
         ]);
 
-        $option = app('poll-vote')->addOption($poll, $validated);
+        $option = app('poller')->addOption($poll, $validated);
 
         return new PollOptionResource($option);
     }
@@ -40,7 +40,7 @@ class PollOptionController extends Controller
             'sort_order' => 'nullable|integer|min:0',
         ]);
 
-        $option = app('poll-vote')->updateOption($option, $validated);
+        $option = app('poller')->updateOption($option, $validated);
 
         return new PollOptionResource($option);
     }
@@ -50,7 +50,7 @@ class PollOptionController extends Controller
         $this->authorizeManagement($poll);
         $this->ensureOptionBelongsToPoll($poll, $option);
 
-        app('poll-vote')->removeOption($option);
+        app('poller')->removeOption($option);
 
         return response()->json(null, 204);
     }
@@ -61,11 +61,11 @@ class PollOptionController extends Controller
 
         $validated = $request->validate([
             'option_ids' => 'required|array',
-            'option_ids.*' => 'integer|exists:'.config('poll-vote.tables.options', 'poll_vote_poll_options').',id',
+            'option_ids.*' => 'integer|exists:'.config('poller.tables.options', 'poll_vote_poll_options').',id',
         ]);
 
-        app('poll-vote')->reorderOptions($poll, $validated['option_ids']);
+        app('poller')->reorderOptions($poll, $validated['option_ids']);
 
-        return response()->json(['message' => __('poll-vote::messages.options_reordered')]);
+        return response()->json(['message' => __('poller::messages.options_reordered')]);
     }
 }
