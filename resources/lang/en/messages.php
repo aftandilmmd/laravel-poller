@@ -15,6 +15,7 @@ return [
     'max_votes_reached' => 'Maximum of :max votes allowed.',
     'vote_changing_not_allowed' => 'Vote changing is not allowed for this poll.',
     'vote_retraction_not_allowed' => 'Vote retraction is not allowed.',
+    'voter_rate_limit_exceeded' => 'You have reached the voting rate limit. Please try again later.',
     'at_least_one_option' => 'At least one option must be selected.',
     'invalid_options' => 'One or more selected options do not belong to this poll.',
     'single_option_only' => 'Only one option can be selected for this poll type.',

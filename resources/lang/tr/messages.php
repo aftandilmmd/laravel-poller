@@ -15,6 +15,7 @@ return [
     'max_votes_reached' => 'En fazla :max oy kullanılabilir.',
     'vote_changing_not_allowed' => 'Bu ankette oy değiştirmeye izin verilmiyor.',
     'vote_retraction_not_allowed' => 'Oy geri çekme işlemi yapılamaz.',
+    'voter_rate_limit_exceeded' => 'Oylama hız sınırına ulaştınız. Lütfen daha sonra tekrar deneyin.',
     'at_least_one_option' => 'En az bir seçenek seçilmelidir.',
     'invalid_options' => 'Seçilen seçeneklerden bir veya daha fazlası bu ankete ait değil.',
     'single_option_only' => 'Bu anket türü için yalnızca bir seçenek seçilebilir.',

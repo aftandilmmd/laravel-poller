@@ -15,6 +15,7 @@ return [
     'max_votes_reached' => 'Ən çox :max səs vermək mümkündür.',
     'vote_changing_not_allowed' => 'Bu sorğuda səs dəyişdirməyə icazə verilmir.',
     'vote_retraction_not_allowed' => 'Səs geri çəkmə əməliyyatı mümkün deyil.',
+    'voter_rate_limit_exceeded' => 'Səsvermə sürət limitinə çatdınız. Zəhmət olmasa daha sonra cəhd edin.',
     'at_least_one_option' => 'Ən azı bir seçim seçilməlidir.',
     'invalid_options' => 'Seçilmiş seçimlərdən bir və ya daha çoxu bu sorğuya aid deyil.',
     'single_option_only' => 'Bu sorğu növü üçün yalnız bir seçim seçilə bilər.',
