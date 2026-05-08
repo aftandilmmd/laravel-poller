@@ -14,7 +14,7 @@ return new class extends Migration
             $table->id();
             $table->nullableMorphs('pollable');
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
-            $table->string('title');
+            $table->text('title');
             $table->text('description')->nullable();
             $table->string('type')->default('single_choice')->index();
             $table->string('status')->default('draft')->index();

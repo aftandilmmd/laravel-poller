@@ -2,6 +2,7 @@
 
 namespace Aftandilmmd\Poller\Models;
 
+use Aftandilmmd\Poller\Concerns\HasTranslatableContent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PollOption extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTranslatableContent;
 
     protected static function newFactory(): \Aftandilmmd\Poller\Database\Factories\PollOptionFactory
     {
@@ -38,10 +39,10 @@ class PollOption extends Model
 
     protected function casts(): array
     {
-        return [
+        return $this->translatableCasts([
             'is_custom' => 'boolean',
             'metadata' => 'array',
-        ];
+        ], ['title', 'description']);
     }
 
     public function poll(): BelongsTo

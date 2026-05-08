@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create($table, function (Blueprint $table) use ($pollsTable) {
             $table->id();
             $table->foreignId('poll_id')->constrained($pollsTable)->cascadeOnDelete();
-            $table->string('title');
+            $table->text('title');
             $table->text('description')->nullable();
             $table->unsignedSmallInteger('sort_order')->default(0);
             $table->unsignedInteger('votes_count')->default(0);
