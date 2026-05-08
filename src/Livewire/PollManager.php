@@ -50,23 +50,14 @@ class PollManager extends Component
         $query = Poll::query()
             ->with(['creator', 'options'])
             ->withCount('votes')
+            ->search($this->search)
+            ->ofStatus($this->statusFilter ?: null)
+            ->ofType($this->typeFilter ?: null)
             ->latest();
 
         if ($this->pollableType && $this->pollableId) {
             $query->where('pollable_type', $this->pollableType)
                 ->where('pollable_id', $this->pollableId);
-        }
-
-        if ($this->search) {
-            $query->where('title', 'like', "%{$this->search}%");
-        }
-
-        if ($this->statusFilter) {
-            $query->where('status', $this->statusFilter);
-        }
-
-        if ($this->typeFilter) {
-            $query->where('type', $this->typeFilter);
         }
 
         return view('poller::livewire.poll-manager', [
