@@ -12,7 +12,7 @@ Laravel üçün güclü və çevik sorğu və səsvermə paketi. 5 sorğu növü
 ## Quraşdırma
 
 ```bash
-composer require aftandilmmd/laravel-poll-vote
+composer require aftandilmmd/laravel-poller
 ```
 
 Xidmət provayderi və fasad avtomatik aşkarlanır.
@@ -20,25 +20,25 @@ Xidmət provayderi və fasad avtomatik aşkarlanır.
 Konfiqurasiya faylını dərc edin:
 
 ```bash
-php artisan vendor:publish --tag=poll-vote-config
+php artisan vendor:publish --tag=poller-config
 ```
 
 Miqrasiyaları dərc edin (istəyə bağlı - miqrasiyalar avtomatik işləyir):
 
 ```bash
-php artisan vendor:publish --tag=poll-vote-migrations
+php artisan vendor:publish --tag=poller-migrations
 ```
 
 Görünüşləri dərc edin (istəyə bağlı - fərdiləşdirmə üçün):
 
 ```bash
-php artisan vendor:publish --tag=poll-vote-views
+php artisan vendor:publish --tag=poller-views
 ```
 
 Tərcümələri dərc edin (istəyə bağlı - fərdiləşdirmə üçün):
 
 ```bash
-php artisan vendor:publish --tag=poll-vote-translations
+php artisan vendor:publish --tag=poller-translations
 ```
 
 Miqrasiyaları işə salın:
@@ -49,14 +49,14 @@ php artisan migrate
 
 ## Konfiqurasiya
 
-Tam konfiqurasiya seçimləri `config/poll-vote.php` faylındadır:
+Tam konfiqurasiya seçimləri `config/poller.php` faylındadır:
 
 | Açar | Təsvir | Susmayagörə |
 |------|--------|-------------|
 | `user_model` | İstifadəçi model sinfi | `App\Models\User` |
-| `tables.polls` | Sorğular cədvəlinin adı | `poll_vote_polls` |
-| `tables.options` | Seçimlər cədvəlinin adı | `poll_vote_poll_options` |
-| `tables.votes` | Səslər cədvəlinin adı | `poll_vote_poll_votes` |
+| `tables.polls` | Sorğular cədvəlinin adı | `poller_polls` |
+| `tables.options` | Seçimlər cədvəlinin adı | `poller_poll_options` |
+| `tables.votes` | Səslər cədvəlinin adı | `poller_poll_votes` |
 | `features.anonymous_voting` | Anonim səsverməni aktiv et | `true` |
 | `features.vote_changing` | Səs dəyişdirməni aktiv et | `true` |
 | `features.vote_retraction` | Səs geri çəkməni aktiv et | `true` |
@@ -80,7 +80,7 @@ Tam konfiqurasiya seçimləri `config/poll-vote.php` faylındadır:
 ### İstənilən modelə sorğu dəstəyi əlavə edin (Pollable)
 
 ```php
-use Aftandilmmd\PollVote\Traits\HasPolls;
+use Aftandilmmd\Poller\Traits\HasPolls;
 
 class Meeting extends Model
 {
@@ -91,7 +91,7 @@ class Meeting extends Model
 ### İstifadəçi modelinə səsvermə qabiliyyəti əlavə edin
 
 ```php
-use Aftandilmmd\PollVote\Traits\InteractsWithPolls;
+use Aftandilmmd\Poller\Traits\InteractsWithPolls;
 
 class User extends Authenticatable
 {
@@ -139,10 +139,10 @@ class User extends Authenticatable
 ### Fasad vasitəsilə
 
 ```php
-use Aftandilmmd\PollVote\Facades\PollVote;
+use Aftandilmmd\Poller\Facades\Poller;
 
 // Create a poll
-$poll = PollVote::create([
+$poll = Poller::create([
     'title' => 'Best framework?',
     'type' => 'single_choice',
     'is_anonymous' => false,
@@ -151,41 +151,41 @@ $poll = PollVote::create([
 ], $user);
 
 // Add options
-PollVote::addOption($poll, ['title' => 'Laravel']);
-PollVote::addOption($poll, ['title' => 'Django']);
-PollVote::addOption($poll, ['title' => 'Rails']);
+Poller::addOption($poll, ['title' => 'Laravel']);
+Poller::addOption($poll, ['title' => 'Django']);
+Poller::addOption($poll, ['title' => 'Rails']);
 
 // Activate the poll
-PollVote::activate($poll);
+Poller::activate($poll);
 
 // Cast a vote
-PollVote::castVote($poll, $user, $optionId);
+Poller::castVote($poll, $user, $optionId);
 
 // Cast vote with comment
-PollVote::castVote($poll, $user, $optionId, ['comment' => 'Great choice!']);
+Poller::castVote($poll, $user, $optionId, ['comment' => 'Great choice!']);
 
 // Change a vote
-PollVote::changeVote($poll, $user, $newOptionId);
+Poller::changeVote($poll, $user, $newOptionId);
 
 // Retract a vote
-PollVote::retractVote($poll, $user);
+Poller::retractVote($poll, $user);
 
 // Get results
-$results = PollVote::getResults($poll);
+$results = Poller::getResults($poll);
 // [['option_id' => 1, 'title' => 'Laravel', 'votes_count' => 15, 'percentage' => 75.0], ...]
 
-$detailed = PollVote::getDetailedResults($poll);
+$detailed = Poller::getDetailedResults($poll);
 // ['poll' => ..., 'total_votes' => 20, 'unique_voters' => 18, 'options' => [...], 'leading_option' => ...]
 
 // Lifecycle
-PollVote::close($poll);
-PollVote::cancel($poll);
+Poller::close($poll);
+Poller::cancel($poll);
 
 // Seçimləri yenidən sırala
-PollVote::reorderOptions($poll, [$optionId3, $optionId1, $optionId2]);
+Poller::reorderOptions($poll, [$optionId3, $optionId1, $optionId2]);
 
 // Duplicate a poll (copies all options)
-$newPoll = PollVote::duplicate($poll, ['title' => 'Copy of poll']);
+$newPoll = Poller::duplicate($poll, ['title' => 'Copy of poll']);
 ```
 
 ### Fərdi Seçimlər
@@ -194,7 +194,7 @@ Səs verənlərin sorğuya öz seçimlərini əlavə etməsinə icazə verin. Ma
 
 ```php
 // Fərdi seçimlər aktiv bir sorğu yaradın (maks 5)
-$poll = PollVote::create([
+$poll = Poller::create([
     'title' => 'Best framework?',
     'type' => 'single_choice',
     'allow_custom_options' => true,
@@ -202,7 +202,7 @@ $poll = PollVote::create([
 ], $user);
 
 // Fərdi seçim əlavə et (Fasad vasitəsilə)
-PollVote::addCustomOption($poll, $user, ['title' => 'Mənim təklifim']);
+Poller::addCustomOption($poll, $user, ['title' => 'Mənim təklifim']);
 
 // Fərdi seçim əlavə et (İstifadəçi modeli vasitəsilə)
 $user->addCustomOption($poll, ['title' => 'Mənim təklifim']);
@@ -224,7 +224,7 @@ public function canAddCustomOption(Poll $poll): bool
 }
 ```
 
-Livewire `PollVote` vidceti fərdi seçimlər aktivləşdirildikdə və istifadəçi səlahiyyətli olduqda avtomatik olaraq "Öz seçiminizi əlavə edin" daxiletmə sahəsini göstərir.
+Livewire `PollVote (poller-poll-vote)` vidceti fərdi seçimlər aktivləşdirildikdə və istifadəçi səlahiyyətli olduqda avtomatik olaraq "Öz seçiminizi əlavə edin" daxiletmə sahəsini göstərir.
 
 ### Sorğu Modeli vasitəsilə
 
@@ -282,10 +282,10 @@ Paket Tailwind CSS UI ilə (qaranlıq rejim dəstəklənir) istifadəyə hazır 
 ### Sorğu İdarəedici (Tam CRUD)
 
 ```blade
-<livewire:poll-vote-poll-manager />
+<livewire:poller-poll-manager />
 
 {{-- Scoped to a specific model --}}
-<livewire:poll-vote-poll-manager :pollable="$meeting" />
+<livewire:poller-poll-manager :pollable="$meeting" />
 ```
 
 Xüsusiyyətlər: Axtarış, status/növə görə süzgəc, yaratma, redaktə, silmə, aktivləşdirmə, bağlama, sorğu dublikatı.
@@ -293,14 +293,14 @@ Xüsusiyyətlər: Axtarış, status/növə görə süzgəc, yaratma, redaktə, s
 ### Sorğu Formu (Yaratma/Redaktə)
 
 ```blade
-<livewire:poll-vote-poll-form />
-<livewire:poll-vote-poll-form :poll-id="$poll->id" />
+<livewire:poller-poll-form />
+<livewire:poller-poll-form :poll-id="$poll->id" />
 ```
 
 ### Sorğu Göstərişi (Tam Görünüş)
 
 ```blade
-<livewire:poll-vote-poll-display :poll="$poll" />
+<livewire:poller-poll-display :poll="$poll" />
 ```
 
 Sorğu məlumatlarını, statistikanı, səsvermə interfeysini, nəticələri və səs tarixçəsi nişanlarını göstərir.
@@ -308,7 +308,7 @@ Sorğu məlumatlarını, statistikanı, səsvermə interfeysini, nəticələri v
 ### Sorğu Nəticələri (Analitika)
 
 ```blade
-<livewire:poll-vote-poll-results :poll="$poll" />
+<livewire:poller-poll-results :poll="$poll" />
 ```
 
 Faizlər və lider seçim ilə sütun diaqram nəticələrini göstərir.
@@ -316,7 +316,7 @@ Faizlər və lider seçim ilə sütun diaqram nəticələrini göstərir.
 ### Sorğu Səsi (Kompakt Vidcet)
 
 ```blade
-<livewire:poll-vote-poll-vote :poll="$poll" />
+<livewire:poller-poll-vote :poll="$poll" />
 ```
 
 Daxil edilə bilən səsvermə vidceti. Bütün 5 sorğu növünü müvafiq interfeys ilə idarə edir (radio, onay qutusu, reytinq şkalası, sıralama).
@@ -324,10 +324,10 @@ Daxil edilə bilən səsvermə vidceti. Bütün 5 sorğu növünü müvafiq inte
 ### Görünüşlərin Fərdiləşdirilməsi
 
 ```bash
-php artisan vendor:publish --tag=poll-vote-views
+php artisan vendor:publish --tag=poller-views
 ```
 
-Görünüşlər `resources/views/vendor/poll-vote/` qovluğuna dərc ediləcək.
+Görünüşlər `resources/views/vendor/poller/` qovluğuna dərc ediləcək.
 
 ---
 
@@ -336,7 +336,7 @@ Görünüşlər `resources/views/vendor/poll-vote/` qovluğuna dərc ediləcək.
 Konfiqurasiyanızda API-ni aktiv edin:
 
 ```php
-// config/poll-vote.php
+// config/poller.php
 'api' => [
     'enabled' => true,
     'prefix' => 'api/polls',
@@ -390,25 +390,25 @@ Avtomatik sorğu həyat dövrü idarəetməsi üçün planlaşdırıcınıza əl
 
 ```php
 // routes/console.php or bootstrap/app.php
-Schedule::command('poll-vote:auto-open')->everyMinute();
-Schedule::command('poll-vote:auto-close')->everyMinute();
+Schedule::command('poller:auto-open')->everyMinute();
+Schedule::command('poller:auto-close')->everyMinute();
 ```
 
-- `poll-vote:auto-open` -- `starts_at` vaxtı keçmiş qaralama sorğularını aktivləşdirir
-- `poll-vote:auto-close` -- `ends_at` vaxtı keçmiş aktiv sorğuları bağlayır
+- `poller:auto-open` -- `starts_at` vaxtı keçmiş qaralama sorğularını aktivləşdirir
+- `poller:auto-close` -- `ends_at` vaxtı keçmiş aktiv sorğuları bağlayır
 
 ### Texniki Xidmət Əmrləri
 
 ```bash
 # Bütün seçim səs sayılarını faktiki səs qeydlərindən yenidən hesabla
-php artisan poll-vote:reconcile-counts
+php artisan poller:reconcile-counts
 ```
 
 ---
 
 ## Hadisələr
 
-Bütün hadisələr `config/poll-vote.php` vasitəsilə konfiqurasiya edilə bilir. Söndürmək üçün `null` təyin edin.
+Bütün hadisələr `config/poller.php` vasitəsilə konfiqurasiya edilə bilir. Söndürmək üçün `null` təyin edin.
 
 | Hadisə | Məlumat |
 |--------|---------|
@@ -434,14 +434,14 @@ Event::listen(VoteCast::class, function ($event) {
 Bütün səsvermə xətaları tipli istisnalar atır:
 
 ```php
-use Aftandilmmd\PollVote\Exceptions\PollClosedException;
-use Aftandilmmd\PollVote\Exceptions\AlreadyVotedException;
-use Aftandilmmd\PollVote\Exceptions\InvalidSelectionException;
-use Aftandilmmd\PollVote\Exceptions\UnauthorizedVoteException;
-use Aftandilmmd\PollVote\Exceptions\CustomOptionException;
+use Aftandilmmd\Poller\Exceptions\PollClosedException;
+use Aftandilmmd\Poller\Exceptions\AlreadyVotedException;
+use Aftandilmmd\Poller\Exceptions\InvalidSelectionException;
+use Aftandilmmd\Poller\Exceptions\UnauthorizedVoteException;
+use Aftandilmmd\Poller\Exceptions\CustomOptionException;
 
 try {
-    PollVote::castVote($poll, $user, $optionId);
+    Poller::castVote($poll, $user, $optionId);
 } catch (PollClosedException $e) {
     // Sorğu səs qəbul etmir
 } catch (AlreadyVotedException $e) {
@@ -460,8 +460,8 @@ try {
 ## Enumlar
 
 ```php
-use Aftandilmmd\PollVote\Enums\PollType;
-use Aftandilmmd\PollVote\Enums\PollStatus;
+use Aftandilmmd\Poller\Enums\PollType;
+use Aftandilmmd\Poller\Enums\PollStatus;
 
 PollType::SingleChoice->value;   // "single_choice"
 PollType::SingleChoice->label(); // "Single Choice"
@@ -486,7 +486,7 @@ Konfiqurasiyada model siniflərini əvəz edin:
 'models' => [
     'poll' => App\Models\CustomPoll::class,
     'option' => App\Models\CustomPollOption::class,
-    'vote' => App\Models\CustomPollVote::class,
+    'vote' => App\Models\CustomPoller::class,
 ],
 ```
 
@@ -508,10 +508,10 @@ Hadisə siniflərini əvəz edin və ya söndürün:
 Paket İngiliscə, Türkcə və Azərbaycanca tərcümələr daxildir. Fərdiləşdirmək və ya yeni dil əlavə etmək üçün:
 
 ```bash
-php artisan vendor:publish --tag=poll-vote-translations
+php artisan vendor:publish --tag=poller-translations
 ```
 
-Tərcümə faylları `lang/vendor/poll-vote/` qovluğuna dərc edilir.
+Tərcümə faylları `lang/vendor/poller/` qovluğuna dərc edilir.
 
 ---
 

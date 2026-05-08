@@ -12,7 +12,7 @@ Laravel için güçlü ve esnek bir anket ve oylama paketi. 5 anket türünü, a
 ## Kurulum
 
 ```bash
-composer require aftandilmmd/laravel-poll-vote
+composer require aftandilmmd/laravel-poller
 ```
 
 Servis sağlayıcı ve facade otomatik olarak keşfedilir.
@@ -20,25 +20,25 @@ Servis sağlayıcı ve facade otomatik olarak keşfedilir.
 Yapılandırma dosyasını yayınlayın:
 
 ```bash
-php artisan vendor:publish --tag=poll-vote-config
+php artisan vendor:publish --tag=poller-config
 ```
 
 Migration dosyalarını yayınlayın (isteğe bağlı - migration'lar otomatik çalışır):
 
 ```bash
-php artisan vendor:publish --tag=poll-vote-migrations
+php artisan vendor:publish --tag=poller-migrations
 ```
 
 Görünümleri yayınlayın (isteğe bağlı - özelleştirme için):
 
 ```bash
-php artisan vendor:publish --tag=poll-vote-views
+php artisan vendor:publish --tag=poller-views
 ```
 
 Çevirileri yayınlayın (isteğe bağlı - özelleştirme için):
 
 ```bash
-php artisan vendor:publish --tag=poll-vote-translations
+php artisan vendor:publish --tag=poller-translations
 ```
 
 Migration'ları çalıştırın:
@@ -49,14 +49,14 @@ php artisan migrate
 
 ## Yapılandırma
 
-Tüm yapılandırma seçenekleri `config/poll-vote.php` dosyasında:
+Tüm yapılandırma seçenekleri `config/poller.php` dosyasında:
 
 | Anahtar | Açıklama | Varsayılan |
 |---------|----------|------------|
 | `user_model` | Kullanıcı model sınıfı | `App\Models\User` |
-| `tables.polls` | Anketler tablo adı | `poll_vote_polls` |
-| `tables.options` | Seçenekler tablo adı | `poll_vote_poll_options` |
-| `tables.votes` | Oylar tablo adı | `poll_vote_poll_votes` |
+| `tables.polls` | Anketler tablo adı | `poller_polls` |
+| `tables.options` | Seçenekler tablo adı | `poller_poll_options` |
+| `tables.votes` | Oylar tablo adı | `poller_poll_votes` |
 | `features.anonymous_voting` | Anonim oylamayı etkinleştir | `true` |
 | `features.vote_changing` | Oy değiştirmeyi etkinleştir | `true` |
 | `features.vote_retraction` | Oy geri çekmeyi etkinleştir | `true` |
@@ -80,7 +80,7 @@ Tüm yapılandırma seçenekleri `config/poll-vote.php` dosyasında:
 ### Herhangi bir modele anket desteği ekleyin (Pollable)
 
 ```php
-use Aftandilmmd\PollVote\Traits\HasPolls;
+use Aftandilmmd\Poller\Traits\HasPolls;
 
 class Meeting extends Model
 {
@@ -91,7 +91,7 @@ class Meeting extends Model
 ### Kullanıcı modeline oylama yeteneği ekleyin
 
 ```php
-use Aftandilmmd\PollVote\Traits\InteractsWithPolls;
+use Aftandilmmd\Poller\Traits\InteractsWithPolls;
 
 class User extends Authenticatable
 {
@@ -139,10 +139,10 @@ class User extends Authenticatable
 ### Facade ile
 
 ```php
-use Aftandilmmd\PollVote\Facades\PollVote;
+use Aftandilmmd\Poller\Facades\Poller;
 
 // Anket oluştur
-$poll = PollVote::create([
+$poll = Poller::create([
     'title' => 'En iyi framework?',
     'type' => 'single_choice',
     'is_anonymous' => false,
@@ -151,41 +151,41 @@ $poll = PollVote::create([
 ], $user);
 
 // Seçenek ekle
-PollVote::addOption($poll, ['title' => 'Laravel']);
-PollVote::addOption($poll, ['title' => 'Django']);
-PollVote::addOption($poll, ['title' => 'Rails']);
+Poller::addOption($poll, ['title' => 'Laravel']);
+Poller::addOption($poll, ['title' => 'Django']);
+Poller::addOption($poll, ['title' => 'Rails']);
 
 // Anketi etkinleştir
-PollVote::activate($poll);
+Poller::activate($poll);
 
 // Oy ver
-PollVote::castVote($poll, $user, $optionId);
+Poller::castVote($poll, $user, $optionId);
 
 // Yorumla oy ver
-PollVote::castVote($poll, $user, $optionId, ['comment' => 'Harika seçim!']);
+Poller::castVote($poll, $user, $optionId, ['comment' => 'Harika seçim!']);
 
 // Oy değiştir
-PollVote::changeVote($poll, $user, $newOptionId);
+Poller::changeVote($poll, $user, $newOptionId);
 
 // Oy geri çek
-PollVote::retractVote($poll, $user);
+Poller::retractVote($poll, $user);
 
 // Sonuçları al
-$results = PollVote::getResults($poll);
+$results = Poller::getResults($poll);
 // [['option_id' => 1, 'title' => 'Laravel', 'votes_count' => 15, 'percentage' => 75.0], ...]
 
-$detailed = PollVote::getDetailedResults($poll);
+$detailed = Poller::getDetailedResults($poll);
 // ['poll' => ..., 'total_votes' => 20, 'unique_voters' => 18, 'options' => [...], 'leading_option' => ...]
 
 // Yaşam döngüsü
-PollVote::close($poll);
-PollVote::cancel($poll);
+Poller::close($poll);
+Poller::cancel($poll);
 
 // Seçenekleri yeniden sırala
-PollVote::reorderOptions($poll, [$optionId3, $optionId1, $optionId2]);
+Poller::reorderOptions($poll, [$optionId3, $optionId1, $optionId2]);
 
 // Anketi kopyala (tüm seçenekleriyle)
-$newPoll = PollVote::duplicate($poll, ['title' => 'Anketin kopyası']);
+$newPoll = Poller::duplicate($poll, ['title' => 'Anketin kopyası']);
 ```
 
 ### Özel Seçenekler
@@ -194,7 +194,7 @@ Oy verenlerin ankete kendi seçeneklerini eklemesine izin verin. Maksimum sayıy
 
 ```php
 // Özel seçenekler etkin bir anket oluşturun (maks 5)
-$poll = PollVote::create([
+$poll = Poller::create([
     'title' => 'En iyi framework?',
     'type' => 'single_choice',
     'allow_custom_options' => true,
@@ -202,7 +202,7 @@ $poll = PollVote::create([
 ], $user);
 
 // Özel seçenek ekle (Facade ile)
-PollVote::addCustomOption($poll, $user, ['title' => 'Benim önerim']);
+Poller::addCustomOption($poll, $user, ['title' => 'Benim önerim']);
 
 // Özel seçenek ekle (Kullanıcı modeli ile)
 $user->addCustomOption($poll, ['title' => 'Benim önerim']);
@@ -224,7 +224,7 @@ public function canAddCustomOption(Poll $poll): bool
 }
 ```
 
-Livewire `PollVote` widget'ı, özel seçenekler etkinleştirildiğinde ve kullanıcı yetkili olduğunda otomatik olarak "Kendi seçeneğinizi ekleyin" giriş alanını gösterir.
+Livewire `PollVote (poller-poll-vote)` widget'ı, özel seçenekler etkinleştirildiğinde ve kullanıcı yetkili olduğunda otomatik olarak "Kendi seçeneğinizi ekleyin" giriş alanını gösterir.
 
 ### Anket Modeli ile
 
@@ -282,10 +282,10 @@ Paket, tam Tailwind CSS arayüzü ile (karanlık mod destekli) kullanıma hazır
 ### Anket Yöneticisi (Tam CRUD)
 
 ```blade
-<livewire:poll-vote-poll-manager />
+<livewire:poller-poll-manager />
 
 {{-- Belirli bir modele kapsamlı --}}
-<livewire:poll-vote-poll-manager :pollable="$meeting" />
+<livewire:poller-poll-manager :pollable="$meeting" />
 ```
 
 Özellikler: Arama, duruma/türe göre filtreleme, oluşturma, düzenleme, silme, etkinleştirme, kapatma, anket kopyalama.
@@ -293,14 +293,14 @@ Paket, tam Tailwind CSS arayüzü ile (karanlık mod destekli) kullanıma hazır
 ### Anket Formu (Oluştur/Düzenle)
 
 ```blade
-<livewire:poll-vote-poll-form />
-<livewire:poll-vote-poll-form :poll-id="$poll->id" />
+<livewire:poller-poll-form />
+<livewire:poller-poll-form :poll-id="$poll->id" />
 ```
 
 ### Anket Görünümü (Tam Görüntüleme)
 
 ```blade
-<livewire:poll-vote-poll-display :poll="$poll" />
+<livewire:poller-poll-display :poll="$poll" />
 ```
 
 Anket bilgilerini, istatistikleri, oylama arayüzünü, sonuçları ve oy geçmişi sekmelerini gösterir.
@@ -308,7 +308,7 @@ Anket bilgilerini, istatistikleri, oylama arayüzünü, sonuçları ve oy geçmi
 ### Anket Sonuçları (Analiz)
 
 ```blade
-<livewire:poll-vote-poll-results :poll="$poll" />
+<livewire:poller-poll-results :poll="$poll" />
 ```
 
 Yüzdelikler ve önde gelen seçenek ile çubuk grafik sonuçlarını gösterir.
@@ -316,7 +316,7 @@ Yüzdelikler ve önde gelen seçenek ile çubuk grafik sonuçlarını gösterir.
 ### Anket Oyu (Kompakt Widget)
 
 ```blade
-<livewire:poll-vote-poll-vote :poll="$poll" />
+<livewire:poller-poll-vote :poll="$poll" />
 ```
 
 Gömülür oylama widget'ı. Uygun arayüz ile (radyo, onay kutusu, derecelendirme ölçeği, sıralama) tüm 5 anket türünü destekler.
@@ -324,10 +324,10 @@ Gömülür oylama widget'ı. Uygun arayüz ile (radyo, onay kutusu, derecelendir
 ### Görünümleri Özelleştirme
 
 ```bash
-php artisan vendor:publish --tag=poll-vote-views
+php artisan vendor:publish --tag=poller-views
 ```
 
-Görünümler `resources/views/vendor/poll-vote/` dizinine yayınlanacaktır.
+Görünümler `resources/views/vendor/poller/` dizinine yayınlanacaktır.
 
 ---
 
@@ -336,7 +336,7 @@ Görünümler `resources/views/vendor/poll-vote/` dizinine yayınlanacaktır.
 Yapılandırma dosyasında API'yi etkinleştirin:
 
 ```php
-// config/poll-vote.php
+// config/poller.php
 'api' => [
     'enabled' => true,
     'prefix' => 'api/polls',
@@ -390,25 +390,25 @@ Otomatik anket yaşam döngüsü yönetimi için zamanlayıcınıza ekleyin:
 
 ```php
 // routes/console.php veya bootstrap/app.php
-Schedule::command('poll-vote:auto-open')->everyMinute();
-Schedule::command('poll-vote:auto-close')->everyMinute();
+Schedule::command('poller:auto-open')->everyMinute();
+Schedule::command('poller:auto-close')->everyMinute();
 ```
 
-- `poll-vote:auto-open` -- `starts_at` tarihi geçmiş taslak anketleri etkinleştirir
-- `poll-vote:auto-close` -- `ends_at` tarihi geçmiş aktif anketleri kapatır
+- `poller:auto-open` -- `starts_at` tarihi geçmiş taslak anketleri etkinleştirir
+- `poller:auto-close` -- `ends_at` tarihi geçmiş aktif anketleri kapatır
 
 ### Bakım Komutları
 
 ```bash
 # Tüm seçenek oy sayılarını gerçek oy kayıtlarından yeniden hesapla
-php artisan poll-vote:reconcile-counts
+php artisan poller:reconcile-counts
 ```
 
 ---
 
 ## Olaylar
 
-Tüm olaylar `config/poll-vote.php` üzerinden yapılandırılabilir. Devre dışı bırakmak için `null` olarak ayarlayın.
+Tüm olaylar `config/poller.php` üzerinden yapılandırılabilir. Devre dışı bırakmak için `null` olarak ayarlayın.
 
 | Olay | Veri |
 |------|------|
@@ -434,14 +434,14 @@ Event::listen(VoteCast::class, function ($event) {
 Tüm oylama hataları tipli istisnalar fırlatır:
 
 ```php
-use Aftandilmmd\PollVote\Exceptions\PollClosedException;
-use Aftandilmmd\PollVote\Exceptions\AlreadyVotedException;
-use Aftandilmmd\PollVote\Exceptions\InvalidSelectionException;
-use Aftandilmmd\PollVote\Exceptions\UnauthorizedVoteException;
-use Aftandilmmd\PollVote\Exceptions\CustomOptionException;
+use Aftandilmmd\Poller\Exceptions\PollClosedException;
+use Aftandilmmd\Poller\Exceptions\AlreadyVotedException;
+use Aftandilmmd\Poller\Exceptions\InvalidSelectionException;
+use Aftandilmmd\Poller\Exceptions\UnauthorizedVoteException;
+use Aftandilmmd\Poller\Exceptions\CustomOptionException;
 
 try {
-    PollVote::castVote($poll, $user, $optionId);
+    Poller::castVote($poll, $user, $optionId);
 } catch (PollClosedException $e) {
     // Anket oy kabul etmiyor
 } catch (AlreadyVotedException $e) {
@@ -460,8 +460,8 @@ try {
 ## Enum'lar
 
 ```php
-use Aftandilmmd\PollVote\Enums\PollType;
-use Aftandilmmd\PollVote\Enums\PollStatus;
+use Aftandilmmd\Poller\Enums\PollType;
+use Aftandilmmd\Poller\Enums\PollStatus;
 
 PollType::SingleChoice->value;   // "single_choice"
 PollType::SingleChoice->label(); // "Single Choice"
@@ -486,7 +486,7 @@ Yapılandırmada model sınıflarını geçersiz kılın:
 'models' => [
     'poll' => App\Models\CustomPoll::class,
     'option' => App\Models\CustomPollOption::class,
-    'vote' => App\Models\CustomPollVote::class,
+    'vote' => App\Models\CustomPoller::class,
 ],
 ```
 
@@ -508,10 +508,10 @@ Olay sınıflarını değiştirin veya devre dışı bırakın:
 Paket İngilizce, Türkçe ve Azerbaycanca çeviriler içerir. Özelleştirmek veya yeni dil eklemek için:
 
 ```bash
-php artisan vendor:publish --tag=poll-vote-translations
+php artisan vendor:publish --tag=poller-translations
 ```
 
-Çeviri dosyaları `lang/vendor/poll-vote/` dizinine yayınlanır.
+Çeviri dosyaları `lang/vendor/poller/` dizinine yayınlanır.
 
 ---
 
