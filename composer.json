@@ -16,7 +16,8 @@
     },
     "require-dev": {
         "orchestra/testbench": "^9.0|^10.0|^11.0",
-        "pestphp/pest": "^3.0|^4.0"
+        "pestphp/pest": "^3.0|^4.0",
+        "livewire/livewire": "^3.0|^4.0"
     },
     "suggest": {
         "livewire/livewire": "Required for Livewire poll components (^3.0|^4.0)"
@@ -40,6 +41,11 @@
             "aliases": {
                 "Poller": "Aftandilmmd\\Poller\\Facades\\Poller"
             }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
         }
     }
 }
