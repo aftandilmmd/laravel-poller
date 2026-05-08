@@ -38,9 +38,9 @@ return [
     |
     */
     'models' => [
-        'poll' => \Aftandilmmd\PollVote\Models\Poll::class,
-        'option' => \Aftandilmmd\PollVote\Models\PollOption::class,
-        'vote' => \Aftandilmmd\PollVote\Models\PollVote::class,
+        'poll' => \Aftandilmmd\Poller\Models\Poll::class,
+        'option' => \Aftandilmmd\Poller\Models\PollOption::class,
+        'vote' => \Aftandilmmd\Poller\Models\PollVote::class,
     ],
 
     /*
@@ -117,13 +117,13 @@ return [
     |
     */
     'events' => [
-        'poll_created' => \Aftandilmmd\PollVote\Events\PollCreated::class,
-        'poll_activated' => \Aftandilmmd\PollVote\Events\PollActivated::class,
-        'poll_closed' => \Aftandilmmd\PollVote\Events\PollClosed::class,
-        'poll_cancelled' => \Aftandilmmd\PollVote\Events\PollCancelled::class,
-        'vote_cast' => \Aftandilmmd\PollVote\Events\VoteCast::class,
-        'vote_changed' => \Aftandilmmd\PollVote\Events\VoteChanged::class,
-        'vote_retracted' => \Aftandilmmd\PollVote\Events\VoteRetracted::class,
+        'poll_created' => \Aftandilmmd\Poller\Events\PollCreated::class,
+        'poll_activated' => \Aftandilmmd\Poller\Events\PollActivated::class,
+        'poll_closed' => \Aftandilmmd\Poller\Events\PollClosed::class,
+        'poll_cancelled' => \Aftandilmmd\Poller\Events\PollCancelled::class,
+        'vote_cast' => \Aftandilmmd\Poller\Events\VoteCast::class,
+        'vote_changed' => \Aftandilmmd\Poller\Events\VoteChanged::class,
+        'vote_retracted' => \Aftandilmmd\Poller\Events\VoteRetracted::class,
     ],
 
     /*
