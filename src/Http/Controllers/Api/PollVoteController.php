@@ -3,6 +3,7 @@
 namespace Aftandilmmd\Poller\Http\Controllers\Api;
 
 use Aftandilmmd\Poller\Exceptions\PollException;
+use Aftandilmmd\Poller\Exceptions\VoterRateLimitException;
 use Aftandilmmd\Poller\Http\Resources\PollVoteResource;
 use Aftandilmmd\Poller\Models\Poll;
 use Illuminate\Http\JsonResponse;
@@ -49,6 +50,8 @@ class PollVoteController extends Controller
             );
 
             return PollVoteResource::collection($votes)->response()->setStatusCode(201);
+        } catch (VoterRateLimitException $e) {
+            return response()->json(['message' => $e->getMessage()], 429);
         } catch (PollException $e) {
             return response()->json(['message' => $e->getMessage()], 422);
         }
@@ -78,6 +81,8 @@ class PollVoteController extends Controller
             );
 
             return PollVoteResource::collection($votes)->response();
+        } catch (VoterRateLimitException $e) {
+            return response()->json(['message' => $e->getMessage()], 429);
         } catch (PollException $e) {
             return response()->json(['message' => $e->getMessage()], 422);
         }
