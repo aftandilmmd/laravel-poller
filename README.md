@@ -627,6 +627,53 @@ vendor/bin/pest
 
 ---
 
+## Roadmap
+
+### Shipped
+
+- [x] Core CRUD with 5 poll types (yes/no, single, multiple, rating, ranked)
+- [x] Anonymous voting, vote changing, vote retraction
+- [x] Scheduled polls with auto-open / auto-close commands
+- [x] User-suggested custom options with limits
+- [x] Vote comments and required-comment polls
+- [x] Result percentages, leading option, detailed results export
+- [x] REST API (18 endpoints)
+- [x] Livewire components (Manager, Form, Display, Vote, Results)
+- [x] Trait-based authorization (`InteractsWithPolls`, `HasPolls`)
+- [x] 7 lifecycle/voting events with broadcasting support
+- [x] Pollable morph (attach polls to any model)
+- [x] Soft deletes
+- [x] Result caching with auto-invalidation
+- [x] Voter rate limiting (cross-poll sliding window)
+- [x] Translatable title/description (opt-in JSON locale map)
+- [x] Query scopes: `search`, `ofStatus`, `ofType`, `createdBy`, `withinDateRange`
+- [x] API filter parameters (`search`, `status`, `type`, `created_by`, `from`, `to`)
+- [x] API returns `429` on voter rate limit
+- [x] Localized exception messages (en, tr, az)
+- [x] Laravel 11, 12, 13 support
+
+### Considered for future
+
+- [ ] Translatable form fields in Livewire `PollForm` (multi-locale inputs)
+- [ ] `PollResource@withTranslations` for API multi-locale output
+- [ ] CSV / JSON export beyond `array`
+- [ ] IP-based vote tracking (anonymous spam protection)
+- [ ] Built-in tags / categories
+- [ ] First-party Filament / Nova plugin
+
+### Out of scope
+
+These belong in user code or sibling packages, not this one:
+
+- [ ] Notifications (mail / database / broadcast on poll events) — wire your own listeners
+- [ ] Captcha / spam middleware — apply at the route level
+- [ ] Webhooks — listen to events and POST yourself
+- [ ] Charts / analytics dashboard — render from `getDetailedResults()` data
+- [ ] Audit log — use [`spatie/laravel-activitylog`](https://github.com/spatie/laravel-activitylog) on the events
+- [ ] Short URLs / QR codes — use a dedicated package
+
+---
+
 ## License
 
 MIT

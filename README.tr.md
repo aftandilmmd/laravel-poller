@@ -627,6 +627,53 @@ vendor/bin/pest
 
 ---
 
+## Yol Haritası
+
+### Tamamlandı
+
+- [x] 5 anket türüyle (yes/no, tekli, çoklu, derecelendirme, sıralı) temel CRUD
+- [x] Anonim oy, oy değiştirme, oy geri çekme
+- [x] Zamanlanmış anketler (auto-open / auto-close komutları)
+- [x] Kullanıcı önerisi özel seçenekler (limit ile)
+- [x] Oy yorumları ve zorunlu yorum
+- [x] Yüzde sonuçları, öncü seçenek, detaylı dışa aktarma
+- [x] REST API (18 endpoint)
+- [x] Livewire bileşenleri (Manager, Form, Display, Vote, Results)
+- [x] Trait tabanlı yetkilendirme (`InteractsWithPolls`, `HasPolls`)
+- [x] 7 yaşam döngüsü/oy olayı (broadcasting destekli)
+- [x] Pollable morph (anketleri herhangi bir modele bağla)
+- [x] Soft delete
+- [x] Otomatik geçersiz kılmalı sonuç önbellekleme
+- [x] Oy veren hız sınırı (anketler arası kayan pencere)
+- [x] Çevrilebilir başlık/açıklama (isteğe bağlı JSON dil haritası)
+- [x] Sorgu scope'ları: `search`, `ofStatus`, `ofType`, `createdBy`, `withinDateRange`
+- [x] API filtre parametreleri (`search`, `status`, `type`, `created_by`, `from`, `to`)
+- [x] API hız sınırında `429` döndürür
+- [x] Yerelleştirilmiş hata mesajları (en, tr, az)
+- [x] Laravel 11, 12, 13 desteği
+
+### Olası gelecek özellikler
+
+- [ ] Livewire `PollForm`'da çevrilebilir form alanları (çoklu dil girişleri)
+- [ ] API çoklu dil çıktısı için `PollResource@withTranslations`
+- [ ] `array` ötesinde CSV / JSON dışa aktarma
+- [ ] IP tabanlı oy takibi (anonim spam koruması)
+- [ ] Yerleşik etiket / kategori
+- [ ] Birinci taraf Filament / Nova eklentisi
+
+### Kapsam dışı
+
+Aşağıdakiler kullanıcı kodunda veya ayrı paketlerde olmalı, bu pakette değil:
+
+- [ ] Bildirimler (mail / database / broadcast olaylarda) — kendi listener'ını bağla
+- [ ] Captcha / spam middleware — route seviyesinde uygula
+- [ ] Webhook'lar — olayları dinle ve kendin POST et
+- [ ] Grafik / analitik paneli — `getDetailedResults()` verisinden render et
+- [ ] Audit log — olaylar üzerinde [`spatie/laravel-activitylog`](https://github.com/spatie/laravel-activitylog) kullan
+- [ ] Kısa URL / QR kod — bunun için ayrı paket kullan
+
+---
+
 ## Lisans
 
 MIT

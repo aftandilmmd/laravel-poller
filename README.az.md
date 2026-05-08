@@ -627,6 +627,53 @@ vendor/bin/pest
 
 ---
 
+## Yol Xəritəsi
+
+### Tamamlanıb
+
+- [x] 5 sorğu növü ilə (yes/no, tək, çox, dəyərləndirmə, sıralı) əsas CRUD
+- [x] Anonim səs, səs dəyişdirmə, səs geri çəkmə
+- [x] Planlanmış sorğular (auto-open / auto-close əmrləri)
+- [x] İstifadəçi təklifi xüsusi seçimlər (limitlə)
+- [x] Səs şərhləri və məcburi şərh
+- [x] Faiz nəticələri, lider seçim, ətraflı ixrac
+- [x] REST API (18 endpoint)
+- [x] Livewire komponentləri (Manager, Form, Display, Vote, Results)
+- [x] Trait əsaslı icazə (`InteractsWithPolls`, `HasPolls`)
+- [x] 7 həyat dövrü/səsvermə hadisəsi (broadcasting dəstəyi ilə)
+- [x] Pollable morph (sorğuları istənilən modelə bağla)
+- [x] Soft delete
+- [x] Avtomatik təmizləmə ilə nəticə keşləməsi
+- [x] Səsverənin sürət limiti (sorğular arası sürüşən pəncərə)
+- [x] Tərcümə edilə bilən başlıq/təsvir (istəyə bağlı JSON dil xəritəsi)
+- [x] Sorğu scope-ları: `search`, `ofStatus`, `ofType`, `createdBy`, `withinDateRange`
+- [x] API filtr parametrləri (`search`, `status`, `type`, `created_by`, `from`, `to`)
+- [x] API sürət limitində `429` qaytarır
+- [x] Yerli xəta mesajları (en, tr, az)
+- [x] Laravel 11, 12, 13 dəstəyi
+
+### Mümkün gələcək xüsusiyyətlər
+
+- [ ] Livewire `PollForm`-da tərcümə edilə bilən form sahələri (çox dilli daxiletmələr)
+- [ ] API çox dilli çıxış üçün `PollResource@withTranslations`
+- [ ] `array` xaricində CSV / JSON ixracı
+- [ ] IP əsaslı səs izlənməsi (anonim spam qoruması)
+- [ ] Daxili etiket / kateqoriya
+- [ ] Birinci tərəf Filament / Nova plugin
+
+### Əhatə xaricində
+
+Aşağıdakılar istifadəçi kodunda və ya ayrı paketlərdə olmalıdır, bu paketdə deyil:
+
+- [ ] Bildirişlər (mail / database / broadcast hadisələrdə) — öz listener-ini bağla
+- [ ] Captcha / spam middleware — marşrut səviyyəsində tətbiq et
+- [ ] Webhook-lar — hadisələri dinlə və özün POST et
+- [ ] Qrafik / analitik paneli — `getDetailedResults()` verisindən render et
+- [ ] Audit log — hadisələrdə [`spatie/laravel-activitylog`](https://github.com/spatie/laravel-activitylog) istifadə et
+- [ ] Qısa URL / QR kod — bunun üçün ayrı paket istifadə et
+
+---
+
 ## Lisenziya
 
 MIT
