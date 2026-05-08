@@ -5,21 +5,21 @@ namespace Aftandilmmd\Poller;
 use Aftandilmmd\Poller\Commands\AutoClosePollsCommand;
 use Aftandilmmd\Poller\Commands\AutoOpenPollsCommand;
 use Aftandilmmd\Poller\Commands\ReconcileVoteCountsCommand;
-use Aftandilmmd\Poller\Contracts\PollVoteServiceInterface;
+use Aftandilmmd\Poller\Contracts\PollerServiceInterface;
 use Aftandilmmd\Poller\Services\PollService;
 use Illuminate\Support\ServiceProvider;
 
-class PollVoteServiceProvider extends ServiceProvider
+class PollerServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/poller.php', 'poller');
 
-        $this->app->singleton(PollVoteServiceInterface::class, function ($app) {
+        $this->app->singleton(PollerServiceInterface::class, function ($app) {
             return new PollService;
         });
 
-        $this->app->alias(PollVoteServiceInterface::class, 'poller');
+        $this->app->alias(PollerServiceInterface::class, 'poller');
     }
 
     public function boot(): void

@@ -8,7 +8,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-interface PollVoteServiceInterface
+interface PollerServiceInterface
 {
     // ── CRUD ────────────────────────────────────────────────────────
 

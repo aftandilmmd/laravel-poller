@@ -2,7 +2,7 @@
 
 namespace Aftandilmmd\Poller\Facades;
 
-use Aftandilmmd\Poller\Contracts\PollVoteServiceInterface;
+use Aftandilmmd\Poller\Contracts\PollerServiceInterface;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -28,10 +28,10 @@ use Illuminate\Support\Facades\Facade;
  *
  * @see \Aftandilmmd\Poller\Services\PollService
  */
-class PollVote extends Facade
+class Poller extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return PollVoteServiceInterface::class;
+        return PollerServiceInterface::class;
     }
 }
