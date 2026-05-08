@@ -1,7 +1,7 @@
 <?php
 
-use Aftandilmmd\PollVote\Enums\PollStatus;
-use Aftandilmmd\PollVote\Enums\PollType;
+use Aftandilmmd\Poller\Enums\PollStatus;
+use Aftandilmmd\Poller\Enums\PollType;
 
 it('has correct poll type values', function () {
     expect(PollType::values())->toBe([
@@ -23,9 +23,9 @@ it('has correct poll status values', function () {
 });
 
 it('returns labels for poll types', function () {
-    expect(PollType::SingleChoice->label())->toBe(__('poll-vote::messages.type_single_choice'));
-    expect(PollType::YesNo->label())->toBe(__('poll-vote::messages.type_yes_no'));
-    expect(PollType::Rating->label())->toBe(__('poll-vote::messages.type_rating'));
+    expect(PollType::SingleChoice->label())->toBe(__('poller::messages.type_single_choice'));
+    expect(PollType::YesNo->label())->toBe(__('poller::messages.type_yes_no'));
+    expect(PollType::Rating->label())->toBe(__('poller::messages.type_rating'));
 });
 
 it('returns colors for poll statuses', function () {
@@ -45,7 +45,7 @@ it('returns options for select dropdowns', function () {
 });
 
 it('returns enabled poll types from config', function () {
-    config()->set('poll-vote.types.rating', false);
+    config()->set('poller.types.rating', false);
 
     $enabled = PollType::enabled();
 

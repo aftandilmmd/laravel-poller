@@ -1,6 +1,6 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Tests;
+namespace Aftandilmmd\Poller\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -13,7 +13,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        config()->set('poll-vote.user_model', \Illuminate\Foundation\Auth\User::class);
+        config()->set('poller.user_model', \Illuminate\Foundation\Auth\User::class);
     }
 
     protected function defineDatabaseMigrations(): void

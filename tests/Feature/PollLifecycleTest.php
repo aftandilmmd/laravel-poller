@@ -1,11 +1,11 @@
 <?php
 
-use Aftandilmmd\PollVote\Enums\PollStatus;
-use Aftandilmmd\PollVote\Events\PollActivated;
-use Aftandilmmd\PollVote\Events\PollCancelled;
-use Aftandilmmd\PollVote\Events\PollClosed;
-use Aftandilmmd\PollVote\Events\PollCreated;
-use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\Poller\Enums\PollStatus;
+use Aftandilmmd\Poller\Events\PollActivated;
+use Aftandilmmd\Poller\Events\PollCancelled;
+use Aftandilmmd\Poller\Events\PollClosed;
+use Aftandilmmd\Poller\Events\PollCreated;
+use Aftandilmmd\Poller\Models\Poll;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Event;
 
@@ -20,7 +20,7 @@ beforeEach(function () {
 it('fires PollCreated event', function () {
     Event::fake([PollCreated::class]);
 
-    app('poll-vote')->create(['title' => 'Event Test'], $this->user);
+    app('poller')->create(['title' => 'Event Test'], $this->user);
 
     Event::assertDispatched(PollCreated::class);
 });
@@ -30,7 +30,7 @@ it('activates a draft poll', function () {
 
     $poll = Poll::factory()->draft()->create(['created_by' => $this->user->id]);
 
-    $activated = app('poll-vote')->activate($poll);
+    $activated = app('poller')->activate($poll);
 
     expect($activated->status)->toBe(PollStatus::Active);
     expect($activated->starts_at)->not->toBeNull();
@@ -42,7 +42,7 @@ it('closes an active poll', function () {
 
     $poll = Poll::factory()->active()->create(['created_by' => $this->user->id]);
 
-    $closed = app('poll-vote')->close($poll);
+    $closed = app('poller')->close($poll);
 
     expect($closed->status)->toBe(PollStatus::Closed);
     expect($closed->closed_at)->not->toBeNull();
@@ -54,7 +54,7 @@ it('cancels a poll', function () {
 
     $poll = Poll::factory()->active()->create(['created_by' => $this->user->id]);
 
-    $cancelled = app('poll-vote')->cancel($poll);
+    $cancelled = app('poller')->cancel($poll);
 
     expect($cancelled->status)->toBe(PollStatus::Cancelled);
     Event::assertDispatched(PollCancelled::class);

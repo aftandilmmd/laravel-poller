@@ -1,8 +1,8 @@
 <?php
 
-use Aftandilmmd\PollVote\Http\Controllers\Api\PollVoteController;
-use Aftandilmmd\PollVote\Models\Poll;
-use Aftandilmmd\PollVote\Models\PollOption;
+use Aftandilmmd\Poller\Http\Controllers\Api\PollVoteController;
+use Aftandilmmd\Poller\Models\Poll;
+use Aftandilmmd\Poller\Models\PollOption;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Route;
 
@@ -65,7 +65,7 @@ it('returns 422 for invalid vote', function () {
 });
 
 it('returns 422 for duplicate vote', function () {
-    app('poll-vote')->castVote($this->poll, $this->user, $this->optionA->id);
+    app('poller')->castVote($this->poll, $this->user, $this->optionA->id);
 
     $this->actingAs($this->user)
         ->postJson("/api/polls/{$this->poll->id}/vote", [
@@ -79,7 +79,7 @@ it('returns 422 for duplicate vote', function () {
 it('changes a vote via API', function () {
     $this->poll->update(['allow_vote_change' => true]);
 
-    app('poll-vote')->castVote($this->poll, $this->user, $this->optionA->id);
+    app('poller')->castVote($this->poll, $this->user, $this->optionA->id);
 
     $this->actingAs($this->user)
         ->putJson("/api/polls/{$this->poll->id}/vote", [
@@ -93,9 +93,9 @@ it('changes a vote via API', function () {
 
 it('returns 422 when vote changing is not allowed', function () {
     $this->poll->update(['allow_vote_change' => false]);
-    config()->set('poll-vote.features.vote_changing', false);
+    config()->set('poller.features.vote_changing', false);
 
-    app('poll-vote')->castVote($this->poll, $this->user, $this->optionA->id);
+    app('poller')->castVote($this->poll, $this->user, $this->optionA->id);
 
     $this->actingAs($this->user)
         ->putJson("/api/polls/{$this->poll->id}/vote", [
@@ -107,7 +107,7 @@ it('returns 422 when vote changing is not allowed', function () {
 // ── Retract Vote ───────────────────────────────────────────────────
 
 it('retracts a vote via API', function () {
-    app('poll-vote')->castVote($this->poll, $this->user, $this->optionA->id);
+    app('poller')->castVote($this->poll, $this->user, $this->optionA->id);
 
     $this->actingAs($this->user)
         ->deleteJson("/api/polls/{$this->poll->id}/vote")
@@ -117,9 +117,9 @@ it('retracts a vote via API', function () {
 });
 
 it('returns 422 when retraction is disabled', function () {
-    config()->set('poll-vote.features.vote_retraction', false);
+    config()->set('poller.features.vote_retraction', false);
 
-    app('poll-vote')->castVote($this->poll, $this->user, $this->optionA->id);
+    app('poller')->castVote($this->poll, $this->user, $this->optionA->id);
 
     $this->actingAs($this->user)
         ->deleteJson("/api/polls/{$this->poll->id}/vote")
@@ -129,7 +129,7 @@ it('returns 422 when retraction is disabled', function () {
 // ── Vote List ──────────────────────────────────────────────────────
 
 it('lists votes for a non-anonymous poll', function () {
-    app('poll-vote')->castVote($this->poll, $this->user, $this->optionA->id);
+    app('poller')->castVote($this->poll, $this->user, $this->optionA->id);
 
     $this->actingAs($this->user)
         ->getJson("/api/polls/{$this->poll->id}/votes")

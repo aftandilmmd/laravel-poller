@@ -1,8 +1,8 @@
 <?php
 
-use Aftandilmmd\PollVote\Models\Poll;
-use Aftandilmmd\PollVote\Models\PollOption;
-use Aftandilmmd\PollVote\Traits\InteractsWithPolls;
+use Aftandilmmd\Poller\Models\Poll;
+use Aftandilmmd\Poller\Models\PollOption;
+use Aftandilmmd\Poller\Traits\InteractsWithPolls;
 use Illuminate\Foundation\Auth\User;
 
 beforeEach(function () {
@@ -45,7 +45,7 @@ it('votes on a poll via service helper', function () {
     $poll = Poll::factory()->active()->singleChoice()->create(['created_by' => $this->user->id]);
     $option = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    $votes = app('poll-vote')->castVote($poll, $this->user, $option->id);
+    $votes = app('poller')->castVote($poll, $this->user, $option->id);
 
     expect($votes)->toHaveCount(1);
     expect($poll->hasUserVoted($this->user))->toBeTrue();
@@ -55,8 +55,8 @@ it('retracts vote via service helper', function () {
     $poll = Poll::factory()->active()->singleChoice()->create(['created_by' => $this->user->id]);
     $option = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    app('poll-vote')->castVote($poll, $this->user, $option->id);
-    app('poll-vote')->retractVote($poll, $this->user);
+    app('poller')->castVote($poll, $this->user, $option->id);
+    app('poller')->retractVote($poll, $this->user);
 
     expect($poll->hasUserVoted($this->user))->toBeFalse();
 });
@@ -69,8 +69,8 @@ it('changes vote via service helper', function () {
     $optA = PollOption::factory()->create(['poll_id' => $poll->id]);
     $optB = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    app('poll-vote')->castVote($poll, $this->user, $optA->id);
-    $newVotes = app('poll-vote')->changeVote($poll, $this->user, $optB->id);
+    app('poller')->castVote($poll, $this->user, $optA->id);
+    $newVotes = app('poller')->changeVote($poll, $this->user, $optB->id);
 
     expect($newVotes->first()->poll_option_id)->toBe($optB->id);
 });
@@ -79,7 +79,7 @@ it('gets user votes for a poll', function () {
     $poll = Poll::factory()->active()->singleChoice()->create(['created_by' => $this->user->id]);
     $option = PollOption::factory()->create(['poll_id' => $poll->id]);
 
-    app('poll-vote')->castVote($poll, $this->user, $option->id);
+    app('poller')->castVote($poll, $this->user, $option->id);
 
     $votes = $poll->getUserVotes($this->user);
 
@@ -116,10 +116,10 @@ it('gets user voting history', function () {
     $poll2 = Poll::factory()->active()->singleChoice()->create(['created_by' => $this->user->id]);
     $opt2 = PollOption::factory()->create(['poll_id' => $poll2->id]);
 
-    app('poll-vote')->castVote($poll1, $this->user, $opt1->id);
-    app('poll-vote')->castVote($poll2, $this->user, $opt2->id);
+    app('poller')->castVote($poll1, $this->user, $opt1->id);
+    app('poller')->castVote($poll2, $this->user, $opt2->id);
 
-    $history = app('poll-vote')->getUserVotingHistory($this->user);
+    $history = app('poller')->getUserVotingHistory($this->user);
 
     expect($history)->toHaveCount(2);
 });
@@ -128,10 +128,10 @@ it('limits user voting history', function () {
     for ($i = 0; $i < 5; $i++) {
         $poll = Poll::factory()->active()->singleChoice()->create(['created_by' => $this->user->id]);
         $opt = PollOption::factory()->create(['poll_id' => $poll->id]);
-        app('poll-vote')->castVote($poll, $this->user, $opt->id);
+        app('poller')->castVote($poll, $this->user, $opt->id);
     }
 
-    $history = app('poll-vote')->getUserVotingHistory($this->user, 3);
+    $history = app('poller')->getUserVotingHistory($this->user, 3);
 
     expect($history)->toHaveCount(3);
 });

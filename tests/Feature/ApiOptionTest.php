@@ -1,8 +1,8 @@
 <?php
 
-use Aftandilmmd\PollVote\Http\Controllers\Api\PollOptionController;
-use Aftandilmmd\PollVote\Models\Poll;
-use Aftandilmmd\PollVote\Models\PollOption;
+use Aftandilmmd\Poller\Http\Controllers\Api\PollOptionController;
+use Aftandilmmd\Poller\Models\Poll;
+use Aftandilmmd\Poller\Models\PollOption;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Route;
 

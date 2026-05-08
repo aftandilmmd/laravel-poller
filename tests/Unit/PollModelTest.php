@@ -1,7 +1,7 @@
 <?php
 
-use Aftandilmmd\PollVote\Models\Poll;
-use Aftandilmmd\PollVote\Models\PollOption;
+use Aftandilmmd\Poller\Models\Poll;
+use Aftandilmmd\Poller\Models\PollOption;
 use Illuminate\Foundation\Auth\User;
 
 beforeEach(function () {
