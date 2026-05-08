@@ -20,27 +20,21 @@ class PollController extends Controller
     {
         $query = Poll::query()
             ->with(['options', 'creator'])
-            ->withCount('votes');
-
-        if ($request->has('status')) {
-            $query->where('status', $request->input('status'));
-        }
-
-        if ($request->has('type')) {
-            $query->where('type', $request->input('type'));
-        }
+            ->withCount('votes')
+            ->search($request->input('search'))
+            ->ofStatus($request->input('status'))
+            ->ofType($request->input('type'))
+            ->withinDateRange($request->input('from'), $request->input('to'));
 
         if ($request->boolean('mine')) {
-            $query->where('created_by', $request->user()->getAuthIdentifier());
+            $query->createdBy($request->user()->getAuthIdentifier());
+        } elseif ($request->filled('created_by')) {
+            $query->createdBy($request->input('created_by'));
         }
 
         if ($request->has('pollable_type') && $request->has('pollable_id')) {
             $query->where('pollable_type', $request->input('pollable_type'))
                 ->where('pollable_id', $request->input('pollable_id'));
-        }
-
-        if ($request->has('search')) {
-            $query->where('title', 'like', '%'.$request->input('search').'%');
         }
 
         return PollResource::collection(
