@@ -2,8 +2,10 @@
 
 namespace Aftandilmmd\Poller\Models;
 
+use Aftandilmmd\Poller\Concerns\HasTranslatableContent;
 use Aftandilmmd\Poller\Enums\PollStatus;
 use Aftandilmmd\Poller\Enums\PollType;
+use Aftandilmmd\Poller\Support\ResultCache;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,7 +19,7 @@ use Illuminate\Support\Collection;
 
 class Poll extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasTranslatableContent, SoftDeletes;
 
     protected static function newFactory(): \Aftandilmmd\Poller\Database\Factories\PollFactory
     {
@@ -58,7 +60,7 @@ class Poll extends Model
 
     protected function casts(): array
     {
-        return [
+        return $this->translatableCasts([
             'type' => PollType::class,
             'status' => PollStatus::class,
             'is_anonymous' => 'boolean',
@@ -70,7 +72,7 @@ class Poll extends Model
             'ends_at' => 'datetime',
             'closed_at' => 'datetime',
             'metadata' => 'array',
-        ];
+        ], ['title', 'description']);
     }
 
     // ── Relationships ──────────────────────────────────────────────
@@ -135,6 +137,57 @@ class Poll extends Model
         $query->where('status', PollStatus::Active)
             ->whereNotNull('ends_at')
             ->where('ends_at', '<=', now());
+    }
+
+    #[Scope]
+    protected function search(Builder $query, ?string $term): void
+    {
+        if (! $term) {
+            return;
+        }
+
+        $like = '%'.$term.'%';
+        $query->where(function (Builder $q) use ($like) {
+            $q->where('title', 'like', $like)->orWhere('description', 'like', $like);
+        });
+    }
+
+    #[Scope]
+    protected function ofStatus(Builder $query, PollStatus|string|null $status): void
+    {
+        if ($status === null || $status === '') {
+            return;
+        }
+
+        $query->where('status', $status instanceof PollStatus ? $status : PollStatus::from($status));
+    }
+
+    #[Scope]
+    protected function ofType(Builder $query, PollType|string|null $type): void
+    {
+        if ($type === null || $type === '') {
+            return;
+        }
+
+        $query->where('type', $type instanceof PollType ? $type : PollType::from($type));
+    }
+
+    #[Scope]
+    protected function createdBy(Builder $query, int|string $userId): void
+    {
+        $query->where('created_by', $userId);
+    }
+
+    #[Scope]
+    protected function withinDateRange(Builder $query, mixed $from = null, mixed $to = null): void
+    {
+        if ($from) {
+            $query->where('created_at', '>=', $from);
+        }
+
+        if ($to) {
+            $query->where('created_at', '<=', $to);
+        }
     }
 
     // ── Status Helpers ─────────────────────────────────────────────
@@ -227,17 +280,25 @@ class Poll extends Model
 
     public function getTotalVotes(): int
     {
-        return $this->options->sum('votes_count');
+        return ResultCache::remember($this, 'total_votes', fn () => $this->options->sum('votes_count'));
     }
 
     public function getUniqueVoterCount(): int
     {
-        return $this->votes()->distinct('user_id')->count('user_id');
+        return ResultCache::remember(
+            $this,
+            'unique_voters',
+            fn () => $this->votes()->distinct('user_id')->count('user_id'),
+        );
     }
 
     public function getLeadingOption(): ?PollOption
     {
-        return $this->options->sortByDesc('votes_count')->first();
+        return ResultCache::remember(
+            $this,
+            'leading',
+            fn () => $this->options->sortByDesc('votes_count')->first(),
+        );
     }
 
     /**
@@ -245,16 +306,23 @@ class Poll extends Model
      */
     public function getResultsAsPercentages(): array
     {
-        $totalVotes = $this->getTotalVotes();
+        return ResultCache::remember($this, 'results', function () {
+            $totalVotes = $this->options->sum('votes_count');
 
-        return $this->options->map(fn (PollOption $option) => [
-            'option_id' => $option->id,
-            'title' => $option->title,
-            'votes_count' => $option->votes_count,
-            'percentage' => $totalVotes > 0
-                ? round(($option->votes_count / $totalVotes) * 100, 1)
-                : 0,
-        ])->toArray();
+            return $this->options->map(fn (PollOption $option) => [
+                'option_id' => $option->id,
+                'title' => $option->title,
+                'votes_count' => $option->votes_count,
+                'percentage' => $totalVotes > 0
+                    ? round(($option->votes_count / $totalVotes) * 100, 1)
+                    : 0,
+            ])->toArray();
+        });
+    }
+
+    public function flushResultsCache(): void
+    {
+        ResultCache::forget($this);
     }
 
     public function hasUserVoted(Authenticatable $user): bool

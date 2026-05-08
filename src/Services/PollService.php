@@ -13,6 +13,8 @@ use Aftandilmmd\Poller\Exceptions\UnauthorizedVoteException;
 use Aftandilmmd\Poller\Models\Poll;
 use Aftandilmmd\Poller\Models\PollOption;
 use Aftandilmmd\Poller\Models\PollVote;
+use Aftandilmmd\Poller\Support\ResultCache;
+use Aftandilmmd\Poller\Support\VoterRateLimiter;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -146,6 +148,7 @@ class PollService implements PollerServiceInterface
 
     public function castVote(Poll $poll, Authenticatable $voter, PollOption|int|array $options, array $extra = []): Collection
     {
+        VoterRateLimiter::check($voter);
         $this->validateVote($poll, $voter);
         $this->validateExtra($poll, $extra);
 
@@ -193,6 +196,8 @@ class PollService implements PollerServiceInterface
                     ->increment('votes_count');
             }
 
+            ResultCache::forget($poll);
+
             $this->fireEvent('vote_cast', $poll, $voter, $votes);
 
             return $votes;
@@ -205,6 +210,7 @@ class PollService implements PollerServiceInterface
             throw new AlreadyVotedException('Vote changing is not allowed for this poll.');
         }
 
+        VoterRateLimiter::check($voter);
         $this->validateVote($poll, $voter, checkExisting: false);
         $this->validateExtra($poll, $extra);
 
@@ -245,6 +251,8 @@ class PollService implements PollerServiceInterface
                     ->increment('votes_count');
             }
 
+            ResultCache::forget($poll);
+
             $this->fireEvent('vote_changed', $poll, $voter, $oldVotes, $votes);
 
             return $votes;
@@ -269,6 +277,8 @@ class PollService implements PollerServiceInterface
             }
 
             $poll->votes()->where('user_id', $voter->getAuthIdentifier())->delete();
+
+            ResultCache::forget($poll);
 
             $this->fireEvent('vote_retracted', $poll, $voter);
         });
