@@ -313,7 +313,7 @@ Shows poll info, stats, voting UI, results, and vote history tabs.
 
 Displays bar chart results with percentages and leading option.
 
-### Poll Vote (Compact Widget)
+### Vote Widget (Compact)
 
 ```blade
 <livewire:poller-poll-vote :poll="$poll" />
@@ -429,6 +429,109 @@ Event::listen(VoteCast::class, function ($event) {
 
 ---
 
+## Advanced Features
+
+All advanced features below are **opt-in** via `config/poller.php`. Defaults keep behavior unchanged.
+
+### Result Caching
+
+Cache poll results to avoid recomputing on every request. Cache is invalidated automatically when votes are cast, changed, or retracted.
+
+```php
+// config/poller.php
+'cache' => [
+    'enabled' => true,
+    'store' => null,         // null = default cache store
+    'ttl' => 60,             // seconds
+    'prefix' => 'poller',
+],
+```
+
+```php
+$poll->getResultsAsPercentages();   // first call hits DB, subsequent calls hit cache
+$poll->flushResultsCache();         // manual invalidation
+```
+
+### Broadcasting
+
+Make poll/vote events broadcast over Laravel Echo / WebSockets. Channel name pattern: `{prefix}.{pollId}`.
+
+```php
+// config/poller.php
+'broadcasting' => [
+    'enabled' => true,
+    'channel' => 'private',          // private | presence | public
+    'channel_prefix' => 'poller.poll',
+],
+```
+
+```js
+// resources/js — listen on the frontend
+Echo.private(`poller.poll.${pollId}`)
+    .listen('VoteCast', (e) => updateChart(e.poll));
+```
+
+### Voter Rate Limiting
+
+Limit how many votes a single voter can cast across all polls in a sliding window. Throws `VoterRateLimitException` when exceeded.
+
+```php
+// config/poller.php
+'voter_rate_limit' => [
+    'enabled' => true,
+    'max_votes' => 30,
+    'per_minutes' => 60,
+],
+```
+
+### Translatable Content
+
+Store poll/option `title` and `description` as JSON locale maps. Returns the value for `app()->getLocale()` automatically, falls back to `fallback_locale`.
+
+```php
+// config/poller.php
+'translatable' => [
+    'enabled' => true,
+    'fallback_locale' => 'en',
+],
+```
+
+```php
+// Create with translations
+Poller::create([
+    'title' => ['en' => 'Best framework?', 'tr' => 'En iyi framework?', 'az' => 'Ən yaxşı framework?'],
+], $user);
+
+// Read in current locale
+app()->setLocale('tr');
+$poll->title;                          // "En iyi framework?"
+
+// Translation helpers
+$poll->translate('title', 'az');       // "Ən yaxşı framework?"
+$poll->setTranslation('title', 'tr', 'Yeni başlık')->save();
+$poll->getTranslations('title');       // ['en' => '...', 'tr' => '...', 'az' => '...']
+```
+
+### Query Scopes
+
+Search and filter polls with chainable scopes:
+
+```php
+use Aftandilmmd\Poller\Models\Poll;
+use Aftandilmmd\Poller\Enums\PollStatus;
+use Aftandilmmd\Poller\Enums\PollType;
+
+Poll::query()
+    ->search('framework')                       // matches title or description
+    ->ofStatus(PollStatus::Active)              // enum or string
+    ->ofType(PollType::SingleChoice)
+    ->createdBy($user->id)
+    ->withinDateRange(now()->subMonth(), now())
+    ->get();
+```
+
+---
+
 ## Error Handling
 
 All voting errors throw typed exceptions:
@@ -518,7 +621,8 @@ Translation files will be published to `lang/vendor/poller/`.
 ## Testing
 
 ```bash
-php artisan test --filter=PollVote
+composer install
+vendor/bin/pest
 ```
 
 ---

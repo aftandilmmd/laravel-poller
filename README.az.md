@@ -421,10 +421,113 @@ Bütün hadisələr `config/poller.php` vasitəsilə konfiqurasiya edilə bilir.
 | `VoteRetracted` | Sorğu, səsverən |
 
 ```php
-// Listen to events
+// Hadisələri dinlə
 Event::listen(VoteCast::class, function ($event) {
     // $event->poll, $event->voter, $event->votes
 });
+```
+
+---
+
+## Qabaqcıl Xüsusiyyətlər
+
+Aşağıdakı xüsusiyyətlərin hamısı `config/poller.php` vasitəsilə **istəyə bağlıdır**. Defolt parametrlər mövcud davranışı dəyişmir.
+
+### Nəticələrin Keşlənməsi
+
+Sorğu nəticələrini hər sorğuda yenidən hesablamamaq üçün keşə salır. Səs verildikdə, dəyişdirildikdə və ya geri çəkildikdə keş avtomatik təmizlənir.
+
+```php
+// config/poller.php
+'cache' => [
+    'enabled' => true,
+    'store' => null,         // null = defolt cache store
+    'ttl' => 60,             // saniyə
+    'prefix' => 'poller',
+],
+```
+
+```php
+$poll->getResultsAsPercentages();   // ilk çağırış DB-yə gedir, sonrakılar keşdən gəlir
+$poll->flushResultsCache();         // əl ilə təmizləmə
+```
+
+### Broadcasting
+
+Sorğu/səs hadisələrini Laravel Echo / WebSocket üzərindən yayımla. Kanal adı: `{prefix}.{pollId}`.
+
+```php
+// config/poller.php
+'broadcasting' => [
+    'enabled' => true,
+    'channel' => 'private',          // private | presence | public
+    'channel_prefix' => 'poller.poll',
+],
+```
+
+```js
+// resources/js — frontend tərəfində dinlə
+Echo.private(`poller.poll.${pollId}`)
+    .listen('VoteCast', (e) => updateChart(e.poll));
+```
+
+### Səsverənin Sürət Limiti
+
+Bir istifadəçinin sürüşən zaman pəncərəsində bütün sorğulara nə qədər səs verə biləcəyini məhdudlaşdırır. Aşıldıqda `VoterRateLimitException` atır.
+
+```php
+// config/poller.php
+'voter_rate_limit' => [
+    'enabled' => true,
+    'max_votes' => 30,
+    'per_minutes' => 60,
+],
+```
+
+### Tərcümə Edilə Bilən Məzmun
+
+Sorğu/seçim `title` və `description` sahələrini JSON dil xəritəsi kimi saxlayır. `app()->getLocale()` dəyərini avtomatik qaytarır, yoxdursa `fallback_locale`-ə düşür.
+
+```php
+// config/poller.php
+'translatable' => [
+    'enabled' => true,
+    'fallback_locale' => 'en',
+],
+```
+
+```php
+// Tərcümələrlə yarat
+Poller::create([
+    'title' => ['en' => 'Best framework?', 'tr' => 'En iyi framework?', 'az' => 'Ən yaxşı framework?'],
+], $user);
+
+// Cari dildə oxu
+app()->setLocale('az');
+$poll->title;                          // "Ən yaxşı framework?"
+
+// Tərcümə köməkçiləri
+$poll->translate('title', 'tr');       // "En iyi framework?"
+$poll->setTranslation('title', 'az', 'Yeni başlıq')->save();
+$poll->getTranslations('title');       // ['en' => '...', 'tr' => '...', 'az' => '...']
+```
+
+### Sorğu Scope-ları
+
+Zəncirlənə bilən scope-larla sorğuları axtar və filtrlə:
+
+```php
+use Aftandilmmd\Poller\Models\Poll;
+use Aftandilmmd\Poller\Enums\PollStatus;
+use Aftandilmmd\Poller\Enums\PollType;
+
+Poll::query()
+    ->search('framework')                       // başlıq və ya təsvirdə uyğunluq
+    ->ofStatus(PollStatus::Active)              // enum və ya string
+    ->ofType(PollType::SingleChoice)
+    ->createdBy($user->id)
+    ->withinDateRange(now()->subMonth(), now())
+    ->get();
 ```
 
 ---
@@ -518,7 +621,8 @@ Tərcümə faylları `lang/vendor/poller/` qovluğuna dərc edilir.
 ## Test
 
 ```bash
-php artisan test --filter=PollVote
+composer install
+vendor/bin/pest
 ```
 
 ---

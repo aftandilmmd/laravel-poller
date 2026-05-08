@@ -429,6 +429,109 @@ Event::listen(VoteCast::class, function ($event) {
 
 ---
 
+## Gelişmiş Özellikler
+
+Aşağıdaki özelliklerin tümü `config/poller.php` üzerinden **isteğe bağlıdır**. Varsayılan ayarlar mevcut davranışı korur.
+
+### Sonuç Önbellekleme
+
+Anket sonuçlarını her istekte yeniden hesaplamamak için önbelleğe alır. Oy verildiğinde, değiştirildiğinde veya geri çekildiğinde önbellek otomatik olarak temizlenir.
+
+```php
+// config/poller.php
+'cache' => [
+    'enabled' => true,
+    'store' => null,         // null = varsayılan cache store
+    'ttl' => 60,             // saniye
+    'prefix' => 'poller',
+],
+```
+
+```php
+$poll->getResultsAsPercentages();   // ilk çağrı DB'ye gider, sonrakiler önbellekten gelir
+$poll->flushResultsCache();         // manuel temizleme
+```
+
+### Broadcasting
+
+Anket/oy olaylarını Laravel Echo / WebSocket üzerinden yayınla. Kanal adı: `{prefix}.{pollId}`.
+
+```php
+// config/poller.php
+'broadcasting' => [
+    'enabled' => true,
+    'channel' => 'private',          // private | presence | public
+    'channel_prefix' => 'poller.poll',
+],
+```
+
+```js
+// resources/js — frontend tarafında dinle
+Echo.private(`poller.poll.${pollId}`)
+    .listen('VoteCast', (e) => updateChart(e.poll));
+```
+
+### Oy Veren Hız Sınırı
+
+Tek bir kullanıcının kayan zaman penceresinde tüm anketlere kaç oy verebileceğini sınırlar. Aşıldığında `VoterRateLimitException` fırlatır.
+
+```php
+// config/poller.php
+'voter_rate_limit' => [
+    'enabled' => true,
+    'max_votes' => 30,
+    'per_minutes' => 60,
+],
+```
+
+### Çevrilebilir İçerik
+
+Anket/seçenek `title` ve `description` alanlarını JSON dil haritası olarak saklar. `app()->getLocale()` değerini otomatik olarak döndürür, eksikse `fallback_locale`'a düşer.
+
+```php
+// config/poller.php
+'translatable' => [
+    'enabled' => true,
+    'fallback_locale' => 'en',
+],
+```
+
+```php
+// Çevirilerle oluştur
+Poller::create([
+    'title' => ['en' => 'Best framework?', 'tr' => 'En iyi framework?', 'az' => 'Ən yaxşı framework?'],
+], $user);
+
+// Geçerli dilde oku
+app()->setLocale('tr');
+$poll->title;                          // "En iyi framework?"
+
+// Çeviri yardımcıları
+$poll->translate('title', 'az');       // "Ən yaxşı framework?"
+$poll->setTranslation('title', 'tr', 'Yeni başlık')->save();
+$poll->getTranslations('title');       // ['en' => '...', 'tr' => '...', 'az' => '...']
+```
+
+### Sorgu Scope'ları
+
+Zincirlenebilir scope'larla anketleri ara ve filtrele:
+
+```php
+use Aftandilmmd\Poller\Models\Poll;
+use Aftandilmmd\Poller\Enums\PollStatus;
+use Aftandilmmd\Poller\Enums\PollType;
+
+Poll::query()
+    ->search('framework')                       // başlık veya açıklamada eşleşme
+    ->ofStatus(PollStatus::Active)              // enum veya string
+    ->ofType(PollType::SingleChoice)
+    ->createdBy($user->id)
+    ->withinDateRange(now()->subMonth(), now())
+    ->get();
+```
+
+---
+
 ## Hata Yönetimi
 
 Tüm oylama hataları tipli istisnalar fırlatır:
@@ -518,7 +621,8 @@ php artisan vendor:publish --tag=poller-translations
 ## Test
 
 ```bash
-php artisan test --filter=PollVote
+composer install
+vendor/bin/pest
 ```
 
 ---
