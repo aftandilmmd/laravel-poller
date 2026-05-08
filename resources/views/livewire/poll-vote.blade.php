@@ -10,7 +10,7 @@
     {{-- Voting Form --}}
     @if(!$hasVoted && $canVote)
         <form wire:submit="submitVote" class="p-4">
-            <h4 class="mb-3 text-sm font-semibold text-gray-900 dark:text-white">{{ __('poll-vote::messages.cast_your_vote') }}</h4>
+            <h4 class="mb-3 text-sm font-semibold text-gray-900 dark:text-white">{{ __('poller::messages.cast_your_vote') }}</h4>
 
             {{-- Yes/No or Single Choice --}}
             @if($poll->isYesNo() || $poll->isSingleChoice())
@@ -34,11 +34,11 @@
                 @if($poll->min_selections || $poll->max_selections)
                     <p class="mb-2 text-[11px] text-gray-400">
                         @if($poll->min_selections && $poll->max_selections)
-                            {{ __('poll-vote::messages.select_min_to_max', ['min' => $poll->min_selections, 'max' => $poll->max_selections]) }}
+                            {{ __('poller::messages.select_min_to_max', ['min' => $poll->min_selections, 'max' => $poll->max_selections]) }}
                         @elseif($poll->min_selections)
-                            {{ __('poll-vote::messages.select_at_least_min', ['min' => $poll->min_selections]) }}
+                            {{ __('poller::messages.select_at_least_min', ['min' => $poll->min_selections]) }}
                         @else
-                            {{ __('poll-vote::messages.select_up_to_max', ['max' => $poll->max_selections]) }}
+                            {{ __('poller::messages.select_up_to_max', ['max' => $poll->max_selections]) }}
                         @endif
                     </p>
                 @endif
@@ -64,7 +64,7 @@
                         <div wire:key="opt-{{ $option->id }}" class="rounded-lg border border-gray-100 px-3 py-2.5 dark:border-gray-700">
                             <div class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $option->title }}</div>
                             <div class="flex gap-1.5">
-                                @for($i = config('poll-vote.rating.min', 1); $i <= config('poll-vote.rating.max', 5); $i++)
+                                @for($i = config('poller.rating.min', 1); $i <= config('poller.rating.max', 5); $i++)
                                     <button wire:click.prevent="$set('rating', {{ $i }}); $set('selectedOption', {{ $option->id }})" type="button"
                                         class="flex size-8 items-center justify-center rounded-md text-xs font-medium transition
                                             {{ $selectedOption === $option->id && $rating === $i
@@ -80,7 +80,7 @@
 
             {{-- Ranked --}}
             @elseif($poll->isRanked())
-                <p class="mb-2 text-[11px] text-gray-400">{{ __('poll-vote::messages.rank_options_hint') }}</p>
+                <p class="mb-2 text-[11px] text-gray-400">{{ __('poller::messages.rank_options_hint') }}</p>
                 <div class="space-y-1.5">
                     @foreach($poll->options as $option)
                         <div wire:key="opt-{{ $option->id }}" class="flex items-center gap-3 rounded-lg border border-gray-100 px-3 py-2.5 dark:border-gray-700">
@@ -106,7 +106,7 @@
             @if($canAddCustomOption)
                 <div class="mt-3 rounded-lg border border-dashed border-gray-200 p-3 dark:border-gray-600">
                     <label class="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
-                        {{ __('poll-vote::messages.add_your_own_option') }}
+                        {{ __('poller::messages.add_your_own_option') }}
                         @if($poll->max_custom_options)
                             <span class="text-[10px] text-gray-300">({{ $poll->getCustomOptionCount() }}/{{ $poll->max_custom_options }})</span>
                         @endif
@@ -114,31 +114,31 @@
                     <div class="flex gap-2">
                         <input wire:model="customOptionTitle" type="text"
                             class="grow rounded-md border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-gray-300 focus:bg-white focus:ring-0 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-gray-500"
-                            placeholder="{{ __('poll-vote::messages.enter_option_title') }}">
+                            placeholder="{{ __('poller::messages.enter_option_title') }}">
                         <button wire:click.prevent="addCustomOption" type="button"
                             class="shrink-0 rounded-md bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
-                            {{ __('poll-vote::messages.add') }}
+                            {{ __('poller::messages.add') }}
                         </button>
                     </div>
                 </div>
             @endif
 
             {{-- Comment --}}
-            @if($poll->requires_comment || config('poll-vote.features.vote_comments', true))
+            @if($poll->requires_comment || config('poller.features.vote_comments', true))
                 <div class="mt-3">
                     <label class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400">
-                        {{ __('poll-vote::messages.comment_label') }}{{ $poll->requires_comment ? ' *' : '' }}
+                        {{ __('poller::messages.comment_label') }}{{ $poll->requires_comment ? ' *' : '' }}
                     </label>
                     <textarea wire:model="comment" rows="2"
                         class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 transition focus:border-gray-300 focus:bg-white focus:ring-0 dark:border-gray-600 dark:bg-gray-700/50 dark:text-white dark:focus:border-gray-500"
-                        placeholder="{{ __('poll-vote::messages.add_a_comment') }}"></textarea>
+                        placeholder="{{ __('poller::messages.add_a_comment') }}"></textarea>
                 </div>
             @endif
 
             <button type="submit" wire:loading.attr="disabled"
                 class="mt-4 w-full rounded-lg bg-gray-900 px-4 py-2.5 text-xs font-medium text-white shadow-sm transition hover:bg-gray-800 disabled:opacity-50 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100">
-                <span wire:loading.remove>{{ __('poll-vote::messages.submit_vote') }}</span>
-                <span wire:loading>{{ __('poll-vote::messages.submitting') }}</span>
+                <span wire:loading.remove>{{ __('poller::messages.submit_vote') }}</span>
+                <span wire:loading>{{ __('poller::messages.submitting') }}</span>
             </button>
         </form>
 
@@ -149,17 +149,17 @@
                 <span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
                     <svg class="size-3 text-emerald-600 dark:text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
                 </span>
-                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ __('poll-vote::messages.you_have_voted') }}</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ __('poller::messages.you_have_voted') }}</span>
             </div>
 
             {{-- Inline Results --}}
             @if($canShowResults && $showResults)
                 <div class="mt-4">
-                    <livewire:poll-vote-poll-results :poll="$poll" :key="'inline-results-' . $poll->id" />
+                    <livewire:poller-poll-results :poll="$poll" :key="'inline-results-' . $poll->id" />
                 </div>
             @elseif($canShowResults)
                 <button wire:click="toggleResults" class="mt-2 text-xs font-medium text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
-                    {{ __('poll-vote::messages.show_results') }}
+                    {{ __('poller::messages.show_results') }}
                 </button>
             @endif
 
@@ -169,13 +169,13 @@
                     @if($canChange)
                         <button wire:click="$set('showResults', false)" type="button"
                             class="rounded-lg px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
-                            {{ __('poll-vote::messages.change_vote') }}
+                            {{ __('poller::messages.change_vote') }}
                         </button>
                     @endif
                     @if($canRetract)
-                        <button wire:click="retractVote" wire:confirm="{{ __('poll-vote::messages.retract_your_vote') }}" type="button"
+                        <button wire:click="retractVote" wire:confirm="{{ __('poller::messages.retract_your_vote') }}" type="button"
                             class="rounded-lg px-3 py-1.5 text-xs font-medium text-red-500 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20">
-                            {{ __('poll-vote::messages.retract_vote') }}
+                            {{ __('poller::messages.retract_vote') }}
                         </button>
                     @endif
                 </div>
@@ -188,11 +188,11 @@
             <div class="rounded-lg bg-gray-50 px-4 py-6 text-center dark:bg-gray-900/30">
                 <p class="text-xs text-gray-400">
                     @if($poll->isClosed() || $poll->isCancelled())
-                        {{ __('poll-vote::messages.poll_is_closed') }}
+                        {{ __('poller::messages.poll_is_closed') }}
                     @elseif(!auth()->check())
-                        {{ __('poll-vote::messages.please_log_in') }}
+                        {{ __('poller::messages.please_log_in') }}
                     @else
-                        {{ __('poll-vote::messages.not_eligible') }}
+                        {{ __('poller::messages.not_eligible') }}
                     @endif
                 </p>
             </div>
@@ -200,7 +200,7 @@
             {{-- Results for closed polls --}}
             @if($canShowResults)
                 <div class="mt-4">
-                    <livewire:poll-vote-poll-results :poll="$poll" :key="'closed-results-' . $poll->id" />
+                    <livewire:poller-poll-results :poll="$poll" :key="'closed-results-' . $poll->id" />
                 </div>
             @endif
         </div>
