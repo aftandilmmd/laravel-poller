@@ -1,13 +1,13 @@
 [English](README.md) | [Türkçe](README.tr.md) | **Azərbaycanca**
 
-# Laravel Poll Vote
+# Laravel Poller
 
 Laravel üçün güclü və çevik sorğu və səsvermə paketi. 5 sorğu növünü, anonim səsverməni, planlanmış sorğuları, səs dəyişdirməni, həm Livewire komponentlərini, həm də RESTful API-ni dəstəkləyir.
 
 ## Tələblər
 
 - PHP 8.2+
-- Laravel 11 və ya 12
+- Laravel 11, 12 və ya 13 (Laravel 13 PHP 8.3+ tələb edir)
 
 ## Quraşdırma
 

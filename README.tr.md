@@ -1,13 +1,13 @@
 [English](README.md) | **Türkçe** | [Azərbaycanca](README.az.md)
 
-# Laravel Poll Vote
+# Laravel Poller
 
 Laravel için güçlü ve esnek bir anket ve oylama paketi. 5 anket türünü, anonim oylamayı, zamanlanmış anketleri, oy değiştirmeyi ve hem Livewire bileşenleri hem de RESTful API destekler.
 
 ## Gereksinimler
 
 - PHP 8.2+
-- Laravel 11 veya 12
+- Laravel 11, 12 veya 13 (Laravel 13 PHP 8.3+ gerektirir)
 
 ## Kurulum
 

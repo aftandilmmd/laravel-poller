@@ -1,13 +1,13 @@
 **English** | [Türkçe](README.tr.md) | [Azərbaycanca](README.az.md)
 
-# Laravel Poll Vote
+# Laravel Poller
 
 A powerful, flexible poll and voting package for Laravel. Supports 5 poll types, anonymous voting, scheduled polls, vote changing, and both Livewire components and a RESTful API.
 
 ## Requirements
 
 - PHP 8.2+
-- Laravel 11 or 12
+- Laravel 11, 12, or 13 (Laravel 13 requires PHP 8.3+)
 
 ## Installation
 
