@@ -156,4 +156,65 @@ return [
         'enabled' => true,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Result Caching
+    |--------------------------------------------------------------------------
+    |
+    | Cache poll results to avoid recomputing on every request. The cache is
+    | invalidated automatically when votes are cast, changed, or retracted.
+    |
+    */
+    'cache' => [
+        'enabled' => false,
+        'store' => null,
+        'ttl' => 60,
+        'prefix' => 'poller',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Broadcasting
+    |--------------------------------------------------------------------------
+    |
+    | Enable broadcasting of poll/vote events. When enabled, events implement
+    | ShouldBroadcast and are dispatched on the configured channel.
+    |
+    */
+    'broadcasting' => [
+        'enabled' => false,
+        'channel' => 'private',
+        'channel_prefix' => 'poller.poll',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Voter Rate Limiting
+    |--------------------------------------------------------------------------
+    |
+    | Limit how often a single voter can cast votes across all polls. Useful
+    | for preventing spam and abuse. Set max_votes to null to disable.
+    |
+    */
+    'voter_rate_limit' => [
+        'enabled' => false,
+        'max_votes' => 30,
+        'per_minutes' => 60,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Translatable Content
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, poll/option title and description are stored as JSON
+    | with locale keys (e.g., {"en": "Title", "tr": "Başlık"}). The current
+    | app locale is returned automatically when accessing the attribute.
+    |
+    */
+    'translatable' => [
+        'enabled' => false,
+        'fallback_locale' => 'en',
+    ],
+
 ];
