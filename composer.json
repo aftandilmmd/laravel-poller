@@ -35,10 +35,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Aftandilmmd\\Poller\\PollVoteServiceProvider"
+                "Aftandilmmd\\Poller\\PollerServiceProvider"
             ],
             "aliases": {
-                "PollVote": "Aftandilmmd\\Poller\\Facades\\PollVote"
+                "Poller": "Aftandilmmd\\Poller\\Facades\\Poller"
             }
         }
     }
