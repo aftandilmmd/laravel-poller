@@ -23,9 +23,9 @@ return [
     |
     */
     'tables' => [
-        'polls' => 'poll_vote_polls',
-        'options' => 'poll_vote_poll_options',
-        'votes' => 'poll_vote_poll_votes',
+        'polls' => 'poller_polls',
+        'options' => 'poller_poll_options',
+        'votes' => 'poller_poll_votes',
     ],
 
     /*

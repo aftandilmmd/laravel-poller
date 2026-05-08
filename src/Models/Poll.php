@@ -53,7 +53,7 @@ class Poll extends Model
 
     public function getTable(): string
     {
-        return config('poller.tables.polls', 'poll_vote_polls');
+        return config('poller.tables.polls', 'poller_polls');
     }
 
     protected function casts(): array

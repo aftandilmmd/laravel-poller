@@ -33,7 +33,7 @@ class PollOption extends Model
 
     public function getTable(): string
     {
-        return config('poller.tables.options', 'poll_vote_poll_options');
+        return config('poller.tables.options', 'poller_poll_options');
     }
 
     protected function casts(): array

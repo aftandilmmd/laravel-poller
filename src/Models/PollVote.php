@@ -27,7 +27,7 @@ class PollVote extends Model
 
     public function getTable(): string
     {
-        return config('poller.tables.votes', 'poll_vote_poll_votes');
+        return config('poller.tables.votes', 'poller_poll_votes');
     }
 
     protected function casts(): array

@@ -2,7 +2,7 @@
 
 namespace Aftandilmmd\Poller\Services;
 
-use Aftandilmmd\Poller\Contracts\PollVoteServiceInterface;
+use Aftandilmmd\Poller\Contracts\PollerServiceInterface;
 use Aftandilmmd\Poller\Enums\PollStatus;
 use Aftandilmmd\Poller\Exceptions\AlreadyVotedException;
 use Aftandilmmd\Poller\Exceptions\CustomOptionException;
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class PollService implements PollVoteServiceInterface
+class PollService implements PollerServiceInterface
 {
     // ── CRUD ────────────────────────────────────────────────────────
 

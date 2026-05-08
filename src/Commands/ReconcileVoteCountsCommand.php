@@ -14,8 +14,8 @@ class ReconcileVoteCountsCommand extends Command
 
     public function handle(): int
     {
-        $optionsTable = config('poller.tables.options', 'poll_vote_poll_options');
-        $votesTable = config('poller.tables.votes', 'poll_vote_poll_votes');
+        $optionsTable = config('poller.tables.options', 'poller_poll_options');
+        $votesTable = config('poller.tables.votes', 'poller_poll_votes');
 
         $updated = DB::statement("
             UPDATE {$optionsTable}

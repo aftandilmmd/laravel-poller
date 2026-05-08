@@ -61,7 +61,7 @@ class PollOptionController extends Controller
 
         $validated = $request->validate([
             'option_ids' => 'required|array',
-            'option_ids.*' => 'integer|exists:'.config('poller.tables.options', 'poll_vote_poll_options').',id',
+            'option_ids.*' => 'integer|exists:'.config('poller.tables.options', 'poller_poll_options').',id',
         ]);
 
         app('poller')->reorderOptions($poll, $validated['option_ids']);
