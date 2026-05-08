@@ -8,9 +8,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $pollsTable = config('poller.tables.polls', 'poll_vote_polls');
-        $optionsTable = config('poller.tables.options', 'poll_vote_poll_options');
-        $votesTable = config('poller.tables.votes', 'poll_vote_poll_votes');
+        $pollsTable = config('poller.tables.polls', 'poller_polls');
+        $optionsTable = config('poller.tables.options', 'poller_poll_options');
+        $votesTable = config('poller.tables.votes', 'poller_poll_votes');
 
         // Add standalone user_id index on votes table
         Schema::table($votesTable, function (Blueprint $table) {
@@ -39,9 +39,9 @@ return new class extends Migration
 
     public function down(): void
     {
-        $pollsTable = config('poller.tables.polls', 'poll_vote_polls');
-        $optionsTable = config('poller.tables.options', 'poll_vote_poll_options');
-        $votesTable = config('poller.tables.votes', 'poll_vote_poll_votes');
+        $pollsTable = config('poller.tables.polls', 'poller_polls');
+        $optionsTable = config('poller.tables.options', 'poller_poll_options');
+        $votesTable = config('poller.tables.votes', 'poller_poll_votes');
 
         Schema::table($votesTable, function (Blueprint $table) {
             $table->dropIndex(['user_id']);

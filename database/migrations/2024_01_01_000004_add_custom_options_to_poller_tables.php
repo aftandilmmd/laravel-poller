@@ -8,8 +8,8 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $pollsTable = config('poller.tables.polls', 'poll_vote_polls');
-        $optionsTable = config('poller.tables.options', 'poll_vote_poll_options');
+        $pollsTable = config('poller.tables.polls', 'poller_polls');
+        $optionsTable = config('poller.tables.options', 'poller_poll_options');
 
         Schema::table($pollsTable, function (Blueprint $table) {
             $table->boolean('allow_custom_options')->default(false)->after('allow_vote_change');
@@ -24,8 +24,8 @@ return new class extends Migration
 
     public function down(): void
     {
-        $pollsTable = config('poller.tables.polls', 'poll_vote_polls');
-        $optionsTable = config('poller.tables.options', 'poll_vote_poll_options');
+        $pollsTable = config('poller.tables.polls', 'poller_polls');
+        $optionsTable = config('poller.tables.options', 'poller_poll_options');
 
         Schema::table($optionsTable, function (Blueprint $table) {
             $table->dropForeign(['created_by']);
