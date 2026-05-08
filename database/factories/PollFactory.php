@@ -1,10 +1,10 @@
 <?php
 
-namespace Aftandilmmd\PollVote\Database\Factories;
+namespace Aftandilmmd\Poller\Database\Factories;
 
-use Aftandilmmd\PollVote\Enums\PollStatus;
-use Aftandilmmd\PollVote\Enums\PollType;
-use Aftandilmmd\PollVote\Models\Poll;
+use Aftandilmmd\Poller\Enums\PollStatus;
+use Aftandilmmd\Poller\Enums\PollType;
+use Aftandilmmd\Poller\Models\Poll;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /** @extends Factory<Poll> */
